@@ -1,0 +1,545 @@
+﻿
+@{
+    ViewBag.Title = "Thực đơn";
+    Layout = "~/Views/Shared/LayoutUser.cshtml";
+}
+<div class="container-fluid menu bg-light py-6 my-6">
+    <div class="container">
+        <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
+            <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Thực đơn của chúng tôi</small>
+            <h1 class="display-5 mb-5">Những món ăn nổi tiếng nhất thế giới</h1>
+        </div>
+        <div class="tab-class text-center">
+            <ul class="nav nav-pills d-inline-flex justify-content-center mb-5 wow bounceInUp" data-wow-delay="0.1s">
+                <li class="nav-item p-2">
+                    <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill active" data-bs-toggle="pill" href="#tab-6">
+                        <span class="text-dark" style="width: 150px;">Khai vị</span>
+                    </a>
+                </li>
+                <li class="nav-item p-2">
+                    <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-7">
+                        <span class="text-dark" style="width: 150px;">Món chính</span>
+                    </a>
+                </li>
+                <li class="nav-item p-2">
+                    <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-8">
+                        <span class="text-dark" style="width: 150px;">Đồ uống</span>
+                    </a>
+                </li>
+                <li class="nav-item p-2">
+                    <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-9">
+                        <span class="text-dark" style="width: 150px;">Ưu đãi</span>
+                    </a>
+                </li>
+                <li class="nav-item p-2">
+                    <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-10">
+                        <span class="text-dark" style="width: 150px;">Đặc biệt</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-6" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.1s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-01.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Paneer</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món khai vị thơm ngon, đậm đà hương vị truyền thống.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.2s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-02.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Khoai lang</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món khai vị ngọt ngào, bổ dưỡng và hấp dẫn.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.3s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-03.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Sabudana Tikki</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn giòn tan, đậm đà hương vị Ấn Độ.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.4s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-04.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Pizza</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Pizza truyền thống với lớp vỏ giòn và nhân phong phú.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.5s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-05.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Thịt xông khói</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Thịt xông khói thơm ngon, đậm đà hương vị.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.6s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-06.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Gà</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món gà chế biến tinh tế, hấp dẫn mọi thực khách.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.7s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-07.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Blooming</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn độc đáo với hương vị khó quên.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.8s">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-08.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Món ngọt</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món tráng miệng ngọt ngào, kết thúc hoàn hảo cho bữa ăn.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-7" class="tab-pane fade show p-0">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-01.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Thịt bò Argentina</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món thịt bò cao cấp với hương vị đậm đà.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-03.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Món giòn</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn giòn tan, hấp dẫn mọi thực khách.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-05.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Sabudana Tikki</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn Ấn Độ truyền thống, giòn ngon.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-07.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Blooming</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn độc đáo với hương vị đặc biệt.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-08.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Thịt bò Argentina</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món thịt bò cao cấp với hương vị đậm đà.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-03.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Chanh</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn với hương vị chanh tươi mát.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-02.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Nước uống</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Nước uống tươi mát, bổ sung năng lượng.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-01.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Chanh muối</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn với hương vị chanh muối độc đáo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-8" class="tab-pane fade show p-0">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-01.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Nước giòn</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Nước uống tươi mát, đậm đà hương vị.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-02.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Nước ép</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Nước ép trái cây tươi ngon, bổ dưỡng.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-03.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Cam</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Nước ép cam tươi, giàu vitamin C.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-04.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Nước ép táo</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Nước ép táo ngọt ngào, tươi mát.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-05.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Chuối</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Sinh tố chuối thơm ngon, bổ dưỡng.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-06.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Nước ngọt</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Nước uống ngọt ngào, tươi mát.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-07.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Cà phê nóng</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Cà phê nóng thơm lừng, đậm đà.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-08.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Khoai lang</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn từ khoai lang ngọt ngào, hấp dẫn.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-9" class="tab-pane fade show p-0">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-06.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Sabudana Tikki</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn Ấn Độ truyền thống, giòn ngon.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-07.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Món giòn</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn giòn tan, hấp dẫn mọi thực khách.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-09.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Pizza</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Pizza truyền thống với lớp vỏ giòn và nhân phong phú.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-02.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Thịt xông khói</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Thịt xông khói thơm ngon, đậm đà hương vị.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-03.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Gà</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món gà chế biến tinh tế, hấp dẫn mọi thực khách.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-05.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Blooming</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn độc đáo với hương vị khó quên.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-07.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Món ngọt</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món tráng miệng ngọt ngào, kết thúc hoàn hảo cho bữa ăn.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-09.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Thịt bò Argentina</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món thịt bò cao cấp với hương vị đậm đà.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-10" class="tab-pane fade show p-0">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-06.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Sabudana Tikki</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn Ấn Độ truyền thống, giòn ngon.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-07.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Món giòn</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn giòn tan, hấp dẫn mọi thực khách.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-09.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Pizza</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Pizza truyền thống với lớp vỏ giòn và nhân phong phú.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-02.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Thịt xông khói</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Thịt xông khói thơm ngon, đậm đà hương vị.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-03.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Gà</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món gà chế biến tinh tế, hấp dẫn mọi thực khách.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-05.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Blooming</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món ăn độc đáo với hương vị khó quên.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-07.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Món ngọt</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món tráng miệng ngọt ngào, kết thúc hoàn hảo cho bữa ăn.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="menu-item d-flex align-items-center">
+                                <img class="flex-shrink-0 img-fluid rounded-circle" src="/Content/landingpage/img/menu-09.jpg" alt="">
+                                <div class="w-100 d-flex flex-column text-start ps-4">
+                                    <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                        <h4>Thịt bò Argentina</h4>
+                                        <h4 class="text-primary">90.000 VNĐ</h4>
+                                    </div>
+                                    <p class="mb-0">Món thịt bò cao cấp với hương vị đậm đà.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

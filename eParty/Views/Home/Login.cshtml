@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/LayoutUser.cshtml";
+}
+
+<div class="container-fluid py-6">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="login_content">
+                <form action="#">
+                    <h2>Đăng Nhập</h2>
+                    <div class="input-field">
+                        <input type="text" required>
+                        <label>Nhập địa chỉ email của bạn</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" required>
+                        <label>Nhập mật khẩu của bạn</label>
+                    </div>
+                    <div class="forget">
+                        <label for="remember">
+                            <input type="checkbox" id="remember">
+                            <p>Nhớ tôi</p>
+                        </label>
+                        <a href="#">Quên mật khẩu?</a>
+                    </div>
+                    <button type="submit">Đăng Nhập</button>
+                    <div class="register">
+                        <p>Bạn chưa có tài khoản? <a href="#">Đăng ký</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
