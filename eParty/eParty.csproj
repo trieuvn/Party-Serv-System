@@ -1077,8 +1077,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\admin\calendar\calendar-setting.js" />
-    <Content Include="Scripts\admin\calendar\fullcalendar.min.js" />
+    <Content Include="Scripts\admin\calendar\script.js" />
+    <Content Include="Scripts\admin\calendar\style.css" />
     <Content Include="Scripts\admin\dashboard\js\demo\bubble-chart.js" />
     <Content Include="Scripts\admin\dashboard\js\demo\chart-area-demo.js" />
     <Content Include="Scripts\admin\dashboard\js\demo\chart-bar-demo.js" />
