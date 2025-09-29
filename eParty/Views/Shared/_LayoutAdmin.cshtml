@@ -6,11 +6,8 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
-    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-          name="viewport" />
-    <link rel="icon"
-          href="/Content/admin/dashboard/img/kaiadmin/favicon.ico"
-          type="image/x-icon" />
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="/Content/admin/dashboard/img/kaiadmin/favicon.ico" type="image/x-icon" />
 
     <!-- Fonts and icons -->
     <script src="/Content/admin/dashboard/js/plugin/webfont/webfont.min.js"></script>
@@ -31,14 +28,13 @@
             },
         });
     </script>
-
+    @RenderSection("scripts", required: false)
     <!-- CSS Files -->
     <link rel="stylesheet" href="/Content/admin/dashboard/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/Content/admin/dashboard/css/plugins.min.css" />
     <link rel="stylesheet" href="/Content/admin/dashboard/css/kaiadmin.min.css" />
-
-    <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="/Content/admin/dashboard/css/demo.css" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <div class="wrapper">
@@ -47,11 +43,8 @@
             <div class="sidebar-logo">
                 <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
-                    <a href="index.html" class="logo">
-                        <img src="/Content/admin/dashboard/img/kaiadmin/logo_light.svg"
-                             alt="navbar brand"
-                             class="navbar-brand"
-                             height="20" />
+                    <a href="/Dashboard" class="logo">
+                        <img src="/Content/admin/dashboard/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
                     </a>
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
@@ -71,10 +64,7 @@
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
                         <li class="nav-item active">
-                            <a data-bs-toggle="collapse"
-                               href="#dashboard"
-                               class="collapsed"
-                               aria-expanded="false">
+                            <a href="/Dashboard">
                                 <i class="fas fa-home"></i>
                                 <p>Dashboard</p>
                             </a>
@@ -87,15 +77,15 @@
                         </li>
                         <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#base">
-                                <i class="fas fa-th-list"></i> 
+                                <i class="fas fa-th-list"></i>
                                 <p>Navigation menu</p>
                                 <span class="caret"></span>
                             </a>
                             <div class="collapse" id="base">
                                 <ul class="nav nav-collapse">
                                     <li>
-                                        <a href="components/avatars.html">
-                                            <span class="sub-item">Avatars</span>
+                                        <a href="/Food">
+                                            <span class="sub-item">Food</span>
                                         </a>
                                     </li>
                                     <li>
@@ -139,15 +129,14 @@
                                         </a>
                                     </li>
                                 </ul>
-                                
-                                </a>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                            <a href="/Calendar">
                                 <i class="fas fa-calendar"></i>
                                 <p>Schedule</p>
                             </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -160,10 +149,7 @@
                     <!-- Logo Header -->
                     <div class="logo-header" data-background-color="dark">
                         <a href="index.html" class="logo">
-                            <img src="/Content/admin/dashboard/img/kaiadmin/logo_light.svg"
-                                 alt="navbar brand"
-                                 class="navbar-brand"
-                                 height="20" />
+                            <img src="/Content/admin/dashboard/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
                         </a>
                         <div class="nav-toggle">
                             <button class="btn btn-toggle toggle-sidebar">
@@ -182,51 +168,25 @@
                 <!-- Navbar Header -->
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
-                        <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button type="submit" class="btn btn-search pe-1">
-                                        <i class="fa fa-search search-icon"></i>
-                                    </button>
-                                </div>
-                                <input type="text"
-                                       placeholder="Search ..."
-                                       class="form-control" />
-                            </div>
-                        </nav>
 
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
-                                <a class="nav-link dropdown-toggle"
-                                   data-bs-toggle="dropdown"
-                                   href="#"
-                                   role="button"
-                                   aria-expanded="false"
-                                   aria-haspopup="true">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
                                     <i class="fa fa-search"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-search animated fadeIn">
                                     <form class="navbar-left navbar-form nav-search">
                                         <div class="input-group">
-                                            <input type="text"
-                                                   placeholder="Search ..."
-                                                   class="form-control" />
+                                            <input type="text" placeholder="Search ..." class="form-control" />
                                         </div>
                                     </form>
                                 </ul>
                             </li>
                             <li class="nav-item topbar-icon dropdown hidden-caret">
-                                <a class="nav-link dropdown-toggle"
-                                   href="#"
-                                   id="messageDropdown"
-                                   role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-envelope"></i>
                                 </a>
-                                <ul class="dropdown-menu messages-notif-box animated fadeIn"
-                                    aria-labelledby="messageDropdown">
+                                <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
                                     <li>
                                         <div class="dropdown-title d-flex justify-content-between align-items-center">
                                             Messages
@@ -238,8 +198,7 @@
                                             <div class="notif-center">
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="/Content/admin/dashboard/img/jm_denis.jpg"
-                                                             alt="Img Profile" />
+                                                        <img src="/Content/admin/dashboard/img/jm_denis.jpg" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Jimmy Denis</span>
@@ -249,8 +208,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="/Content/admin/dashboard/img/chadengle.jpg"
-                                                             alt="Img Profile" />
+                                                        <img src="/Content/admin/dashboard/img/chadengle.jpg" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Chad</span>
@@ -260,21 +218,17 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="/Content/admin/dashboard/img/mlane.jpg"
-                                                             alt="Img Profile" />
+                                                        <img src="/Content/admin/dashboard/img/mlane.jpg" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Jhon Doe</span>
-                                                        <span class="block">
-                                                            Ready for the meeting today...
-                                                        </span>
+                                                        <span class="block"> Ready for the meeting today... </span>
                                                         <span class="time">12 minutes ago</span>
                                                     </div>
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="/Content/admin/dashboard/img/talha.jpg"
-                                                             alt="Img Profile" />
+                                                        <img src="/Content/admin/dashboard/img/talha.jpg" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Talha</span>
@@ -286,29 +240,18 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <a class="see-all" href="javascript:void(0);">
-                                            See all messages<i class="fa fa-angle-right"></i>
-                                        </a>
+                                        <a class="see-all" href="javascript:void(0);">See all messages<i class="fa fa-angle-right"></i></a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item topbar-icon dropdown hidden-caret">
-                                <a class="nav-link dropdown-toggle"
-                                   href="#"
-                                   id="notifDropdown"
-                                   role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-haspopup="true"
-                                   aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
                                     <span class="notification">4</span>
                                 </a>
-                                <ul class="dropdown-menu notif-box animated fadeIn"
-                                    aria-labelledby="notifDropdown">
+                                <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
                                     <li>
-                                        <div class="dropdown-title">
-                                            You have 4 new notification
-                                        </div>
+                                        <div class="dropdown-title">You have 4 new notification</div>
                                     </li>
                                     <li>
                                         <div class="notif-scroll scrollbar-outer">
@@ -327,21 +270,16 @@
                                                         <i class="fa fa-comment"></i>
                                                     </div>
                                                     <div class="notif-content">
-                                                        <span class="block">
-                                                            Rahmad commented on Admin
-                                                        </span>
+                                                        <span class="block"> Rahmad commented on Admin </span>
                                                         <span class="time">12 minutes ago</span>
                                                     </div>
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="/Content/admin/dashboard/img/profile2.jpg"
-                                                             alt="Img Profile" />
+                                                        <img src="/Content/admin/dashboard/img/profile2.jpg" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
-                                                        <span class="block">
-                                                            Reza send messages to you
-                                                        </span>
+                                                        <span class="block"> Reza send messages to you </span>
                                                         <span class="time">12 minutes ago</span>
                                                     </div>
                                                 </a>
@@ -358,17 +296,12 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <a class="see-all" href="javascript:void(0);">
-                                            See all notifications<i class="fa fa-angle-right"></i>
-                                        </a>
+                                        <a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i></a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="nav-item topbar-icon dropdown hidden-caret">
-                                <a class="nav-link"
-                                   data-bs-toggle="dropdown"
-                                   href="#"
-                                   aria-expanded="false">
+                                <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <i class="fas fa-layer-group"></i>
                                 </a>
                                 <div class="dropdown-menu quick-actions animated fadeIn">
@@ -432,16 +365,10 @@
                                     </div>
                                 </div>
                             </li>
-
                             <li class="nav-item topbar-user dropdown hidden-caret">
-                                <a class="dropdown-toggle profile-pic"
-                                   data-bs-toggle="dropdown"
-                                   href="#"
-                                   aria-expanded="false">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
-                                        <img src="/Content/admin/dashboard/img/profile.jpg"
-                                             alt="..."
-                                             class="avatar-img rounded-circle" />
+                                        <img src="/Content/admin/dashboard/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
                                         <span class="op-7">Hi,</span>
@@ -453,15 +380,12 @@
                                     <li>
                                         <div class="user-box">
                                             <div class="avatar-lg">
-                                                <img src="/Content/admin/dashboard/img/profile.jpg"
-                                                     alt="image profile"
-                                                     class="avatar-img rounded" />
+                                                <img src="/Content/admin/dashboard/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
                                             </div>
                                             <div class="u-text">
                                                 <h4>Hizrian</h4>
                                                 <p class="text-muted">hello@example.com</p>
-                                                <a href="profile.html"
-                                                   class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                                <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                             </div>
                                         </div>
                                     </li>
@@ -483,7 +407,10 @@
             </nav>
             <!-- End Navbar -->
         </div>
-        @RenderSection("scripts", required: false)
-        @RenderBody() 
+        <!-- Main Content -->
+        @RenderBody()
+    </div>
+    </div>
 </body>
+
 </html>
