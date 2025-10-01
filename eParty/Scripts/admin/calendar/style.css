@@ -12,7 +12,6 @@
 
 
 
-
 .app-container {
     display: flex;
     flex-direction: column;
@@ -131,7 +130,7 @@ button:hover {
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
     padding: 1.5rem;
     overflow: auto;
-    width:960px;
+    width:1225px;
 }
 
 
@@ -200,7 +199,7 @@ button:hover {
 
 /* Month View */
 .month-view {
-    width: 900px;
+    width: 1200px;
 }
 
 .month-header {
