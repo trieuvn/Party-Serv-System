@@ -1,92 +1,82 @@
-﻿
-@{
+﻿@{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     ViewBag.Title = "Calendar";
 }
-<div class="pd-20 card-box mb-30">
-    <div class="calendar-wrap">
-        <div id="calendar"></div>
-    </div>
 
-    <!-- View event modal -->
-    <div id="modal-view-event" class="modal modal-top fade calendar-modal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h4 class="h4">
-                        <span class="event-icon weight-400 mr-3"></span>
-                        <span class="event-title"></span>
-                    </h4>
-                    <div class="event-body"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                </div>
+<div class="app-container" style="padding-top:70px;padding-left:10px; display:flex; gap:20px;">
+    <!-- Calendar content -->
+    <div style="flex:1;">
+        <h1><i class="fas fa-calendar-alt"></i> Event Calendar App</h1>
+        <div class="header-controls" style="display:flex;align-items:center;gap:15px;margin-bottom:15px;">
+            <button id="today-btn" style="padding:5px 10px;">Today</button>
+
+            <div class="view-options">
+                <button class="view-option active" data-view="day">Day</button>
+                <button class="view-option" data-view="week">Week</button>
+                <button class="view-option" data-view="month">Month</button>
             </div>
+
+            <div class="date-navigation" style="display:flex;align-items:center;gap:10px;">
+                <button id="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                <h2 id="current-date" style="margin:0;">May 2023</h2>
+                <button id="next-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Calendar View -->
+        <div class="calendar-view" id="calendar-view" style="border:1px solid #ddd; min-height:400px; padding:10px;">
         </div>
     </div>
 
-    <!-- Add event modal -->
-    <div id="modal-view-event-add" class="modal modal-top fade calendar-modal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form id="add-event">
-                    <div class="modal-body">
-                        <h4 class="text-blue h4 mb-10">Add Event Detail</h4>
-                        <div class="form-group">
-                            <label>Event name</label>
-                            <input type="text" class="form-control" name="ename" />
-                        </div>
-                        <div class="form-group">
-                            <label>Event Date</label>
-                            <input type='text' class="datetimepicker form-control" name="edate" />
-                        </div>
-                        <div class="form-group">
-                            <label>Event Description</label>
-                            <textarea class="form-control" name="edesc"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Event Color</label>
-                            <select class="form-control" name="ecolor">
-                                <option value="fc-bg-default">fc-bg-default</option>
-                                <option value="fc-bg-blue">fc-bg-blue</option>
-                                <option value="fc-bg-lightgreen">fc-bg-lightgreen</option>
-                                <option value="fc-bg-pinkred">fc-bg-pinkred</option>
-                                <option value="fc-bg-deepskyblue">fc-bg-deepskyblue</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Event Icon</label>
-                            <select class="form-control" name="eicon">
-                                <option value="circle">circle</option>
-                                <option value="cog">cog</option>
-                                <option value="group">group</option>
-                                <option value="suitcase">suitcase</option>
-                                <option value="calendar">calendar</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
+    <!-- Sidebar Events -->
+    <div id="event-sidebar" style="width:300px; border-left:1px solid #ddd; padding:10px;">
+        <h3>Events</h3>
+        <div id="events-list" style="min-height:200px;">
+            <!-- JS sẽ render event list vào đây -->
         </div>
     </div>
 </div>
 
-@section Styles{
-    <!-- CSS plugin cho trang Calendar -->
-    <link rel="stylesheet" href="/Content/admin/calendar/css/fullcalendar.css" />
+<!-- Floating Add Event Button -->
+<button id="add-event-btn"
+        style="position:fixed; bottom:30px; right:30px; background:#4e73df; color:#fff; border:none; padding:15px 25px; border-radius:50px; font-size:16px; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
+    Add Event
+</button>
+
+<!-- Event Modal -->
+<div id="event-modal" class="modal" style="display:none;">
+    <div class="modal-content" style="background:#fff; padding:40px; border-radius:8px; width:400px; margin:100px auto; position:relative;">
+        <span class="close-btn" style="position:absolute; top:10px; right:15px; cursor:pointer;">&times;</span>
+        <form id="event-form">
+            <input type="text" id="event-title" placeholder="Title" required class="form-control"><br>
+            <input type="date" id="event-date" required class="form-control"><br>
+            <input type="time" id="event-start-time" required class="form-control"><br>
+            <input type="time" id="event-end-time" required class="form-control"><br>
+            <textarea id="event-description" placeholder="Description" class="form-control"></textarea><br>
+            <input type="color" id="event-color" value="#4e73df"><br>
+            <label><input type="checkbox" id="event-reminder"> Reminder</label><br><br>
+            <button type="submit" style="background:#4e73df;color:#fff;border:none;padding:10px 20px;border-radius:4px;">Save</button>
+        </form>
+    </div>
+</div>
+
+<!-- Event Details Modal -->
+<div id="event-details-modal" class="modal" style="display:none;">
+    <div class="modal-content" style="background:#fff; padding:20px; border-radius:8px; width:400px; margin:100px auto; position:relative;">
+        <span class="close-btn" style="position:absolute; top:10px; right:15px; cursor:pointer;">&times;</span>
+        <h3 id="details-title"></h3>
+        <p id="details-date"></p>
+        <p id="details-time"></p>
+        <p id="details-description"></p>
+        <button id="edit-event-btn" style="background:#f6c23e;color:#fff;border:none;padding:10px 20px;border-radius:4px;">Edit</button>
+        <button id="delete-event-btn" style="background:#e74a3b;color:#fff;border:none;padding:10px 20px;border-radius:4px;">Delete</button>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/Scripts/admin/calendar/style.css" />
 }
 
-@section Scripts{
-    <!-- JS plugin cho trang Calendar -->
-    <script src="/Scripts/admin/calendar/fullcalendar.min.js"></script>
-    <script src="/Scripts/admin/calendar/calendar-setting.js"></script>
+@section Scripts {
+    <script src="~/Scripts/admin/calendar/script.js"></script>
 }
-
-
-
-
