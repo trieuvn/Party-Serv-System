@@ -125,9 +125,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\admin\CalendarController.cs" />
-    <Compile Include="Controllers\admin\DashboardController.cs" />
-    <Compile Include="Controllers\admin\FoodController.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\CalendarController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DefaultController.cs" />
+    <Compile Include="Areas\Admin\Controllers\FoodController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1214,6 +1216,12 @@
     <Content Include="Content\admin\dashboard\fonts\summernote\summernote.ttf" />
     <Content Include="Content\admin\dashboard\fonts\summernote\summernote.woff" />
     <Content Include="Content\admin\dashboard\fonts\summernote\summernote.woff2" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Areas\Admin\Views\Calendar\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Food\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Default\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -1245,13 +1253,12 @@
     <Content Include="Views\Home\Team.cshtml" />
     <Content Include="Views\Home\Book.cshtml" />
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\Food\Index.cshtml" />
-    <Content Include="Views\Calendar\Index.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Data\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
