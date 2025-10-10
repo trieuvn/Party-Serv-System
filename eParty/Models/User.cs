@@ -14,18 +14,15 @@ namespace eParty.Models
         [Required, StringLength(50)] public string Password { get; set; }
         [StringLength(50)] public string FirstName { get; set; }
         [StringLength(50)] public string LastName { get; set; }
+        public string Avatar { get; set; } // nvarchar(MAX)
         [StringLength(50)] public string Email { get; set; }
         [StringLength(50)] public string PhoneNumber { get; set; }
         [StringLength(20)] public string Role { get; set; }
 
         public virtual ICollection<Party> Parties { get; set; }
-    }
-
-    // TPH kế thừa từ User
-    public class Staff : User
-    {
-        public int Salary { get; set; }
-
-        public virtual ICollection<StaffParty> StaffParties { get; set; }
+        public virtual ICollection<UserDiscount> UserDiscounts { get; set; }
+        public virtual ICollection<Rate> Rates { get; set; }
+        public virtual ICollection<News> NewsPosts { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

@@ -27,51 +27,42 @@
             db.SaveChanges();
 
             // ---------- INGREDIENTS ----------
-            var ingNames = new[]
-            {
-        "Sugar","Flour","Egg","Milk","Butter","Salt","Pepper",
-        "Chicken","Beef","Rice","Tomato","Lettuce","Onion","Garlic","Oil"
-    };
+            var ingNames = new[] { "Sugar","Flour","Egg","Milk","Butter","Salt","Pepper",
+                           "Chicken","Beef","Rice","Tomato","Lettuce","Onion","Garlic","Oil" };
             foreach (var n in ingNames)
                 db.Ingredients.AddOrUpdate(i => i.Name, new Ingredient { Name = n, Description = n + " ingredient" });
             db.SaveChanges();
 
             // ---------- PROVIDERS (nhiều provider cho 1 ingredient) ----------
-            var providers = new[]
-            {
-        new Provider { Name="ABC Foods",  IngredientId=db.Ingredients.Single(i=>i.Name=="Chicken").Id, Cost=40, PhoneNumber="0901 000 001", Address="Q1 HCM" },
-        new Provider { Name="XYZ Farms",  IngredientId=db.Ingredients.Single(i=>i.Name=="Beef").Id,     Cost=75, PhoneNumber="0901 000 002", Address="Q3 HCM" },
-        new Provider { Name="Dairy VN",   IngredientId=db.Ingredients.Single(i=>i.Name=="Milk").Id,     Cost=18, PhoneNumber="0901 000 003", Address="Thu Duc" },
-        new Provider { Name="Bakers Co",  IngredientId=db.Ingredients.Single(i=>i.Name=="Flour").Id,    Cost=12, PhoneNumber="0901 000 004", Address="Q5 HCM" },
-        new Provider { Name="Sweet Co",   IngredientId=db.Ingredients.Single(i=>i.Name=="Sugar").Id,    Cost=10, PhoneNumber="0901 000 005", Address="Tan Binh" },
-        new Provider { Name="Veggie Hub", IngredientId=db.Ingredients.Single(i=>i.Name=="Tomato").Id,   Cost=9,  PhoneNumber="0901 000 006", Address="Go Vap" },
-        new Provider { Name="Veggie Hub", IngredientId=db.Ingredients.Single(i=>i.Name=="Lettuce").Id,  Cost=7,  PhoneNumber="0901 000 006", Address="Go Vap" }
-    };
-            foreach (var p in providers)
-                db.Providers.AddOrUpdate(x => new { x.Name, x.IngredientId }, p);
+            var ing = db.Ingredients.ToDictionary(i => i.Name, i => i.Id);
+            db.Providers.AddOrUpdate(x => new { x.Name, x.Ingredient },
+                new Provider { Name = "ABC Foods", Ingredient = ing["Chicken"], Cost = 40, PhoneNumber = "0901000001", Address = "Q1 HCM" },
+                new Provider { Name = "XYZ Farms", Ingredient = ing["Beef"], Cost = 75, PhoneNumber = "0901000002", Address = "Q3 HCM" },
+                new Provider { Name = "Dairy VN", Ingredient = ing["Milk"], Cost = 18, PhoneNumber = "0901000003", Address = "Thu Duc" },
+                new Provider { Name = "Bakers Co", Ingredient = ing["Flour"], Cost = 12, PhoneNumber = "0901000004", Address = "Q5 HCM" },
+                new Provider { Name = "Sweet Co", Ingredient = ing["Sugar"], Cost = 10, PhoneNumber = "0901000005", Address = "Tan Binh" },
+                new Provider { Name = "Veggie Hub", Ingredient = ing["Tomato"], Cost = 9, PhoneNumber = "0901000006", Address = "Go Vap" },
+                new Provider { Name = "Veggie Hub", Ingredient = ing["Lettuce"], Cost = 7, PhoneNumber = "0901000006", Address = "Go Vap" }
+            );
             db.SaveChanges();
 
             // ---------- FOODS ----------
-            var foods = new[]
-            {
-        new Food { Name="Bread",        Unit=1, Cost=10, Description="Fresh bread" },
-        new Food { Name="Cake",         Unit=1, Cost=50, Description="Sweet cake" },
-        new Food { Name="Fried Chicken",Unit=1, Cost=65, Description="Crispy chicken" },
-        new Food { Name="Beef Stew",    Unit=1, Cost=90, Description="Beef and veggies" },
-        new Food { Name="Salad",        Unit=1, Cost=25, Description="Mixed salad" },
-        new Food { Name="Rice Bowl",    Unit=1, Cost=20, Description="Steamed rice" },
-        new Food { Name="Tomato Soup",  Unit=1, Cost=30, Description="Soup with tomato" },
-        new Food { Name="Omelette",     Unit=1, Cost=22, Description="Egg omelette" }
-    };
-            foreach (var f in foods) db.Foods.AddOrUpdate(x => x.Name, f);
+            db.Foods.AddOrUpdate(f => f.Name,
+                new Food { Name = "Bread", Unit = 1, Cost = 10, Description = "Fresh bread" },
+                new Food { Name = "Cake", Unit = 1, Cost = 50, Description = "Sweet cake" },
+                new Food { Name = "Fried Chicken", Unit = 1, Cost = 65, Description = "Crispy chicken" },
+                new Food { Name = "Beef Stew", Unit = 1, Cost = 90, Description = "Beef and veggies" },
+                new Food { Name = "Salad", Unit = 1, Cost = 25, Description = "Mixed salad" },
+                new Food { Name = "Rice Bowl", Unit = 1, Cost = 20, Description = "Steamed rice" },
+                new Food { Name = "Tomato Soup", Unit = 1, Cost = 30, Description = "Soup with tomato" },
+                new Food { Name = "Omelette", Unit = 1, Cost = 22, Description = "Egg omelette" }
+            );
             db.SaveChanges();
 
-            var dictFood = db.Foods.ToDictionary(f => f.Name, f => f.Id);
-            var dictIng = db.Ingredients.ToDictionary(i => i.Name, i => i.Id);
+            var food = db.Foods.ToDictionary(f => f.Name, f => f.Id);
 
             // ---------- FOOD <-> INGREDIENT ----------
-            var fi = new (string Food, string Ing, int Amount)[]
-            {
+            var fi = new (string Food, string Ing, int Amount)[] {
         ("Bread","Flour",2), ("Bread","Sugar",1), ("Bread","Salt",1), ("Bread","Oil",1),
         ("Cake","Flour",2), ("Cake","Sugar",2), ("Cake","Egg",3), ("Cake","Butter",2), ("Cake","Milk",1),
         ("Fried Chicken","Chicken",1), ("Fried Chicken","Oil",2), ("Fried Chicken","Salt",1), ("Fried Chicken","Pepper",1),
@@ -80,12 +71,10 @@
         ("Rice Bowl","Rice",2), ("Rice Bowl","Salt",1),
         ("Tomato Soup","Tomato",3), ("Tomato Soup","Onion",1), ("Tomato Soup","Salt",1),
         ("Omelette","Egg",2), ("Omelette","Milk",1), ("Omelette","Salt",1)
-            };
-            foreach (var (food, ing, amount) in fi)
-                db.FoodIngredients.AddOrUpdate(
-                    k => new { k.FoodId, k.IngredientId },
-                    new FoodIngredient { FoodId = dictFood[food], IngredientId = dictIng[ing], Amount = amount }
-                );
+    };
+            foreach (var x in fi)
+                db.FoodIngredients.AddOrUpdate(k => new { k.Food, k.Ingredient },
+                    new FoodIngredient { Food = food[x.Food], Ingredient = ing[x.Ing], Amount = x.Amount });
             db.SaveChanges();
 
             // ---------- MENUS ----------
@@ -97,21 +86,18 @@
             );
             db.SaveChanges();
 
-            var dictMenu = db.Menus.ToDictionary(m => m.Name, m => m.Id);
+            var menu = db.Menus.ToDictionary(m => m.Name, m => m.Id);
 
             // ---------- MENU DETAILS ----------
-            var md = new (string Menu, string Food, int Amount)[]
-            {
+            var md = new (string Menu, string Food, int Amount)[] {
         ("Basic Menu","Bread",10), ("Basic Menu","Rice Bowl",20), ("Basic Menu","Salad",10),
         ("Premium Menu","Fried Chicken",15), ("Premium Menu","Beef Stew",12), ("Premium Menu","Cake",8),
         ("Vegan Menu","Salad",20), ("Vegan Menu","Tomato Soup",15), ("Vegan Menu","Bread",10),
         ("Kids Menu","Omelette",15), ("Kids Menu","Bread",15), ("Kids Menu","Cake",6)
-            };
-            foreach (var (menu, food, amount) in md)
-                db.MenuDetails.AddOrUpdate(
-                    k => new { k.MenuId, k.FoodId },
-                    new MenuDetail { MenuId = dictMenu[menu], FoodId = dictFood[food], Amount = amount }
-                );
+    };
+            foreach (var x in md)
+                db.MenuDetails.AddOrUpdate(k => new { k.Menu, k.Food },
+                    new MenuDetail { Menu = menu[x.Menu], Food = food[x.Food], Amount = x.Amount });
             db.SaveChanges();
 
             // ---------- PARTIES ----------
@@ -124,8 +110,9 @@
                     Cost = 200,
                     Slots = 20,
                     Address = "Q1, HCM",
-                    UserUsername = "admin",
-                    MenuId = dictMenu["Kids Menu"]
+                    User = "admin",
+                    Menu = menu["Kids Menu"],
+                    CreatedDate = DateTime.Now
                 },
                 new Party
                 {
@@ -134,9 +121,10 @@
                     Status = "Planning",
                     Cost = 1200,
                     Slots = 150,
-                    Address = "Thu Duc City",
-                    UserUsername = "user1",
-                    MenuId = dictMenu["Premium Menu"]
+                    Address = "Thu Duc",
+                    User = "user1",
+                    Menu = menu["Premium Menu"],
+                    CreatedDate = DateTime.Now
                 },
                 new Party
                 {
@@ -146,8 +134,9 @@
                     Cost = 800,
                     Slots = 80,
                     Address = "District 7",
-                    UserUsername = "user2",
-                    MenuId = dictMenu["Basic Menu"]
+                    User = "user2",
+                    Menu = menu["Basic Menu"],
+                    CreatedDate = DateTime.Now
                 },
                 new Party
                 {
@@ -157,58 +146,81 @@
                     Cost = 300,
                     Slots = 30,
                     Address = "Cu Chi",
-                    UserUsername = "admin",
-                    MenuId = dictMenu["Vegan Menu"]
+                    User = "admin",
+                    Menu = menu["Vegan Menu"],
+                    CreatedDate = DateTime.Now
                 }
             );
             db.SaveChanges();
 
-            var dictParty = db.Parties.ToDictionary(p => p.Name, p => p.Id);
+            var party = db.Parties.ToDictionary(p => p.Name, p => p.Id);
 
             // ---------- STAFF <-> PARTY ----------
-            var sp = new (string Staff, string Party)[]
-            {
+            var sp = new (string Staff, string Party)[] {
         ("admin","Birthday"), ("staff1","Birthday"),
         ("staff2","Wedding"), ("staff3","Wedding"),
         ("staff1","Company Year End"), ("staff2","Company Year End"),
         ("staff3","Picnic")
-            };
-            foreach (var (staff, party) in sp)
-                db.StaffParties.AddOrUpdate(
-                    k => new { k.StaffUsername, k.PartyId },
-                    new StaffParty { StaffUsername = staff, PartyId = dictParty[party] }
-                );
+    };
+            foreach (var x in sp)
+                db.StaffParties.AddOrUpdate(k => new { k.Staff, k.Party },
+                    new StaffParty { Staff = x.Staff, Party = party[x.Party] });
             db.SaveChanges();
 
-            // ---------- PRICE HISTORY (mỗi party-đồ ăn một giá) ----------
-            var ph = new[]
-            {
-        // Birthday (Kids Menu)
-        new { Party="Birthday", Food="Omelette",   Cost=20, Amount=15 },
-        new { Party="Birthday", Food="Bread",      Cost=8,  Amount=15 },
-        new { Party="Birthday", Food="Cake",       Cost=45, Amount=6 },
-
-        // Wedding (Premium)
-        new { Party="Wedding",  Food="Fried Chicken", Cost=60, Amount=15 },
-        new { Party="Wedding",  Food="Beef Stew",     Cost=85, Amount=12 },
-        new { Party="Wedding",  Food="Cake",          Cost=48, Amount=8  },
-
-        // Company Year End (Basic)
-        new { Party="Company Year End", Food="Bread",     Cost=9,  Amount=10 },
-        new { Party="Company Year End", Food="Rice Bowl", Cost=18, Amount=20 },
-        new { Party="Company Year End", Food="Salad",     Cost=22, Amount=10 },
-
-        // Picnic (Vegan)
-        new { Party="Picnic", Food="Salad",       Cost=23, Amount=20 },
-        new { Party="Picnic", Food="Tomato Soup", Cost=28, Amount=15 },
-        new { Party="Picnic", Food="Bread",       Cost=9,  Amount=10 }
+            // ---------- PRICE HISTORY ----------
+            var ph = new[] {
+        new { Party="Birthday",          Food="Omelette",    Cost=20, Amount=15 },
+        new { Party="Birthday",          Food="Bread",       Cost=8,  Amount=15 },
+        new { Party="Birthday",          Food="Cake",        Cost=45, Amount=6  },
+        new { Party="Wedding",           Food="Fried Chicken", Cost=60, Amount=15 },
+        new { Party="Wedding",           Food="Beef Stew",     Cost=85, Amount=12 },
+        new { Party="Wedding",           Food="Cake",          Cost=48, Amount=8  },
+        new { Party="Company Year End",  Food="Bread",       Cost=9,  Amount=10 },
+        new { Party="Company Year End",  Food="Rice Bowl",   Cost=18, Amount=20 },
+        new { Party="Company Year End",  Food="Salad",       Cost=22, Amount=10 },
+        new { Party="Picnic",            Food="Salad",       Cost=23, Amount=20 },
+        new { Party="Picnic",            Food="Tomato Soup", Cost=28, Amount=15 },
+        new { Party="Picnic",            Food="Bread",       Cost=9,  Amount=10 }
     };
             foreach (var x in ph)
-                db.PriceHistories.AddOrUpdate(
-                    k => new { k.PartyId, k.FoodId },
-                    new PriceHistory { PartyId = dictParty[x.Party], FoodId = dictFood[x.Food], Cost = x.Cost, Amount = x.Amount }
-                );
+                db.PriceHistories.AddOrUpdate(k => new { k.Party, k.Food },
+                    new PriceHistory { Party = party[x.Party], Food = food[x.Food], Cost = x.Cost, Amount = x.Amount });
             db.SaveChanges();
+
+            // ---------- DISCOUNT & USERDISCOUNT ----------
+            db.Discounts.AddOrUpdate(d => d.CouponCode,
+                new Discount { Value = 10, CouponCode = "WELCOME10", CreatedDate = DateTime.Now, ExpiredDate = DateTime.Now.AddMonths(3), IsValid = true },
+                new Discount { Value = 20, CouponCode = "VIP20", CreatedDate = DateTime.Now, ExpiredDate = DateTime.Now.AddMonths(1), IsValid = true }
+            );
+            db.SaveChanges();
+            var disc = db.Discounts.ToDictionary(d => d.CouponCode, d => d.Id);
+            db.UserDiscounts.AddOrUpdate(k => new { k.User, k.Discount },
+                new UserDiscount { User = "admin", Discount = disc["WELCOME10"], Amount = 1 }
+            );
+
+            // ---------- NEWS / COMMENT ----------
+            db.News.AddOrUpdate(n => n.Subject,
+                new News { Name = "Notice 1", Subject = "New Menu Launched", Description = "Try our premium menu", Status = "Active", User = "admin" }
+            );
+            db.SaveChanges();
+            var newsId = db.News.Where(n => n.Subject == "New Menu Launched").Select(n => n.Id).First();
+            db.Comments.AddOrUpdate(k => new { k.User, k.News },
+                new Comment { User = "user1", News = newsId, Stars = 5, Description = "Great!" }
+            );
+
+            // ---------- RATE ----------
+            var birthdayId = party["Birthday"];
+            db.Rates.AddOrUpdate(k => new { k.User, k.Party },
+                new Rate { User = "user1", Party = birthdayId, Stars = 5, Comment = "Nice party" }
+            );
+
+            // ---------- POSTER / PARTNER ----------
+            db.Posters.AddOrUpdate(p => p.Name,
+                new Poster { Name = "Poster1", Image = "/content/img/poster1.jpg" }
+            );
+            db.Partners.AddOrUpdate(p => p.Name,
+                new Partner { Name = "EcoLayers", Subject = "Green Partner", Description = "Sustainable partner" }
+            );
         }
     }
 }
