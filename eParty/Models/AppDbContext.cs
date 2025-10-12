@@ -22,46 +22,52 @@ namespace eParty.Models
         public DbSet<Provider> Providers { get; set; }
         public DbSet<PriceHistory> PriceHistories { get; set; }
         public DbSet<StaffParty> StaffParties { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+        public DbSet<UserDiscount> UserDiscounts { get; set; }
+        public DbSet<Rate> Rates { get; set; }
+        public DbSet<News> News { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Poster> Posters { get; set; }
+        public DbSet<Partner> Partners { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder mb)
         {
             base.OnModelCreating(mb);
             mb.Conventions.Remove<PluralizingTableNameConvention>();
 
-            // TPH cho Staff kế thừa User: EF tự thêm Discriminator
-
-            // Composite Keys (đã đặt DataAnnotations ở model) – cấu hình quan hệ:
+            // Tắt cascade để tránh multiple cascade paths (nhiều bảng join)
             mb.Entity<MenuDetail>()
-              .HasRequired(md => md.Menu).WithMany(m => m.MenuDetails)
-              .HasForeignKey(md => md.MenuId).WillCascadeOnDelete(false);
-
+              .HasRequired(x => x.MenuRef).WithMany(m => m.MenuDetails)
+              .HasForeignKey(x => x.Menu).WillCascadeOnDelete(false);
             mb.Entity<MenuDetail>()
-              .HasRequired(md => md.Food).WithMany(f => f.MenuDetails)
-              .HasForeignKey(md => md.FoodId).WillCascadeOnDelete(false);
+              .HasRequired(x => x.FoodRef).WithMany(f => f.MenuDetails)
+              .HasForeignKey(x => x.Food).WillCascadeOnDelete(false);
 
             mb.Entity<FoodIngredient>()
-              .HasRequired(fi => fi.Food).WithMany(f => f.FoodIngredients)
-              .HasForeignKey(fi => fi.FoodId).WillCascadeOnDelete(false);
-
+              .HasRequired(x => x.FoodRef).WithMany(f => f.FoodIngredients)
+              .HasForeignKey(x => x.Food).WillCascadeOnDelete(false);
             mb.Entity<FoodIngredient>()
-              .HasRequired(fi => fi.Ingredient).WithMany(i => i.FoodIngredients)
-              .HasForeignKey(fi => fi.IngredientId).WillCascadeOnDelete(false);
+              .HasRequired(x => x.IngredientRef).WithMany(i => i.FoodIngredients)
+              .HasForeignKey(x => x.Ingredient).WillCascadeOnDelete(false);
 
             mb.Entity<PriceHistory>()
-              .HasRequired(ph => ph.Party).WithMany(p => p.PriceHistories)
-              .HasForeignKey(ph => ph.PartyId).WillCascadeOnDelete(false);
-
+              .HasRequired(x => x.PartyRef).WithMany(p => p.PriceHistories)
+              .HasForeignKey(x => x.Party).WillCascadeOnDelete(false);
             mb.Entity<PriceHistory>()
-              .HasRequired(ph => ph.Food).WithMany(f => f.PriceHistories)
-              .HasForeignKey(ph => ph.FoodId).WillCascadeOnDelete(false);
+              .HasRequired(x => x.FoodRef).WithMany(f => f.PriceHistories)
+              .HasForeignKey(x => x.Food).WillCascadeOnDelete(false);
 
             mb.Entity<StaffParty>()
-              .HasRequired(sp => sp.Party).WithMany(p => p.StaffParties)
-              .HasForeignKey(sp => sp.PartyId).WillCascadeOnDelete(false);
+              .HasRequired(x => x.PartyRef).WithMany(p => p.StaffParties)
+              .HasForeignKey(x => x.Party).WillCascadeOnDelete(false);
 
             mb.Entity<Provider>()
-              .HasRequired(pv => pv.Ingredient).WithMany(i => i.Providers)
-              .HasForeignKey(pv => pv.IngredientId).WillCascadeOnDelete(false);
+              .HasRequired(x => x.IngredientRef).WithMany(i => i.Providers)
+              .HasForeignKey(x => x.Ingredient).WillCascadeOnDelete(false);
+
+            mb.Entity<Rate>()
+              .HasRequired(r => r.PartyRef).WithMany(p => p.Rates)
+              .HasForeignKey(r => r.Party).WillCascadeOnDelete(false);
         }
     }
 }
