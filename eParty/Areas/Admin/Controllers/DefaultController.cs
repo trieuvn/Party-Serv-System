@@ -4,11 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace eParty.Controllers.admin
+namespace eParty.Areas.Admin.Controllers
 {
-    public class DashboardController : Controller
+    public class DefaultController : Controller
     {
-        // GET: Dashboard
+        // GET: Admin/Default
         public ActionResult Index()
         {
             return View();
