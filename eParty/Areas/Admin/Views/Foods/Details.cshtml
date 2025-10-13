@@ -1,0 +1,81 @@
+﻿@model eParty.Areas.Admin.Models.FoodRecipeViewModel
+
+@{
+    ViewBag.Title = "Food Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Food Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Foods")">Food</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Details for: @Model.Food.Name</div></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(Model.Food.Image))
+                        {
+                            <img src="data:image/jpeg;base64,@Model.Food.Image" alt="@Model.Food.Name" class="img-fluid rounded" />
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-3">Name</dt>
+                            <dd class="col-sm-9">@Model.Food.Name</dd>
+                            <dt class="col-sm-3">Cost</dt>
+                            <dd class="col-sm-9">@Model.Food.Cost</dd>
+                            <dt class="col-sm-3">Unit</dt>
+                            <dd class="col-sm-9">@Model.Food.Unit</dd>
+                            <dt class="col-sm-3">Discount</dt>
+                            <dd class="col-sm-9">@Model.Food.Discount%</dd>
+                            <dt class="col-sm-3">Description</dt>
+                            <dd class="col-sm-9">@Model.Food.Description</dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <hr />
+
+                <h4 class="mt-4">Recipe Ingredients</h4>
+                @if (Model.Ingredients.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Ingredients)
+                            {
+                                <tr>
+                                    <td>@item.IngredientRef.Name</td>
+                                    <td>@item.Amount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>This food has no ingredients defined yet.</p>
+                }
+            </div>
+            <div class="card-action">
+                <a href="@Url.Action("Edit", new { id = Model.Food.Id })" class="btn btn-primary">Edit Food & Recipe</a>
+                <a href="@Url.Action("Index")" class="btn btn-info">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

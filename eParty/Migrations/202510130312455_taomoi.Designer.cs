@@ -7,13 +7,13 @@ namespace eParty.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class Update_ERD_20251010 : IMigrationMetadata
+    public sealed partial class taomoi : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Update_ERD_20251010));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(taomoi));
         
         string IMigrationMetadata.Id
         {
-            get { return "202510102217138_Update_ERD_20251010"; }
+            get { return "202510130312455_taomoi"; }
         }
         
         string IMigrationMetadata.Source
