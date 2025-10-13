@@ -526,6 +526,7 @@
     <Compile Include="Models\Discount.cs" />
     <Compile Include="Models\Food.cs" />
     <Compile Include="Models\FoodIngredient.cs" />
+    <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\Ingredient.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\MenuDetail.cs" />
@@ -1678,13 +1679,13 @@
     <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Home\Team.cshtml" />
     <Content Include="Views\Home\Book.cshtml" />
-    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Data\" />
+    <Folder Include="Views\HomeViewModel\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
