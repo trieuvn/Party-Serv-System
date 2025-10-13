@@ -1,0 +1,80 @@
+﻿@model IEnumerable<eParty.Models.Discount>
+
+@{
+    ViewBag.Title = "Discount Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Discount List</h4>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
+                    <i class="fa fa-plus"></i>
+                    Create New
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="discount-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.CouponCode)</th>
+                            <th>@Html.DisplayNameFor(model => model.Value) (%)</th>
+                            <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.ExpiredDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.IsValid)</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.CouponCode)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Value)</td>
+                                <td>@item.CreatedDate.ToString()</td>
+                                <td>@item.ExpiredDate.ToString()</td>
+                                <td>
+                                    @if (item.IsValid)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="form-button-action">
+                                        <a href="@Url.Action("Edit", new { id = item.Id })" data-bs-toggle="tooltip" title="Edit" class="btn btn-link btn-primary btn-lg">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", new { id = item.Id })" data-bs-toggle="tooltip" title="Details" class="btn btn-link btn-info btn-lg">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" data-bs-toggle="tooltip" title="Remove" class="btn btn-link btn-danger">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#discount-datatables').DataTable({
+                "pageLength": 5,
+            });
+        });
+    </script>
+}

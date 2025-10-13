@@ -1,0 +1,56 @@
+﻿@model eParty.Models.Discount
+
+@{
+    ViewBag.Title = "Discount Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Discount Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Discount")">Discounts</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Details for: @Model.CouponCode</div></div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CouponCode)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.CouponCode)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Value) (%)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Value)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedDate)</dt>
+                    <dd class="col-sm-9">@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ExpiredDate)</dt>
+                    <dd class="col-sm-9">@Model.ExpiredDate.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IsValid)</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsValid)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactive</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-action">
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">Edit</a>
+                <a href="@Url.Action("Index")" class="btn btn-info">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

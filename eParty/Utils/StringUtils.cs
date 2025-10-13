@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 
 namespace eParty.Utils
 {
@@ -82,6 +83,28 @@ namespace eParty.Utils
             catch (Exception ex)
             {
                 throw new Exception("Lỗi khi mã hóa chuỗi: " + ex.Message);
+            }
+        }
+
+        public static string ImageFileToBase64(HttpPostedFileBase imageFile)
+        {
+            if (imageFile == null || imageFile.ContentLength == 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                byte[] imageBytes = new byte[imageFile.ContentLength];
+                // Reset stream về vị trí đầu trước khi đọc
+                imageFile.InputStream.Seek(0, SeekOrigin.Begin);
+                imageFile.InputStream.Read(imageBytes, 0, imageFile.ContentLength);
+                return Convert.ToBase64String(imageBytes);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR converting image to Base64: " + ex.Message);
+                return null;
             }
         }
     }

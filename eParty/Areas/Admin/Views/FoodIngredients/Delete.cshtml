@@ -1,0 +1,49 @@
+﻿@model eParty.Models.FoodIngredient
+
+@{
+    ViewBag.Title = "Delete Recipe Item";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Recipe Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "FoodIngredient")">Recipes</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Delete</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Confirm Deletion</div></div>
+            <div class="card-body">
+                <div class="alert alert-danger" role="alert">
+                    <strong>Warning!</strong> Are you sure you want to remove this ingredient from the food?
+                </div>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-3">Food</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.FoodRef.Name)</dd>
+
+                    <dt class="col-sm-3">Ingredient</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.IngredientRef.Name)</dd>
+
+                    <dt class="col-sm-3">Amount</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Amount)</dd>
+                </dl>
+            </div>
+            <div class="card-action">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

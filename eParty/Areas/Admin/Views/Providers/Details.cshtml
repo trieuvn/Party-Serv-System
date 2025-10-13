@@ -1,0 +1,56 @@
+﻿@model eParty.Models.Provider
+
+@{
+    ViewBag.Title = "Provider Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Provider Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Providers")">Providers</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Details for: @Html.DisplayFor(model => model.Name)</div></div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IngredientRef.Name)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.IngredientRef.Name)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Address)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Address)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cost)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Cost)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Description)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Description)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Latitude)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Latitude)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Longitude)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Longitude)</dd>
+                </dl>
+            </div>
+            <div class="card-action">
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">Edit</a>
+                <a href="@Url.Action("Index")" class="btn btn-info">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
