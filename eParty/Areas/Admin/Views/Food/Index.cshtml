@@ -1,7 +1,9 @@
-﻿@{
-    ViewBag.Title = "Danh sách thức ăn";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
+
 <div class="food-container" style="padding-top: 100px;">
     <h2>@ViewBag.Title</h2>
 
@@ -41,47 +43,47 @@
         </div>
     </div>
 </div>
-    @section Styles {
-        <style>
-            .popup {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0,0,0,0.5);
-            }
+@section Styles {
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
 
-            .popup-content {
-                background-color: #fff;
-                margin: 10% auto;
-                padding: 20px;
-                width: 50%;
-                border-radius: 5px;
-                position: relative;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            }
+        .popup-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            width: 50%;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
 
-            .close {
-                position: absolute;
-                top: 10px;
-                right: 15px;
-                font-size: 28px;
-                font-weight: bold;
-                cursor: pointer;
-            }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-            #filterInput {
-                max-width: 400px;
-            }
-        </style>
-    }
+        #filterInput {
+            max-width: 400px;
+        }
+    </style>
+}
 
-    @section Scripts {
-        <script>
+@section Scripts {
+    <script>
             const foods = [
                 { name: "Phở bò", type: "Món chính", price: "50,000 VND", description: "Phở bò thơm ngon, nước dùng đậm đà, kèm bánh phở mềm và rau thơm." },
                 { name: "Gỏi cuốn", type: "Món khai vị", price: "30,000 VND", description: "Gỏi cuốn tươi ngon với tôm, thịt, rau sống và bún, chấm với nước mắm chua ngọt." },
@@ -135,7 +137,9 @@
                     popup.style.display = "none";
                 }
             }
-        </script>
-    }
+    </script>
+}
+
+
 
 

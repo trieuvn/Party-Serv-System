@@ -4,11 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace eParty.Controllers.admin
+namespace eParty.Areas.Admin.Controllers
 {
-    public class FoodController : Controller
+    public class CalendarController : Controller
     {
-        // GET: Food
+        // GET: Calendar
         public ActionResult Index()
         {
             return View();
