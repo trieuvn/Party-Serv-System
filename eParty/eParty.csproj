@@ -504,6 +504,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\CalendarController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CategoriesController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\DiscountsController.cs" />
     <Compile Include="Areas\Admin\Controllers\FoodIngredientsController.cs" />
@@ -520,8 +521,13 @@
     <Compile Include="Migrations\202510130312455_taomoi.Designer.cs">
       <DependentUpon>202510130312455_taomoi.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202510140617310_add_category.cs" />
+    <Compile Include="Migrations\202510140617310_add_category.Designer.cs">
+      <DependentUpon>202510140617310_add_category.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Discount.cs" />
     <Compile Include="Models\Food.cs" />
@@ -1890,6 +1896,11 @@
     <Content Include="Content\news\assets\scss\_wecky3-new.scss" />
     <Content Include="Content\news\assets\scss\_whats-new.scss" />
     <Content Include="Content\news\assets\scss\_youtube.scss" />
+    <Content Include="Areas\Admin\Views\Categories\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Categories\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Categories\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Categories\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Categories\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -1964,6 +1975,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202510130312455_taomoi.resx">
       <DependentUpon>202510130312455_taomoi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202510140617310_add_category.resx">
+      <DependentUpon>202510140617310_add_category.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

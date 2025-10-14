@@ -69,5 +69,7 @@ namespace eParty.Models
               .HasRequired(r => r.PartyRef).WithMany(p => p.Rates)
               .HasForeignKey(r => r.Party).WillCascadeOnDelete(false);
         }
+
+        public System.Data.Entity.DbSet<eParty.Models.Category> Categories { get; set; }
     }
 }

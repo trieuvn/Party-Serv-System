@@ -36,6 +36,13 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                @Html.LabelFor(model => model.CategoryId, "Category", new { @class = "form-label" })
+                                @Html.DropDownList("CategoryId", null, "--- Select a Category ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 @Html.LabelFor(model => model.Unit, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.Unit, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g., Plate, Bowl, Item" } })
                                 @Html.ValidationMessageFor(model => model.Unit, "", new { @class = "text-danger" })
