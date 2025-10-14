@@ -1,13 +1,12 @@
-﻿using eParty.Areas.Admin.Models;
-using eParty.Models;
-using eParty.Utils;
-using System;
+﻿using System;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using eParty.Areas.Admin.Models; // Namespace của ViewModel
+using eParty.Models;             // Namespace của Models
+using eParty.Utils;
 
 namespace eParty.Areas.Admin.Controllers
 {
@@ -26,10 +25,7 @@ namespace eParty.Areas.Admin.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            // ✨ THÊM .Include(f => f.Category)
             var food = db.Foods.Include(f => f.Category).SingleOrDefault(f => f.Id == id);
-
             if (food == null) return HttpNotFound();
 
             var viewModel = new FoodRecipeViewModel
@@ -63,8 +59,6 @@ namespace eParty.Areas.Admin.Controllers
                 TempData["SuccessMessage"] = "Food created! You can now add ingredients.";
                 return RedirectToAction("Edit", new { id = food.Id });
             }
-
-            // Nếu thất bại, tải lại danh sách Category
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", food.CategoryId);
             return View(food);
         }
@@ -82,7 +76,6 @@ namespace eParty.Areas.Admin.Controllers
                 Ingredients = db.FoodIngredients.Include(fi => fi.IngredientRef).Where(fi => fi.Food == id).ToList(),
                 AllIngredients = db.Ingredients.ToList().Select(i => new SelectListItem { Value = i.Id.ToString(), Text = i.Name })
             };
-
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", food.CategoryId);
             return View(viewModel);
         }
@@ -92,7 +85,8 @@ namespace eParty.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(FoodRecipeViewModel viewModel, HttpPostedFileBase imageFile)
         {
-            if (ModelState.IsValidField("Food"))
+            // Chỉ validate các trường của đối tượng Food trong ViewModel
+            if (ModelState.IsValidField("Food.Name") && ModelState.IsValidField("Food.CategoryId"))
             {
                 var foodToUpdate = db.Foods.Find(viewModel.Food.Id);
                 if (foodToUpdate == null) return HttpNotFound();
@@ -104,25 +98,35 @@ namespace eParty.Areas.Admin.Controllers
                 foodToUpdate.Discount = viewModel.Food.Discount;
                 foodToUpdate.CategoryId = viewModel.Food.CategoryId;
 
-                if (imageFile != null)
+                if (imageFile != null) { foodToUpdate.Image = StringUtils.ImageFileToBase64(imageFile); }
+                db.Entry(foodToUpdate).State = EntityState.Modified;
+
+                // Cập nhật số lượng của các nguyên liệu
+                if (viewModel.Ingredients != null)
                 {
-                    foodToUpdate.Image = StringUtils.ImageFileToBase64(imageFile);
+                    foreach (var item in viewModel.Ingredients)
+                    {
+                        var ingToUpdate = db.FoodIngredients.Find(item.Food, item.Ingredient);
+                        if (ingToUpdate != null && ingToUpdate.Amount != item.Amount)
+                        {
+                            ingToUpdate.Amount = item.Amount;
+                            db.Entry(ingToUpdate).State = EntityState.Modified;
+                        }
+                    }
                 }
 
-                db.Entry(foodToUpdate).State = EntityState.Modified;
                 db.SaveChanges();
-                TempData["SuccessMessage"] = "Food info updated successfully!";
+                TempData["SuccessMessage"] = "All changes saved successfully!";
                 return RedirectToAction("Edit", new { id = viewModel.Food.Id });
             }
 
             // Nếu có lỗi, tải lại dữ liệu cần thiết cho View
+            TempData["ErrorMessage"] = "There was an error updating the food info. Please check the required fields.";
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", viewModel.Food.CategoryId);
             viewModel.AllIngredients = db.Ingredients.ToList().Select(i => new SelectListItem { Value = i.Id.ToString(), Text = i.Name });
             viewModel.Ingredients = db.FoodIngredients.Include(fi => fi.IngredientRef).Where(fi => fi.Food == viewModel.Food.Id).ToList();
             return View(viewModel);
         }
-
-        // ... (Delete Actions) ...
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -130,7 +134,7 @@ namespace eParty.Areas.Admin.Controllers
         {
             if (int.TryParse(newIngredientId, out int ingredientIdAsInt) && ingredientIdAsInt > 0)
             {
-                // ✨ SỬA LỖI Ở ĐÂY: Chuyển đổi newIngredientAmount sang int
+                // ✅ SỬA LỖI TẠI ĐÂY: Chuyển đổi `newIngredientAmount` sang kiểu int
                 if (int.TryParse(newIngredientAmount, out int amountAsInt))
                 {
                     var existing = db.FoodIngredients.Find(foodId, ingredientIdAsInt);
@@ -140,7 +144,7 @@ namespace eParty.Areas.Admin.Controllers
                         {
                             Food = foodId,
                             Ingredient = ingredientIdAsInt,
-                            Amount = amountAsInt // Gán giá trị đã chuyển đổi
+                            Amount = amountAsInt // Gán giá trị kiểu int
                         });
                         db.SaveChanges();
                         TempData["SuccessMessage"] = "Ingredient added.";
@@ -160,54 +164,54 @@ namespace eParty.Areas.Admin.Controllers
             var ingredientToUpdate = db.FoodIngredients.Find(foodId, ingredientId);
             if (ingredientToUpdate != null)
             {
-                // ✨ SỬA LỖI Ở ĐÂY: Chuyển đổi amount sang int
+                // ✅ SỬA LỖI TẠI ĐÂY: Chuyển đổi `amount` sang kiểu int
                 if (int.TryParse(amount, out int amountAsInt))
                 {
-                    ingredientToUpdate.Amount = amountAsInt; // Gán giá trị đã chuyển đổi
+                    ingredientToUpdate.Amount = amountAsInt; // Gán giá trị kiểu int
                     db.Entry(ingredientToUpdate).State = EntityState.Modified;
                     db.SaveChanges();
                     TempData["SuccessMessage"] = "Amount updated!";
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Amount must be a valid number.";
-                }
+                else { TempData["ErrorMessage"] = "Amount must be a valid number."; }
             }
-            else
-            {
-                TempData["ErrorMessage"] = "Ingredient not found!";
-            }
+            else { TempData["ErrorMessage"] = "Ingredient not found!"; }
             return RedirectToAction("Edit", new { id = foodId });
         }
+
+        // GET: Admin/Foods/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var food = db.Foods.Find(id);
-            if (food == null)
-                return HttpNotFound();
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            Food food = db.Foods.Find(id);
+            if (food == null) return HttpNotFound();
             return View(food);
         }
+
+        // POST: Admin/Foods/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Debug.WriteLine("DeleteConfirmed called with ID = " + id); 
-
-            var food = db.Foods.Find(id);
-            if (food == null)
+            Food food = db.Foods.Find(id);
+            if (food != null)
             {
-                TempData["ErrorMessage"] = "Food not found.";
-                return RedirectToAction("Index");
+                var ingredients = db.FoodIngredients.Where(fi => fi.Food == id);
+                db.FoodIngredients.RemoveRange(ingredients);
+
+                db.Foods.Remove(food);
+                db.SaveChanges();
+                TempData["SuccessMessage"] = "Food deleted successfully.";
             }
-
-            db.Foods.Remove(food);
-            db.SaveChanges();
-
-            TempData["SuccessMessage"] = "Food deleted.";
             return RedirectToAction("Index");
         }
 
-
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
