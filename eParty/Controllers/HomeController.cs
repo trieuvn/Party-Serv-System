@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using eParty.Models;
+using System.Data.Entity;
 
 namespace eParty.Controllers
 {
     public class HomeController : Controller
     {
+        private AppDbContext db = new AppDbContext();
         public ActionResult Index()
         {
             return View();
@@ -39,7 +42,19 @@ namespace eParty.Controllers
 
         public ActionResult Menu()
         {
-            return View();
+            // Lấy tất cả các Category và đồng thời tải tất cả Food tương ứng
+            var categoriesWithFoods = db.Categories
+                                        .Include(c => c.Foods)
+                                        .ToList();
+
+            // Tạo ViewModel và gán dữ liệu vào
+            var viewModel = new MenuViewModel
+            {
+                CategoriesWithFoods = categoriesWithFoods
+            };
+
+            // Trả về View cùng với ViewModel
+            return View(viewModel);
         }
 
         public ActionResult Book()

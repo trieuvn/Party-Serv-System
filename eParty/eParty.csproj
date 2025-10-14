@@ -536,6 +536,7 @@
     <Compile Include="Models\Ingredient.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\MenuDetail.cs" />
+    <Compile Include="Models\MenuViewModel.cs" />
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\Party.cs" />
