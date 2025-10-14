@@ -1,4 +1,4 @@
-﻿
+﻿@model eParty.Models.HomeViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -28,8 +28,8 @@
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Visitors</p>
-                                    <h4 class="card-title">1,294</h4>
+                                    <p class="card-category">Customers</p>
+                                    <h4 class="card-title">@Model.RoleUsers.Count()</h4>
                                 </div>
                             </div>
                         </div>
@@ -42,13 +42,13 @@
                         <div class="row align-items-center">
                             <div class="col-icon">
                                 <div class="icon-big text-center icon-info bubble-shadow-small">
-                                    <i class="fas fa-user-check"></i>
+                                    <i class="fas fa-shopping-cart"></i>
                                 </div>
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Upcomming</p>
-                                    <h4 class="card-title">1303</h4>
+                                    <p class="card-category">Ingredients</p>
+                                    <h4 class="card-title">@Model.Ingredients.Count()</h4>
                                 </div>
                             </div>
                         </div>
@@ -61,13 +61,13 @@
                         <div class="row align-items-center">
                             <div class="col-icon">
                                 <div class="icon-big text-center icon-success bubble-shadow-small">
-                                    <i class="fas fa-luggage-cart"></i>
+                                    <i class="fas fa-receipt"></i>
                                 </div>
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
                                     <p class="card-category">Sales</p>
-                                    <h4 class="card-title">$ 1,345</h4>
+                                    <h4 class="card-title">@Model.TotalCost.ToString("C")</h4>
                                 </div>
                             </div>
                         </div>
@@ -85,8 +85,8 @@
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Order</p>
-                                    <h4 class="card-title">576</h4>
+                                    <p class="card-category">Provider</p>
+                                    <h4 class="card-title">@Model.Providers.Count()</h4>
                                 </div>
                             </div>
                         </div>
@@ -547,34 +547,7 @@
     </div>
 </div>
 
-<footer class="footer">
-    <div class="container-fluid d-flex justify-content-between">
-        <nav class="pull-left">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="http://www.themekita.com">
-                        ThemeKita
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"> Help </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"> Licenses </a>
-                </li>
-            </ul>
-        </nav>
-        <div class="copyright">
-            2024, made with <i class="fa fa-heart heart text-danger"></i> by
-            <a href="http://www.themekita.com">ThemeKita</a>
-        </div>
-        <div>
-            Distributed by
-            <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
-        </div>
-    </div>
-</footer>
-      </div>
+
 
 <!-- Custom template | don't include it in your project! -->
 <div class="custom-template">
