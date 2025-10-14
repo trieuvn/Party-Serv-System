@@ -17,28 +17,24 @@ namespace eParty.Areas.Admin.Controllers
         // GET: Admin/Foods
         public ActionResult Index()
         {
-            return View(db.Foods.ToList());
+            var foods = db.Foods.Include(f => f.Category);
+            return View(foods.ToList());
         }
 
         // GET: Admin/Foods/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var food = db.Foods.Find(id);
-            if (food == null)
-            {
-                return HttpNotFound();
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            // ✨ THÊM .Include(f => f.Category)
+            var food = db.Foods.Include(f => f.Category).SingleOrDefault(f => f.Id == id);
+
+            if (food == null) return HttpNotFound();
+
             var viewModel = new FoodRecipeViewModel
             {
                 Food = food,
-                Ingredients = db.FoodIngredients
-                                .Include(fi => fi.IngredientRef)
-                                .Where(fi => fi.Food == id)
-                                .ToList()
+                Ingredients = db.FoodIngredients.Include(fi => fi.IngredientRef).Where(fi => fi.Food == id).ToList()
             };
             return View(viewModel);
         }
@@ -46,25 +42,29 @@ namespace eParty.Areas.Admin.Controllers
         // GET: Admin/Foods/Create
         public ActionResult Create()
         {
+            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
             return View();
         }
 
         // POST: Admin/Foods/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,Description,Unit,Cost,Discount")] Food food, HttpPostedFileBase imageFile)
+        public ActionResult Create([Bind(Include = "Name,Description,Unit,Cost,Discount,CategoryId")] Food food, HttpPostedFileBase imageFile)
         {
             if (ModelState.IsValid)
             {
-                if (imageFile != null && imageFile.ContentLength > 0)
+                if (imageFile != null)
                 {
                     food.Image = StringUtils.ImageFileToBase64(imageFile);
                 }
                 db.Foods.Add(food);
                 db.SaveChanges();
-                TempData["SuccessMessage"] = "Food item created successfully! You can now add ingredients.";
+                TempData["SuccessMessage"] = "Food created! You can now add ingredients.";
                 return RedirectToAction("Edit", new { id = food.Id });
             }
+
+            // Nếu thất bại, tải lại danh sách Category
+            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", food.CategoryId);
             return View(food);
         }
 
@@ -79,12 +79,10 @@ namespace eParty.Areas.Admin.Controllers
             {
                 Food = food,
                 Ingredients = db.FoodIngredients.Include(fi => fi.IngredientRef).Where(fi => fi.Food == id).ToList(),
-                AllIngredients = db.Ingredients.ToList().Select(i => new SelectListItem
-                {
-                    Value = i.Id.ToString(),
-                    Text = i.Name
-                })
+                AllIngredients = db.Ingredients.ToList().Select(i => new SelectListItem { Value = i.Id.ToString(), Text = i.Name })
             };
+
+            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", food.CategoryId);
             return View(viewModel);
         }
 
@@ -103,6 +101,7 @@ namespace eParty.Areas.Admin.Controllers
                 foodToUpdate.Unit = viewModel.Food.Unit;
                 foodToUpdate.Cost = viewModel.Food.Cost;
                 foodToUpdate.Discount = viewModel.Food.Discount;
+                foodToUpdate.CategoryId = viewModel.Food.CategoryId;
 
                 if (imageFile != null)
                 {
@@ -116,8 +115,9 @@ namespace eParty.Areas.Admin.Controllers
             }
 
             // Nếu có lỗi, tải lại dữ liệu cần thiết cho View
-            viewModel.Ingredients = db.FoodIngredients.Include(fi => fi.IngredientRef).Where(fi => fi.Food == viewModel.Food.Id).ToList();
+            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", viewModel.Food.CategoryId);
             viewModel.AllIngredients = db.Ingredients.ToList().Select(i => new SelectListItem { Value = i.Id.ToString(), Text = i.Name });
+            viewModel.Ingredients = db.FoodIngredients.Include(fi => fi.IngredientRef).Where(fi => fi.Food == viewModel.Food.Id).ToList();
             return View(viewModel);
         }
 

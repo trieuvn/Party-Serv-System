@@ -39,6 +39,13 @@
 
                     <div class="row">
                         <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Name, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Name, new { htmlAttributes = new { @class = "form-control" } }) @Html.ValidationMessageFor(m => m.Food.Name, "", new { @class = "text-danger" })</div></div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Food.CategoryId, "Category", new { @class = "form-label" })
+                                @Html.DropDownListFor(model => model.Food.CategoryId, (IEnumerable<SelectListItem>)ViewBag.CategoryId, "--- Select a Category ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Food.CategoryId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
                         <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Unit, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Unit, new { htmlAttributes = new { @class = "form-control" } })</div></div>
                         <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Cost, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Cost, new { htmlAttributes = new { @class = "form-control", type = "number" } })</div></div>
                         <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Discount, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Discount, new { htmlAttributes = new { @class = "form-control", type = "number" } })</div></div>
