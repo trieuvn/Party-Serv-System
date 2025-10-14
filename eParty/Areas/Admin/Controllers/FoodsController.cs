@@ -1,12 +1,13 @@
-﻿using System;
+﻿using eParty.Areas.Admin.Models;
+using eParty.Models;
+using eParty.Utils;
+using System;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using eParty.Areas.Admin.Models;
-using eParty.Models;
-using eParty.Utils;
 
 namespace eParty.Areas.Admin.Controllers
 {
@@ -178,7 +179,35 @@ namespace eParty.Areas.Admin.Controllers
             }
             return RedirectToAction("Edit", new { id = foodId });
         }
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var food = db.Foods.Find(id);
+            if (food == null)
+                return HttpNotFound();
+            return View(food);
+        }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Debug.WriteLine("DeleteConfirmed called with ID = " + id); 
 
-        // ... (Dispose method, Delete actions...)
+            var food = db.Foods.Find(id);
+            if (food == null)
+            {
+                TempData["ErrorMessage"] = "Food not found.";
+                return RedirectToAction("Index");
+            }
+
+            db.Foods.Remove(food);
+            db.SaveChanges();
+
+            TempData["SuccessMessage"] = "Food deleted.";
+            return RedirectToAction("Index");
+        }
+
+
     }
 }
