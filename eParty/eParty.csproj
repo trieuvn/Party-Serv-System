@@ -1500,6 +1500,8 @@
     <Content Include="Content\landingpage\lib\waypoints\waypoints.min.js" />
     <Content Include="Content\landingpage\lib\wow\wow.js" />
     <Content Include="Content\landingpage\lib\wow\wow.min.js" />
+    <Content Include="Content\login\hero-bg.jpg" />
+    <Content Include="Content\login\style.css" />
     <Content Include="Content\news\assets\css\animate.min.css" />
     <Content Include="Content\news\assets\css\bootstrap.min.css" />
     <Content Include="Content\news\assets\css\flaticon.css" />
@@ -1939,7 +1941,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Data\" />
-    <Folder Include="Views\HomeViewModel\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>

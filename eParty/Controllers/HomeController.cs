@@ -42,18 +42,15 @@ namespace eParty.Controllers
 
         public ActionResult Menu()
         {
-            // Lấy tất cả các Category và đồng thời tải tất cả Food tương ứng
             var categoriesWithFoods = db.Categories
                                         .Include(c => c.Foods)
                                         .ToList();
 
-            // Tạo ViewModel và gán dữ liệu vào
             var viewModel = new MenuViewModel
             {
                 CategoriesWithFoods = categoriesWithFoods
             };
 
-            // Trả về View cùng với ViewModel
             return View(viewModel);
         }
 
@@ -71,6 +68,21 @@ namespace eParty.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult Login(string email, string password)
+        {
+            if (email == "admin@gmail.com" && password == "123")
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Email hoặc mật khẩu không chính xác.";
+                return View(); 
+            }
+        }
+
         public ActionResult News()
         {
             return View();

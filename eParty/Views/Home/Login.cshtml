@@ -1,38 +1,53 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Login";
-    Layout = "~/Views/Shared/LayoutUser.cshtml";
+    Layout = null;
 }
 
-<div class="container-fluid py-6">
-    <div class="container">
-        <div class="row g-5 align-items-center">
-            <div class="login_content">
-                <form action="#">
-                    <h2>Đăng Nhập</h2>
-                    <div class="input-field">
-                        <input type="text" required>
-                        <label>Nhập địa chỉ email của bạn</label>
-                    </div>
-                    <div class="input-field">
-                        <input type="password" required>
-                        <label>Nhập mật khẩu của bạn</label>
-                    </div>
-                    <div class="forget">
-                        <label for="remember">
-                            <input type="checkbox" id="remember">
-                            <p>Nhớ tôi</p>
-                        </label>
-                        <a href="#">Quên mật khẩu?</a>
-                    </div>
-                    <button type="submit">Đăng Nhập</button>
-                    <div class="register">
-                        <p>Bạn chưa có tài khoản? <a href="#">Đăng ký</a></p>
-                    </div>
-                </form>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
+    <link rel="stylesheet" href="~/Content/login/style.css">
+</head>
+<body>
+    <div class="wrapper">
+        @* Sửa action và method của form *@
+        <form action="@Url.Action("Login", "Home")" method="post">
+            <h2>Đăng Nhập</h2>
+
+            @* Thêm thông báo lỗi nếu có *@
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <p style="color: red; text-align: center;">@ViewBag.ErrorMessage</p>
+            }
+
+            <div class="input-field">
+                @* Thêm thuộc tính 'name' *@
+                <input type="text" name="email" required>
+                <label>Nhập địa chỉ email của bạn</label>
             </div>
-        </div>
+            <div class="input-field">
+                @* Thêm thuộc tính 'name' *@
+                <input type="password" name="password" required>
+                <label>Nhập mật khẩu của bạn</label>
+            </div>
+            <div class="forget">
+                <label for="remember">
+                    <input type="checkbox" id="remember">
+                    <p>Nhớ tôi</p>
+                </label>
+                <a href="#">Quên mật khẩu?</a>
+            </div>
+
+            @* Bỏ thuộc tính 'href' không cần thiết *@
+            <button type="submit">Đăng Nhập</button>
+
+            <div class="register">
+                <p>Bạn chưa có tài khoản? <a href="#">Đăng ký</a></p>
+            </div>
+        </form>
     </div>
-</div>
-
-
+</body>
+</html>
