@@ -588,6 +588,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserDiscount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\MenuService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\EmailUtils.cs" />
     <Compile Include="Utils\MapUtils.cs" />

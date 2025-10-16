@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using eParty.Models;
 using System.Data.Entity;
+using eParty.Service;
 
 namespace eParty.Controllers
 {
