@@ -4,12 +4,16 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace eParty.Models
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public AppDbContext() : base("DefaultConnection") { }
+        public AppDbContext()
+            : base("DefaultConnection", throwIfV1Schema: false)
+        {
+        }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Staff> Staffs { get; set; }
@@ -71,5 +75,11 @@ namespace eParty.Models
         }
 
         public System.Data.Entity.DbSet<eParty.Models.Category> Categories { get; set; }
+
+        public static AppDbContext Create()
+        {
+            return new AppDbContext();
+        }
+
     }
 }
