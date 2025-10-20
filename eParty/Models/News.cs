@@ -21,5 +21,21 @@ namespace eParty.Models
         [ForeignKey(nameof(User))] public virtual User Author { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// Gets the average star rating from all comments on this news.
+        /// Returns 0 if no comments or ratings are available.
+        /// </summary>
+        /// <returns>Average star rating of the news</returns>
+        public double GetAvgStar()
+        {
+            if (Comments == null || !Comments.Any())
+            {
+                return 0;
+            }
+
+            // Calculate average of all star ratings
+            return Comments.Average(c => c.Stars);
+        }
     }
 }

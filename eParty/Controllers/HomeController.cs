@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using eParty.Models;
+using System.Data.Entity;
+using eParty.Service;
 
 namespace eParty.Controllers
 {
     public class HomeController : Controller
     {
+        private AppDbContext db = new AppDbContext();
         public ActionResult Index()
         {
             return View();
@@ -39,7 +43,16 @@ namespace eParty.Controllers
 
         public ActionResult Menu()
         {
-            return View();
+            var categoriesWithFoods = db.Categories
+                                        .Include(c => c.Foods)
+                                        .ToList();
+
+            var viewModel = new MenuViewModel
+            {
+                CategoriesWithFoods = categoriesWithFoods
+            };
+
+            return View(viewModel);
         }
 
         public ActionResult Book()
@@ -53,6 +66,25 @@ namespace eParty.Controllers
         }
 
         public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(string email, string password)
+        {
+            if (email == "admin@gmail.com" && password == "123")
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Email hoặc mật khẩu không chính xác.";
+                return View(); 
+            }
+        }
+
+        public ActionResult News()
         {
             return View();
         }

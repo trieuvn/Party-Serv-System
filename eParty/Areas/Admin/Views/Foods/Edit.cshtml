@@ -1,0 +1,110 @@
+﻿@model eParty.Areas.Admin.Models.FoodRecipeViewModel
+
+@{
+    ViewBag.Title = "Edit Food & Recipe";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Food Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Foods")">Food</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Edit</a></li>
+    </ul>
+</div>
+@if (TempData["SuccessMessage"] != null)
+{<div class="alert alert-success">@TempData["SuccessMessage"]</div>}
+@if (TempData["ErrorMessage"] != null)
+{<div class="alert alert-danger">@TempData["ErrorMessage"]</div>}
+
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Edit", "Foods", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header"><div class="card-title">Edit Food Info: @Model.Food.Name</div></div>
+                <div class="card-body">
+                    @Html.HiddenFor(m => m.Food.Id)
+                    @Html.HiddenFor(m => m.Food.Image)
+                    <div class="row">
+                        <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Name, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Name, new { htmlAttributes = new { @class = "form-control" } })</div></div>
+                        <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.CategoryId, "Category", new { @class = "form-label" }) @Html.DropDownListFor(m => m.Food.CategoryId, (IEnumerable<SelectListItem>)ViewBag.CategoryId, "--- Select ---", new { @class = "form-control" })</div></div>
+                        <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Unit, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Unit, new { htmlAttributes = new { @class = "form-control" } })</div></div>
+                        <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Cost, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Cost, new { htmlAttributes = new { @class = "form-control", type = "number" } })</div></div>
+                        <div class="col-md-6"><div class="form-group">@Html.LabelFor(m => m.Food.Discount, new { @class = "form-label" }) @Html.EditorFor(m => m.Food.Discount, new { htmlAttributes = new { @class = "form-control", type = "number" } })</div></div>
+                        <div class="col-md-12"><div class="form-group">@Html.LabelFor(m => m.Food.Description, new { @class = "form-label" }) @Html.TextAreaFor(m => m.Food.Description, 5, 1, new { @class = "form-control" })</div></div>
+                        <div class="col-md-12"><div class="form-group"><label>Current Image</label> @if (!string.IsNullOrEmpty(Model.Food.Image))
+                        {<img src="data:image/jpeg;base64,@Model.Food.Image" alt="@Model.Food.Name" style="max-width: 200px; display: block; margin-bottom: 10px;" />} <label for="imageFile">Upload new image</label> <input type="file" name="imageFile" class="form-control" /></div></div>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Save Food Info</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Manage Recipe Ingredients</div></div>
+            <div class="card-body">
+                @if (Model.Ingredients.Any())
+                {
+                    foreach (var item in Model.Ingredients)
+                    {
+                        // ✨ FORM 2: MỖI NGUYÊN LIỆU CÓ 1 FORM RIÊNG ĐỂ CẬP NHẬT/XÓA
+                        using (Html.BeginForm("UpdateIngredientAmount", "Foods", FormMethod.Post, new { @class = "d-inline" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("foodId", item.Food)
+                            @Html.Hidden("ingredientId", item.Ingredient)
+                            <div class="row align-items-center mb-3 border-bottom pb-3">
+                                <div class="col-md-4">@item.IngredientRef.Name</div>
+                                <div class="col-md-5">
+                                    <input type="text" name="amount" value="@item.Amount" class="form-control" placeholder="e.g., 200g" />
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+
+                                    @using (Html.BeginForm("RemoveIngredient", "Foods", FormMethod.Post, new { @class = "d-inline ms-1" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("foodId", item.Food)
+                                        @Html.Hidden("ingredientId", item.Ingredient)
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Remove</button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+                else
+                { <p>No ingredients yet. Add one below.</p>}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        @using (Html.BeginForm("AddIngredient", "Foods", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header"><div class="card-title">Add New Ingredient</div></div>
+                <div class="card-body">
+                    @Html.Hidden("foodId", Model.Food.Id)
+                    <div class="row">
+                        <div class="col-md-6"><div class="form-group"><label for="newIngredientId">Ingredient</label>@Html.DropDownList("newIngredientId", Model.AllIngredients, "--- Select ---", new { @class = "form-control" })</div></div>
+                        <div class="col-md-6"><div class="form-group"><label for="newIngredientAmount">Amount</label>@Html.TextBox("newIngredientAmount", "", new { @class = "form-control", placeholder = "e.g., 200g, 1 unit" })</div></div>
+                    </div>
+                </div>
+                <div class="card-action"><button type="submit" class="btn btn-primary">Add Ingredient</button></div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@model IEnumerable<eParty.Models.Food>
+
+@{
+    ViewBag.Title = "Food Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Food List</h4>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
+                    <i class="fa fa-plus"></i>
+                    Create New
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="food-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>@Html.DisplayNameFor(model => model.Name)</th>
+                            <th>Category</th>
+                            <th>@Html.DisplayNameFor(model => model.Cost)</th>
+                            <th>@Html.DisplayNameFor(model => model.Unit)</th>
+                            <th>@Html.DisplayNameFor(model => model.Discount)</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Image))
+                                    {
+                                        <img src="data:image/jpeg;base64,@item.Image" alt="@item.Name" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;" />
+                                    }
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Cost)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Unit)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Discount)</td>
+                                <td>
+                                    <div class="form-button-action">
+                                        <a href="@Url.Action("Edit", new { id = item.Id })" data-bs-toggle="tooltip" title="Edit" class="btn btn-link btn-primary btn-lg">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", new { id = item.Id })" data-bs-toggle="tooltip" title="Details" class="btn btn-link btn-info btn-lg">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" data-bs-toggle="tooltip" title="Remove" class="btn btn-link btn-danger">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#food-datatables').DataTable({
+                "pageLength": 5, // Hiển thị 5 mục mỗi trang
+            });
+        });
+    </script>
+}

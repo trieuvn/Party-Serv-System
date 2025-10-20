@@ -1,0 +1,88 @@
+﻿@model eParty.Models.Food
+
+@{
+    ViewBag.Title = "Create New Food";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Food Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Foods")">Food</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "Foods", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header"><div class="card-title">Add New Food Item</div></div>
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter food name" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CategoryId, "Category", new { @class = "form-label" })
+                                @Html.DropDownList("CategoryId", null, "--- Select a Category ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Unit, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Unit, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g., Plate, Bowl, Item" } })
+                                @Html.ValidationMessageFor(model => model.Unit, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Cost, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g., 50000", type = "number" } })
+                                @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Discount, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g., 10 for 10%", type = "number" } })
+                                @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Description, new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.Description, 5, 1, new { @class = "form-control", placeholder = "Enter a detailed description" })
+                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="imageFile">Image</label>
+                                <input type="file" name="imageFile" id="imageFile" class="form-control" />
+                                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
