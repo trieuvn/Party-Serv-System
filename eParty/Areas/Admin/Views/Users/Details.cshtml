@@ -1,0 +1,62 @@
+﻿@model eParty.Models.User
+
+@{
+    ViewBag.Title = "User Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">User Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Users")">Users</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Details for: @Model.Username</div></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(Model.Avatar))
+                        {
+                            <img src="data:image/jpeg;base64,@Model.Avatar" alt="@Model.Username" class="img-fluid rounded" />
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-3">Username</dt>
+                            <dd class="col-sm-9">@Model.Username</dd>
+
+                            <dt class="col-sm-3">First Name</dt>
+                            <dd class="col-sm-9">@Model.FirstName</dd>
+
+                            <dt class="col-sm-3">Last Name</dt>
+                            <dd class="col-sm-9">@Model.LastName</dd>
+
+                            <dt class="col-sm-3">Email</dt>
+                            <dd class="col-sm-9">@Model.Email</dd>
+
+                            <dt class="col-sm-3">Phone Number</dt>
+                            <dd class="col-sm-9">@Model.PhoneNumber</dd>
+
+                            <dt class="col-sm-3">Role</dt>
+                            <dd class="col-sm-9">
+                                @Model.Role
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card-action">
+                <a href="@Url.Action("Edit", "Users", new { id = Model.Username })" class="btn btn-primary">Edit User</a>
+                <a href="@Url.Action("Index", "Users")" class="btn btn-info">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

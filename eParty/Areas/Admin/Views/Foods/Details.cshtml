@@ -49,7 +49,7 @@
                 <hr />
 
                 <h4 class="mt-4">Recipe Ingredients</h4>
-                @if (Model.Ingredients.Any())
+                @if (Model.Ingredients != null && Model.Ingredients.Any())
                 {
                     <table class="table table-striped">
                         <thead>

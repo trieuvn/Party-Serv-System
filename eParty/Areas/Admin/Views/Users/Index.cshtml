@@ -1,0 +1,93 @@
+﻿@model IEnumerable<eParty.Models.User>
+
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header d-flex align-items-center">
+            <h4 class="card-title">User List</h4>
+            <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
+                <i class="fa fa-plus"></i> Create New
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="user-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Avatar</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th style="width: 15%">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(m => item.Username)</td>
+                                <td>@Html.DisplayFor(m => item.FirstName)</td>
+                                <td>@Html.DisplayFor(m => item.LastName)</td>
+                                <td>
+                                    <img src="@(!string.IsNullOrEmpty(item.Avatar) ? item.Avatar : Url.Content("~/images/no-image.png"))"
+                                         alt="@item.Username"
+                                         style="width:50px; height:50px; object-fit:cover; border-radius:50%;" />
+                                </td>
+                                <td>@Html.DisplayFor(m => item.Email)</td>
+                                <td>@Html.DisplayFor(m => item.PhoneNumber)</td>
+                                <td>
+                                    @if (item.Role.Contains("Users"))
+                                    {
+                                        <span class="badge bg-primary">Users</span>
+                                    }
+                                    else if (item.Role.Contains("Admin"))
+                                    {
+                                        <span class="badge bg-success">Admin</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Unknown</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a href="@Url.Action("Edit", new { id = item.Username })" class="btn btn-sm btn-primary" title="Edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", new { id = item.Username })" class="btn btn-sm btn-info" title="Details">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Username })" class="btn btn-sm btn-danger" title="Remove">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#user-datatables').DataTable({
+                "pageLength": 5,
+                "lengthMenu": [5, 10, 20],
+                "columnDefs": [
+                    { "orderable": false, "targets": 7 } // cột Actions không sắp xếp
+                ]
+            });
+        });
+    </script>
+}
