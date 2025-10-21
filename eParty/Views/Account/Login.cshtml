@@ -37,6 +37,13 @@
                             </div>
                         </div>
                     </div>
+
+                    @* ======= ĐÃ THÊM: Liên kết Quên mật khẩu ======= *@
+                    <p>
+                        @Html.ActionLink("Forgot your password?", "ForgotPassword", "Account")
+                    </p>
+                    @* ============================================= *@
+
                     <div class="row">
                         <div class="offset-md-2 col-md-10">
                             <input type="submit" value="Log in" class="btn btn-outline-dark" />
@@ -45,16 +52,13 @@
                     <p>
                         @Html.ActionLink("Register as a new user", "Register")
                     </p>
-                    @* Enable this once you have account confirmation enabled for password reset functionality
-                        <p>
-                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                        </p>*@
                 }
             </section>
         </div>
         <div class="col-md-4">
             <section id="socialLoginForm">
-                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                @* ĐÃ SỬA: SỬ DỤNG ExternalLoginListViewModel VỚI NAMESPACE CHUẨN XÁC *@
+                @Html.Partial("_ExternalLoginsListPartial", new eParty.Models.ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
             </section>
         </div>
     </div>

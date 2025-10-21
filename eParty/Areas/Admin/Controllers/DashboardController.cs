@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace eParty.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")] // <-- THÊM DÒNG NÀY
     public class DashboardController : Controller
     {
         private AppDbContext db = new AppDbContext();

@@ -13,39 +13,46 @@
 </head>
 <body>
     <div class="wrapper">
-        @* Sửa action và method của form *@
-        <form action="@Url.Action("Login", "Home")" method="post">
+        @* ĐÃ SỬA: Chuyển action sang AccountController để dùng ASP.NET Identity *@
+        <form action="@Url.Action("Login", "Account")" method="post">
+            @* Thêm AntiForgeryToken là cần thiết cho form Identity *@
+            @Html.AntiForgeryToken()
+
             <h2>Đăng Nhập</h2>
 
-            @* Thêm thông báo lỗi nếu có *@
+            @* Hiển thị thông báo lỗi từ Controller (cả lỗi custom và lỗi Identity) *@
             @if (ViewBag.ErrorMessage != null)
             {
                 <p style="color: red; text-align: center;">@ViewBag.ErrorMessage</p>
             }
+            @* Thêm ValidationSummary để hiển thị lỗi từ Model Validation/Identity *@
+            @Html.ValidationSummary(true, "", new { @style = "color: red; text-align: center;" })
 
             <div class="input-field">
-                @* Thêm thuộc tính 'name' *@
-                <input type="text" name="email" required>
+                @* ĐÃ SỬA: Thuộc tính name phải là Email để khớp với LoginViewModel *@
+                <input type="text" name="Email" required>
                 <label>Nhập địa chỉ email của bạn</label>
             </div>
             <div class="input-field">
-                @* Thêm thuộc tính 'name' *@
-                <input type="password" name="password" required>
+                @* ĐÃ SỬA: Thuộc tính name phải là Password để khớp với LoginViewModel *@
+                <input type="password" name="Password" required>
                 <label>Nhập mật khẩu của bạn</label>
             </div>
             <div class="forget">
                 <label for="remember">
-                    <input type="checkbox" id="remember">
-                    <p>Nhớ tôi</p>
+                    @* ĐÃ SỬA: name phải là RememberMe để khớp với LoginViewModel *@
+                    <input type="checkbox" name="RememberMe" id="remember">
+                    <>Nhớ tôi</>
                 </label>
-                <a href="#">Quên mật khẩu?</a>
+                @* ĐÃ SỬA: Trỏ đến trang quên mật khẩu của Identity *@
+                <a href="@Url.Action("ForgotPassword", "Account")">Quên mật khẩu?</a>
             </div>
 
-            @* Bỏ thuộc tính 'href' không cần thiết *@
             <button type="submit">Đăng Nhập</button>
 
             <div class="register">
-                <p>Bạn chưa có tài khoản? <a href="#">Đăng ký</a></p>
+                @* Liên kết Đăng ký đã đúng *@
+                <p>Bạn chưa có tài khoản? <a href="@Url.Action("Register", "Account")">Đăng ký</a></p>
             </div>
         </form>
     </div>
