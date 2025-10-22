@@ -36,7 +36,9 @@
                                 <td>@Html.DisplayFor(m => item.FirstName)</td>
                                 <td>@Html.DisplayFor(m => item.LastName)</td>
                                 <td>
-                                    <img src="@(!string.IsNullOrEmpty(item.Avatar) ? item.Avatar : Url.Content("~/images/no-image.png"))"
+                                    <img src="@(!string.IsNullOrEmpty(item.Avatar)
+                                            ? $"data:image/jpeg;base64,{item.Avatar}"
+                                            : Url.Content("~/images/no-image.png"))"
                                          alt="@item.Username"
                                          style="width:50px; height:50px; object-fit:cover; border-radius:50%;" />
                                 </td>

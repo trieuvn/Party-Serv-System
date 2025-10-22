@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using eParty.Models;
+using System.IO;
 
 namespace eParty.Areas.Admin.Controllers
 {
@@ -23,15 +22,11 @@ namespace eParty.Areas.Admin.Controllers
         // GET: Admin/Users/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
+            if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = db.Users.Find(id);
+            if (user == null) return HttpNotFound();
+
             return View(user);
         }
 
@@ -42,14 +37,21 @@ namespace eParty.Areas.Admin.Controllers
         }
 
         // POST: Admin/Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Username,Password,FirstName,LastName,Avatar,Email,PhoneNumber,Role")] User user)
+        public ActionResult Create([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] User user, HttpPostedFileBase avatarFile)
         {
             if (ModelState.IsValid)
             {
+                if (avatarFile != null && avatarFile.ContentLength > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        avatarFile.InputStream.CopyTo(ms);
+                        user.Avatar = Convert.ToBase64String(ms.ToArray());
+                    }
+                }
+
                 db.Users.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -61,28 +63,41 @@ namespace eParty.Areas.Admin.Controllers
         // GET: Admin/Users/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
+            if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = db.Users.Find(id);
+            if (user == null) return HttpNotFound();
+
             return View(user);
         }
 
         // POST: Admin/Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Username,Password,FirstName,LastName,Avatar,Email,PhoneNumber,Role")] User user)
+        public ActionResult Edit([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] User user, HttpPostedFileBase avatarFile)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
+                var userInDb = db.Users.Find(user.Username);
+                if (userInDb == null) return HttpNotFound();
+
+                userInDb.FirstName = user.FirstName;
+                userInDb.LastName = user.LastName;
+                userInDb.Email = user.Email;
+                userInDb.PhoneNumber = user.PhoneNumber;
+                userInDb.Password = user.Password;
+                userInDb.Role = user.Role;
+
+                if (avatarFile != null && avatarFile.ContentLength > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        avatarFile.InputStream.CopyTo(ms);
+                        userInDb.Avatar = Convert.ToBase64String(ms.ToArray());
+                    }
+                }
+
+                db.Entry(userInDb).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -92,46 +107,32 @@ namespace eParty.Areas.Admin.Controllers
         // GET: Admin/Users/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
+            if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var user = db.Users.Find(id);
+            if (user == null) return HttpNotFound();
+
             return View(user);
         }
 
         // POST: Admin/Users/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound(); // Tránh xóa null
-            }
+            var user = db.Users.Find(id);
+            if (user == null) return HttpNotFound();
 
             db.Users.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            if (disposing) db.Dispose();
             base.Dispose(disposing);
         }
     }
