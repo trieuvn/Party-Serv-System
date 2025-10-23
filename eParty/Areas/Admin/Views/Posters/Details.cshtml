@@ -1,0 +1,66 @@
+﻿@model eParty.Models.Poster
+
+@{
+    ViewBag.Title = "Poster Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Poster Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Posters")">Posters</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Details for: @Model.Name</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <img src="data:image/jpeg;base64,@Model.Image" alt="@Model.Name" class="img-fluid rounded" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/no-image.png")" alt="No Image" class="img-fluid rounded" />
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-3">Name</dt>
+                            <dd class="col-sm-9">@Model.Name</dd>
+                            <dt class="col-sm-3">Image</dt>
+                            <dd class="col-sm-9">
+                                @if (!string.IsNullOrEmpty(Model.Image))
+                                {
+                                    <span>Image uploaded</span>
+                                }
+                                else
+                                {
+                                    <span>No image</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card-action">
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">
+                    <i class="fa fa-edit"></i> Edit
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-info">
+                    <i class="fa fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

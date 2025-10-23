@@ -1,0 +1,88 @@
+﻿@model eParty.Models.Comment
+
+@{
+    ViewBag.Title = "Edit Comment";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Comment Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Comments")">Comments</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Edit</a></li>
+    </ul>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Edit", "Comments", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.User)
+            @Html.HiddenFor(m => m.News)
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Edit Comment for News: @Model.NewsRef.Name</div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <!-- User -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>User</label>
+                                <input type="text" class="form-control" value="@Model.UserRef.Email" readonly />
+                            </div>
+                        </div>
+                        <!-- News -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>News</label>
+                                <input type="text" class="form-control" value="@Model.NewsRef.Name" readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <!-- Stars -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Stars, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Stars, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1", max = "5" } })
+                                @Html.ValidationMessageFor(m => m.Stars, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <!-- Description -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.Description, 5, 1, new { @class = "form-control", placeholder = "Enter comment content" })
+                                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Save Comment</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

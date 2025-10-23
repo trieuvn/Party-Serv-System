@@ -1,7 +1,7 @@
-﻿@model IEnumerable<eParty.Models.Menu>
+﻿@model IEnumerable<eParty.Models.Poster>
 
 @{
-    ViewBag.Title = "Menu Management";
+    ViewBag.Title = "Poster Management";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -9,7 +9,7 @@
     <div class="card">
         <div class="card-header">
             <div class="d-flex align-items-center">
-                <h4 class="card-title">Menu List</h4>
+                <h4 class="card-title">Poster List</h4>
                 <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
                     <i class="fa fa-plus"></i>
                     Create New
@@ -18,15 +18,11 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table id="menu-datatables" class="display table table-striped table-hover">
+                <table id="poster-datatables" class="display table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Image</th>
                             <th>@Html.DisplayNameFor(model => model.Name)</th>
-                            <th>@Html.DisplayNameFor(model => model.Description)</th>
-                            <th>@Html.DisplayNameFor(model => model.Cost)</th>
-                            <th>@Html.DisplayNameFor(model => model.Status)</th>
-                            <th>@Html.DisplayNameFor(model => model.Discount)</th>
+                            <th>Image</th>
                             <th style="width: 10%">Action</th>
                         </tr>
                     </thead>
@@ -34,18 +30,13 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                 <td>
                                     @if (!string.IsNullOrEmpty(item.Image))
                                     {
-                                        <img src="data:image/jpeg;base64,@item.Image" alt="@item.Name"
-                                             style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;" />
+                                        <img src="data:image/jpeg;base64,@item.Image" alt="@item.Name" style="width:60px;height:60px;object-fit:cover;border-radius:5px;" />
                                     }
                                 </td>
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Cost)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Discount)</td>
                                 <td>
                                     <div class="form-button-action">
                                         <a href="@Url.Action("Edit", new { id = item.Id })" data-bs-toggle="tooltip" title="Edit" class="btn btn-link btn-primary btn-lg">
@@ -71,8 +62,11 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            $('#menu-datatables').DataTable({
-                "pageLength": 5, // Hiển thị 5 mục mỗi trang
+            $('#poster-datatables').DataTable({
+                "pageLength": 5,
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false
             });
         });
     </script>
