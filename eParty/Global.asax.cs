@@ -1,4 +1,6 @@
 ﻿using eParty.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -20,6 +22,31 @@ namespace eParty
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            CreateRoles();
+        }
+        private void CreateRoles()
+        {
+            AppDbContext context = new AppDbContext();
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            // Kiểm tra và tạo vai trò "Admin" 
+            if (!roleManager.RoleExists("Admin"))
+            {
+                var role = new IdentityRole(); role.Name = "Admin";
+                roleManager.Create(role);
+            }
+            // Kiểm tra và tạo vai trò "User" 
+            if (!roleManager.RoleExists("User"))
+            {
+                var role = new IdentityRole(); role.Name = "User"; roleManager.Create(role);
+            }
+            if (!roleManager.RoleExists("User"))
+            {
+                var role = new IdentityRole(); role.Name = "User"; roleManager.Create(role);
+            }
+            if (!roleManager.RoleExists("Staff"))
+            {
+                var role = new IdentityRole(); role.Name = "Staff"; roleManager.Create(role);
+            }
         }
     }
 }

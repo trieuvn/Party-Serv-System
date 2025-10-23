@@ -551,6 +551,7 @@
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
     <Compile Include="Areas\Admin\Controllers\PostersController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProvidersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserPermissionController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\FoodRecipeViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -579,6 +580,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Discount.cs" />
     <Compile Include="Models\Food.cs" />
+    <Compile Include="Models\FoodDto.cs" />
     <Compile Include="Models\FoodIngredient.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\Ingredient.cs" />
@@ -1977,6 +1979,7 @@
     <Content Include="Areas\Admin\Views\Posters\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Posters\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Posters\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserPermission\RegisterRole.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

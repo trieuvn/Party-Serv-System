@@ -57,7 +57,21 @@ namespace eParty.Controllers
 
         public ActionResult Book()
         {
-            return View();
+            var foodsDto = db.Foods.Select(f => new FoodDto
+            {
+                Id = f.Id,
+                Name = f.Name,
+                ImageUrl = f.Image,
+            }).ToList();
+
+            var viewModel = new HomeViewModel
+            {
+                Menus = db.Menus.ToList(),
+                DtoFoods = foodsDto
+            };
+
+            return View(viewModel);
+
         }
 
         public ActionResult Team()
