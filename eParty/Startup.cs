@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Trong file Startup.cs
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
@@ -11,6 +13,7 @@ namespace eParty
     {
         public void Configuration(IAppBuilder app)
         {
+            // DÒNG NÀY CHỈ NÊN LÀ DÒNG CODE DUY NHẤT VÀ KHÔNG ĐƯỢC CHỨA CẤU HÌNH AUTH KHÁC
             ConfigureAuth(app);
         }
     }
