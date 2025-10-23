@@ -6,9 +6,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using eParty.Models; // <-- QUAN TRỌNG: Đảm bảo using này đúng với namespace của model
+using eParty.Models;
+using eParty.Service; // Cần thêm để đảm bảo dịch vụ có thể được tham chiếu (Nếu EmailService nằm trong Services)
 
-namespace eParty // <-- QUAN TRỌNG: Đảm bảo namespace này đúng với dự án của bạn
+namespace eParty
 {
     // Cấu hình trình quản lý người dùng ứng dụng được sử dụng trong ứng dụng này.
     public class ApplicationUserManager : UserManager<ApplicationUser>
@@ -43,6 +44,12 @@ namespace eParty // <-- QUAN TRỌNG: Đảm bảo namespace này đúng với d
             manager.UserLockoutEnabledByDefault = true;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+
+            // =================================================================
+            // ĐÃ THÊM: THIẾT LẬP DỊCH VỤ EMAIL CHO CHỨC NĂNG QUÊN MẬT KHẨU
+            // LƯU Ý: Đảm bảo lớp EmailService nằm trong cùng namespace hoặc đã được using.
+            manager.EmailService = new EmailService();
+            // =================================================================
 
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)

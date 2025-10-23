@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace eParty.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")] // <-- THÊM DÒNG NÀY
     public class CalendarController : Controller
     {
         // GET: Calendar

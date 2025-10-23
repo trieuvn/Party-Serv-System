@@ -10,6 +10,7 @@ using eParty.Models;
 
 namespace eParty.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")] // <-- THÊM DÒNG NÀY
     public class IngredientsController : Controller
     {
         private AppDbContext db = new AppDbContext();

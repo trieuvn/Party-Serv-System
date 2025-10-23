@@ -80,13 +80,30 @@ namespace eParty.Controllers
             else
             {
                 ViewBag.ErrorMessage = "Email hoặc mật khẩu không chính xác.";
-                return View(); 
+                return View();
             }
         }
 
         public ActionResult News()
         {
             return View();
+        }
+    
+    [Authorize] // Yêu cầu người dùng phải đăng nhập trước khi kiểm tra
+        public ActionResult RedirectToAdmin()
+        {
+            // Kiểm tra xem người dùng có vai trò "Admin" hay không
+            if (User.IsInRole("Admin"))
+            {
+                // Nếu là Admin, chuyển hướng đến trang Dashboard
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            }
+            else
+            {
+                // Nếu không phải Admin, lưu một thông báo vào TempData và chuyển hướng về trang chủ
+                TempData["AdminMessage"] = "Tài khoản hiện tại không đủ quyền hạn. Vui lòng đăng nhập bằng tài khoản Admin để truy cập.";
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

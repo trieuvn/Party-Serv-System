@@ -8,7 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Microsoft.Owin;
-
+using Microsoft.Owin.Security.Google; // <-- ĐÃ THÊM: Cần thiết cho Google Auth
 
 namespace eParty
 {
@@ -34,6 +34,14 @@ namespace eParty
                 }
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
+            // CẤU HÌNH GOOGLE AUTHENTICATION
+            // Đã sử dụng Client ID và Client Secret thực tế được xác nhận trước đó.
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = "5256981425-brbfsc635e1d5e9s7757pvrrukvaoqi0.apps.googleusercontent.com",
+                ClientSecret = "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"
+            });
         }
     }
 }
