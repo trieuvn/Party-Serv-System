@@ -1,0 +1,46 @@
+﻿@model eParty.Models.ApplicationUser
+@{
+    ViewBag.Title = "Tài khoản cá nhân";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<h2 class="mb-4">Tài khoản cá nhân</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-3 mb-3">
+            <h5>Thông tin cá nhân</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                <li class="list-group-item"><strong>Số điện thoại:</strong> @Model.PhoneNumber</li>
+                <li class="list-group-item"><strong>Email đã xác nhận:</strong> @(Model.EmailConfirmed ? "Có" : "Chưa")</li>
+                <li class="list-group-item"><strong>2FA:</strong> @(Model.TwoFactorEnabled ? "Bật" : "Tắt")</li>
+            </ul>
+        </div>
+
+        <div class="d-grid gap-2">
+            <a href="@Url.Action("UpdateInfo")" class="btn btn-primary">Cập nhật thông tin</a>
+            <a href="@Url.Action("ChangePassword")" class="btn btn-warning">Đổi mật khẩu</a>
+            <a href="@Url.Action("GoogleLink")" class="btn btn-success">Quản lý Google</a>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Trạng thái liên kết Google</h5>
+            @{
+                var googleLogin = Model.Logins.FirstOrDefault(l => l.LoginProvider == "Google");
+            }
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Liên kết Google:</strong> @(googleLogin != null ? "Đã liên kết" : "Chưa liên kết")
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
