@@ -564,6 +564,10 @@
     <Compile Include="Migrations\202510160646570_InitialIdentitySchema.Designer.cs">
       <DependentUpon>202510160646570_InitialIdentitySchema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202510240914132_RenameUserToSystemUser.cs" />
+    <Compile Include="Migrations\202510240914132_RenameUserToSystemUser.Designer.cs">
+      <DependentUpon>202510240914132_RenameUserToSystemUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -588,7 +592,7 @@
     <Compile Include="Models\Rate.cs" />
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\StaffParty.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\SystemUser.cs" />
     <Compile Include="Models\UserDiscount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\EmailService.cs" />
@@ -2050,6 +2054,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202510160646570_InitialIdentitySchema.resx">
       <DependentUpon>202510160646570_InitialIdentitySchema.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202510240914132_RenameUserToSystemUser.resx">
+      <DependentUpon>202510240914132_RenameUserToSystemUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

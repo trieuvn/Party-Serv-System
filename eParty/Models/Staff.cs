@@ -5,7 +5,7 @@ using System.Web;
 
 namespace eParty.Models
 {
-    public class Staff : User
+    public class Staff : SystemUser
     {
         public int Salary { get; set; }
 
