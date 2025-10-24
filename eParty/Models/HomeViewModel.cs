@@ -9,6 +9,7 @@ namespace eParty.Models
     public class HomeViewModel
     {
         public List<Menu> Menus { get; set; }
+        public List<MenuDetailDto> menuDetails { get; set; }
         public List<Provider> Providers { get; set; }
         public List<FoodDto> DtoFoods { get; set; }
         public List<Food>Foods {  get; set; }

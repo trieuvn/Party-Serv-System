@@ -587,6 +587,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\MenuDetail.cs" />
+    <Compile Include="Models\MenuDetailDto.cs" />
     <Compile Include="Models\MenuViewModel.cs" />
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\Partner.cs" />
