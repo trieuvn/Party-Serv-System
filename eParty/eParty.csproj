@@ -551,8 +551,12 @@
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
     <Compile Include="Areas\Admin\Controllers\PostersController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProvidersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserPermissionController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\FoodRecipeViewModel.cs" />
+    <Compile Include="Areas\Staff\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Staff\Controllers\PersonalAccountController.cs" />
+    <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -583,12 +587,14 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Discount.cs" />
     <Compile Include="Models\Food.cs" />
+    <Compile Include="Models\FoodDto.cs" />
     <Compile Include="Models\FoodIngredient.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\Ingredient.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\MenuDetail.cs" />
+    <Compile Include="Models\MenuDetailDto.cs" />
     <Compile Include="Models\MenuViewModel.cs" />
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\Partner.cs" />
@@ -1981,6 +1987,16 @@
     <Content Include="Areas\Admin\Views\Posters\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Posters\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Posters\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserPermission\RegisterRole.cshtml" />
+    <Content Include="Areas\Staff\Views\web.config" />
+    <Content Include="Areas\Staff\Views\Shared\_LayoutStaff.cshtml" />
+    <Content Include="Areas\Staff\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Staff\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Staff\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Staff\Views\PersonalAccount\UpdateInfo.cshtml" />
+    <Content Include="Areas\Staff\Views\PersonalAccount\ChangePassword.cshtml" />
+    <Content Include="Areas\Staff\Views\PersonalAccount\GoogleLink.cshtml" />
+    <Content Include="Areas\Staff\Views\PersonalAccount\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -2038,6 +2054,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Staff\Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>

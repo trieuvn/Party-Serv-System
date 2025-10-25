@@ -1,11 +1,12 @@
-﻿using System;
+﻿using eParty.Models;
+using eParty.Service;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using eParty.Models;
-using System.Data.Entity;
-using eParty.Service;
 
 namespace eParty.Controllers
 {
@@ -57,8 +58,130 @@ namespace eParty.Controllers
 
         public ActionResult Book()
         {
-            return View();
+            var foodsDto = db.Foods.Select(f => new FoodDto
+            {
+                Id = f.Id,
+                Name = f.Name,
+                ImageUrl = f.Image,
+                Unit = f.Unit,
+            }).ToList();
+            var menuDetailsDto = db.MenuDetails
+                .Include(md => md.FoodRef)
+                .Select(md => new MenuDetailDto
+                {
+                    MenuId = md.Menu,
+                    FoodId = md.Food,
+                    FoodName = md.FoodRef.Name,
+                    Amount = md.Amount
+                }).ToList();
+
+            var viewModel = new HomeViewModel
+            {
+                Menus = db.Menus.ToList(),
+                DtoFoods = foodsDto,
+                menuDetails= menuDetailsDto
+            };
+
+            return View(viewModel);
+
         }
+        [HttpPost]
+        public JsonResult SaveCustomMenuBase64()
+        {
+            try
+            {
+                // đọc JSON
+                string json;
+                using (var reader = new System.IO.StreamReader(Request.InputStream))
+                {
+                    json = reader.ReadToEnd();
+                }
+
+                var request = JsonConvert.DeserializeObject<CustomMenuRequest>(json);
+
+                if (request == null)
+                    throw new Exception("Không nhận được dữ liệu từ client");
+
+                // 1. Lưu Menu
+                var menu = new Menu
+                {
+                    Name = request.Name,
+                    Image = SaveBase64Image(request.ImageBase64), // hàm xử lý base64 -> lưu file, trả về path
+                };
+                db.Menus.Add(menu);
+                db.SaveChanges(); // để lấy menu.Id
+
+                // 2. Lưu MenuDetail
+                foreach (var food in request.Foods)
+                {
+                    var detail = new MenuDetail
+                    {
+                        Menu = menu.Id,
+                        Food = food.FoodId,
+                        Amount = food.Amount
+                    };
+                    db.MenuDetails.Add(detail);
+                }
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // Hàm xử lý base64 -> lưu file -> trả về path lưu trong DB
+        private string SaveBase64Image(string base64)
+        {
+            try
+            {
+                var parts = base64.Split(',');
+                var base64Data = parts.Length > 1 ? parts[1] : parts[0];
+                byte[] bytes = Convert.FromBase64String(base64Data);
+
+                var folderPath = Server.MapPath("~/Uploads/Menus");
+                if (!System.IO.Directory.Exists(folderPath))
+                    System.IO.Directory.CreateDirectory(folderPath);
+
+                var fileName = Guid.NewGuid().ToString() + ".png";
+                var path = System.IO.Path.Combine(folderPath, fileName);
+
+                System.IO.File.WriteAllBytes(path, bytes);
+
+                return "/Uploads/Menus/" + fileName;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi lưu ảnh menu: " + ex.Message);
+            }
+        }
+
+
+
+
+
+        // DTO
+        public class CustomMenuRequest
+        {
+            public string Name { get; set; }
+            public string ImageBase64 { get; set; }
+            public List<MenuFoodDto> Foods { get; set; }
+        }
+        public class SaveMenuRequest
+        {
+            public string Name { get; set; }
+            public string ImageBase64 { get; set; }
+            public List<MenuFoodDto> Foods { get; set; }
+        }
+
+        public class MenuFoodDto
+        {
+            public int FoodId { get; set; }
+            public int Amount { get; set; }
+        }
+
 
         public ActionResult Team()
         {

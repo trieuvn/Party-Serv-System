@@ -1,0 +1,54 @@
+﻿@model eParty.Models.ApplicationUser
+@{
+    ViewBag.Title = "Quản lý liên kết Google";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<h2>Quản lý liên kết Google</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-3 mb-3">
+            <h5>Liên kết / Ngắt liên kết Google</h5>
+
+            @using (Html.BeginForm("LinkGoogle", "PersonalAccount", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-success mb-2 w-100">Kích hoạt Google</button>
+            }
+
+            @using (Html.BeginForm("UnlinkGoogle", "PersonalAccount", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger w-100">Ngắt liên kết Google</button>
+            }
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-info mt-3">
+                    @TempData["Message"]
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Thông tin tài khoản</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Email:</strong> @Model.Email
+                </li>
+                <li class="list-group-item">
+                    <strong>Email đã xác nhận:</strong> @(Model.EmailConfirmed ? "Có" : "Chưa")
+                </li>
+                <li class="list-group-item">
+                    <strong>2FA:</strong> @(Model.TwoFactorEnabled ? "Bật" : "Tắt")
+                </li>
+                <li class="list-group-item">
+                    <strong>Số điện thoại:</strong> @Model.PhoneNumber
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
