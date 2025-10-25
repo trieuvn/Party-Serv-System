@@ -18,7 +18,9 @@ namespace eParty.Models
         // FK -> User (author)
         [StringLength(50)]
         public string User { get; set; }
-        [ForeignKey(nameof(User))] public virtual User Author { get; set; }
+
+        // [ĐÃ SỬA] Đổi User thành SystemUser
+        [ForeignKey(nameof(User))] public virtual SystemUser Author { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 

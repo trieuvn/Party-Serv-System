@@ -17,7 +17,8 @@ namespace eParty.Models
         public int Stars { get; set; }
         public string Description { get; set; }
 
-        [ForeignKey(nameof(User))] public virtual User UserRef { get; set; }
+        // [ĐÃ SỬA] Đổi User thành SystemUser
+        [ForeignKey(nameof(User))] public virtual SystemUser UserRef { get; set; }
         [ForeignKey(nameof(News))] public virtual News NewsRef { get; set; }
     }
 }
