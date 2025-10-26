@@ -1,10 +1,13 @@
 ﻿using eParty.Models;
 using eParty.Service;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,6 +16,8 @@ namespace eParty.Controllers
     public class HomeController : Controller
     {
         private AppDbContext db = new AppDbContext();
+
+        // ================== TRANG CHỦ ==================
         public ActionResult Index()
         {
             return View();
@@ -21,14 +26,12 @@ namespace eParty.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
             return View();
         }
 
@@ -41,6 +44,7 @@ namespace eParty.Controllers
         {
             return View();
         }
+        
 
         public ActionResult Menu()
         {
@@ -56,6 +60,8 @@ namespace eParty.Controllers
             return View(viewModel);
         }
 
+        // ================== TRANG ĐẶT TIỆC ==================
+        [HttpGet]
         public ActionResult Book()
         {
             var foodsDto = db.Foods.Select(f => new FoodDto
@@ -65,8 +71,9 @@ namespace eParty.Controllers
                 ImageUrl = f.Image,
                 Unit = f.Unit,
             }).ToList();
+
             var menuDetailsDto = db.MenuDetails
-                .Include(md => md.FoodRef)
+                .Include("FoodRef")
                 .Select(md => new MenuDetailDto
                 {
                     MenuId = md.Menu,
@@ -79,18 +86,162 @@ namespace eParty.Controllers
             {
                 Menus = db.Menus.ToList(),
                 DtoFoods = foodsDto,
-                menuDetails= menuDetailsDto
+                menuDetails = menuDetailsDto
             };
 
             return View(viewModel);
-
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Book(Party model)
+        {
+            // ✅ Kiểm tra đăng nhập
+            if (Session["UserEmail"] == null)
+            {
+                TempData["LoginMessage"] = "Vui lòng đăng nhập để đặt tiệc.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            // ✅ Lấy email người dùng
+            string userEmail = Session["UserEmail"].ToString();
+            var currentUser = db.AppUsers.FirstOrDefault(u => u.Email == userEmail);
+            if (currentUser == null)
+            {
+                TempData["Error"] = "Tài khoản không tồn tại.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Tính toán EndTime (ví dụ mặc định 2 giờ)
+            if (model.BeginTime.HasValue && model.Slots > 0)
+            {
+                model.EndTime = model.BeginTime.Value.AddHours(2);
+            }
+
+            // Gán thông tin cơ bản
+            model.User = currentUser.Username;
+            model.Owner = currentUser;
+            model.Status = "Active";
+            model.Type = Request.Form["Type"];
+
+            if (int.TryParse(Request.Form["MenuId"], out int menuId))
+            {
+                model.Menu = menuId;
+                model.MenuRef = db.Menus.Find(menuId);
+            }
+            else
+            {
+                model.Menu = null;
+                model.MenuRef = null;
+            }
+                model.CreatedDate = DateTime.Now;
+
+                try
+                {
+                    // Sinh mã xác nhận
+                    string confirmationCode = new Random().Next(100000, 999999).ToString();
+                    Session["ConfirmCode"] = confirmationCode;
+                    Session["PendingParty"] = model;
+
+                    // Gửi email xác nhận
+                    using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        smtpClient.EnableSsl = true;
+                        smtpClient.Credentials = new NetworkCredential("phucnguyen2716@gmail.com", "ooag phsw rzno onxy");
+
+                        var mail = new MailMessage("your_email@gmail.com", currentUser.Email)
+                        {
+                            Subject = "Xác nhận đăng ký đặt tiệc",
+                            Body = $"Mã xác nhận của bạn là: {confirmationCode}"
+                        };
+
+                        smtpClient.Send(mail);
+                    }
+
+                    return RedirectToAction("ConfirmEmail");
+                }
+                catch (Exception ex)
+                {
+                    TempData["Error"] = "Không thể gửi email xác nhận: " + ex.Message;
+                    return RedirectToAction("Book");
+                }
+            }
+
+        // ================== XÁC NHẬN EMAIL ==================
+        [HttpGet]
+        public ActionResult ConfirmEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmEmail(string confirmCode)
+        {
+            // Lấy code và pending party từ session
+            var savedCode = Session["ConfirmCode"] as string;
+            var pendingParty = Session["PendingParty"] as Party;
+
+            if (savedCode == null || pendingParty == null)
+            {
+                TempData["Error"] = "Phiên xác nhận đã hết hạn. Vui lòng đặt lại.";
+                return RedirectToAction("Book");
+            }
+
+            if (confirmCode == savedCode)
+            {
+                try
+                {
+                    var newParty = new Party
+                    {
+                        Name = pendingParty.Name,
+                        Image = pendingParty.Image,
+                        Type = pendingParty.Type,
+                        Status = pendingParty.Status,
+                        Cost = pendingParty.Cost,
+                        BeginTime = pendingParty.BeginTime,
+                        EndTime = pendingParty.EndTime,
+                        CreatedDate = DateTime.Now,
+                        Description = pendingParty.Description,
+                        Slots = pendingParty.Slots,
+                        Address = pendingParty.Address,
+                        Latitude = pendingParty.Latitude,
+                        Longitude = pendingParty.Longitude,
+                        User = pendingParty.User,
+                        Menu = pendingParty.Menu
+
+                    };
+
+                    db.Parties.Add(newParty);
+                    db.SaveChanges();
+
+                    // Xóa session
+                    Session.Remove("ConfirmCode");
+                    Session.Remove("PendingParty");
+
+                    TempData["Success"] = "Đặt tiệc thành công! Thông tin của bạn đã được lưu.";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["Error"] = "Không thể lưu dữ liệu: " + ex.Message;
+                    return RedirectToAction("Book");
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Mã xác nhận không đúng. Vui lòng thử lại.";
+                return View();
+            }
+        }
+
+
+        // ================== LƯU MENU TÙY CHỈNH ==================
         [HttpPost]
         public JsonResult SaveCustomMenuBase64()
         {
             try
             {
-                // đọc JSON
                 string json;
                 using (var reader = new System.IO.StreamReader(Request.InputStream))
                 {
@@ -98,20 +249,19 @@ namespace eParty.Controllers
                 }
 
                 var request = JsonConvert.DeserializeObject<CustomMenuRequest>(json);
-
                 if (request == null)
                     throw new Exception("Không nhận được dữ liệu từ client");
 
-                // 1. Lưu Menu
+                // Lưu Menu
                 var menu = new Menu
                 {
                     Name = request.Name,
-                    Image = SaveBase64Image(request.ImageBase64), // hàm xử lý base64 -> lưu file, trả về path
+                    Image = SaveBase64Image(request.ImageBase64)
                 };
                 db.Menus.Add(menu);
-                db.SaveChanges(); // để lấy menu.Id
+                db.SaveChanges();
 
-                // 2. Lưu MenuDetail
+                // Lưu MenuDetail
                 foreach (var food in request.Foods)
                 {
                     var detail = new MenuDetail
@@ -132,7 +282,6 @@ namespace eParty.Controllers
             }
         }
 
-        // Hàm xử lý base64 -> lưu file -> trả về path lưu trong DB
         private string SaveBase64Image(string base64)
         {
             try
@@ -147,7 +296,6 @@ namespace eParty.Controllers
 
                 var fileName = Guid.NewGuid().ToString() + ".png";
                 var path = System.IO.Path.Combine(folderPath, fileName);
-
                 System.IO.File.WriteAllBytes(path, bytes);
 
                 return "/Uploads/Menus/" + fileName;
@@ -158,18 +306,7 @@ namespace eParty.Controllers
             }
         }
 
-
-
-
-
-        // DTO
         public class CustomMenuRequest
-        {
-            public string Name { get; set; }
-            public string ImageBase64 { get; set; }
-            public List<MenuFoodDto> Foods { get; set; }
-        }
-        public class SaveMenuRequest
         {
             public string Name { get; set; }
             public string ImageBase64 { get; set; }
@@ -182,16 +319,9 @@ namespace eParty.Controllers
             public int Amount { get; set; }
         }
 
-
-        public ActionResult Team()
-        {
-            return View();
-        }
-
-        public ActionResult Login()
-        {
-            return View();
-        }
+        // ================== TEAM, LOGIN, NEWS ==================
+        public ActionResult Team() => View();
+        public ActionResult Login() => View();
 
         [HttpPost]
         public ActionResult Login(string email, string password)
@@ -200,33 +330,21 @@ namespace eParty.Controllers
             {
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
-            else
-            {
-                ViewBag.ErrorMessage = "Email hoặc mật khẩu không chính xác.";
-                return View();
-            }
-        }
-
-        public ActionResult News()
-        {
+            ViewBag.ErrorMessage = "Email hoặc mật khẩu không chính xác.";
             return View();
         }
-    
-    [Authorize] // Yêu cầu người dùng phải đăng nhập trước khi kiểm tra
+
+        public ActionResult News() => View();
+
+        [Authorize]
         public ActionResult RedirectToAdmin()
         {
-            // Kiểm tra xem người dùng có vai trò "Admin" hay không
             if (User.IsInRole("Admin"))
             {
-                // Nếu là Admin, chuyển hướng đến trang Dashboard
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
-            else
-            {
-                // Nếu không phải Admin, lưu một thông báo vào TempData và chuyển hướng về trang chủ
-                TempData["AdminMessage"] = "Tài khoản hiện tại không đủ quyền hạn. Vui lòng đăng nhập bằng tài khoản Admin để truy cập.";
-                return RedirectToAction("Index", "Home");
-            }
+            TempData["AdminMessage"] = "Tài khoản hiện tại không đủ quyền hạn. Vui lòng đăng nhập bằng tài khoản Admin để truy cập.";
+            return RedirectToAction("Index", "Home");
         }
     }
 }

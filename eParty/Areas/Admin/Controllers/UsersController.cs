@@ -52,7 +52,7 @@ namespace eParty.Areas.Admin.Controllers
                     }
                 }
 
-                db.Users.Add(user);
+                db.AppUsers.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -78,7 +78,7 @@ namespace eParty.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userInDb = db.Users.Find(user.Username);
+                var userInDb = db.AppUsers.Find(user.Username);
                 if (userInDb == null) return HttpNotFound();
 
                 userInDb.FirstName = user.FirstName;

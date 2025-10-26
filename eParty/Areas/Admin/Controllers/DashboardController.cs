@@ -20,7 +20,7 @@ namespace eParty.Areas.Admin.Controllers
                 Foods = db.Foods.ToList(),
                 Ingredients = db.Ingredients.ToList(),
                 TotalCost = totalfoods,
-                RoleUsers= db.Users.Where(p=>p.Role == "User").ToList()
+                RoleUsers= db.AppUsers.Where(p=>p.Role == "User").ToList()
             };
             return View(list);
         }

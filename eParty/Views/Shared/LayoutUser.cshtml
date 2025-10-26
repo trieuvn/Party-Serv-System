@@ -34,6 +34,11 @@
     <link href="/Content/landingpage/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="/Content/landingpage/css/style.css" rel="stylesheet">
+    <style>
+        .navbar .navbar-nav .nav-link {
+            font-size: 15px !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -61,15 +66,10 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Trang khác</a>
                             <div class="dropdown-menu bg-light">
-                                <a href="/Home/Book" class="dropdown-item">Đặt dịch vụ</a>
                                 <a href="/Home/Team" class="dropdown-item">Đội ngũ</a>
                                 <a href="/Home/News" class="dropdown-item">Tin tức</a>
-                                @* ĐÃ SỬA: Liên kết đến Admin qua Action trung gian *@
-                                <a href="@Url.Action("RedirectToAdmin", "Home")" class="dropdown-item">Đến trang admin</a>
-                                <a href="@Url.Action("Login", "Account")" class="dropdown-item">Đến trang đăng nhập</a>
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
                     </div>
 
                     @* ==================================================================== *@
@@ -83,11 +83,24 @@
                             @Html.AntiForgeryToken()
 
                             @* Nút Tìm kiếm *@
-                            <button class="btn-search btn btn-primary btn-md-square me-4 rounded-circle d-none d-lg-inline-flex" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i></button>
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Search button -->
+                                <button class="btn-search btn btn-primary btn-md-square rounded-circle d-none d-lg-inline-flex"
+                                        data-bs-toggle="modal" data-bs-target="#searchModal">
+                                    <i class="fas fa-search"></i>
+                                </button>
 
-                            @* CỤM NÚT HÀNH ĐỘNG *@
-                            <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-primary py-2 px-4 d-none d-xl-inline-block rounded-pill me-2">ĐĂNG XUẤT</a>
-                            <a href="/Home/Book" class="btn btn-primary py-2 px-4 d-none d-xl-inline-block rounded-pill">ĐẶT NGAY</a>
+                                <!-- Logout -->
+                                <a href="javascript:document.getElementById('logoutForm').submit()"
+                                   class="btn btn-primary py-2 px-4 rounded-pill d-none d-xl-inline-block">
+                                    ĐĂNG XUẤT
+                                </a>
+
+                                <!-- Book -->
+                                <a href="/Home/Book" class="btn btn-primary py-2 px-4 rounded-pill d-none d-xl-inline-block">
+                                    ĐẶT NGAY
+                                </a>
+                            </div>
                         }
                     }
                     else
@@ -101,7 +114,7 @@
             </nav>
         </div>
     </div>
-
+    
     @* ==================================================================== *@
     @* ĐÃ THÊM: Vị trí hiển thị thông báo lỗi quyền Admin *@
     @* ==================================================================== *@

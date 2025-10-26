@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Confirm Your Email";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Enter Confirmation Code</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @using (Html.BeginForm("ConfirmEmail", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken() <!-- ✅ Token chống CSRF -->
+
+        <div class="form-group mb-3">
+            <label for="confirmCode">Confirmation Code</label>
+            <input type="text" name="confirmCode" id="confirmCode" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Confirm</button>
+    }
+</div>
