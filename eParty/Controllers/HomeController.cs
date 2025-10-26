@@ -59,6 +59,24 @@ namespace eParty.Controllers
 
             return View(viewModel);
         }
+        public ActionResult MenuList(int page = 1, int pageSize = 5)
+        {
+            // Lấy tổng số menu
+            var totalMenus = db.Menus.Count();
+
+            // Lấy menu theo trang
+            var menus = db.Menus
+                          .OrderBy(m => m.Id)
+                          .Skip((page - 1) * pageSize)
+                          .Take(pageSize)
+                          .ToList();
+
+            // Truyền dữ liệu sang View
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalMenus / pageSize);
+
+            return PartialView(menus);
+        }
 
         // ================== TRANG ĐẶT TIỆC ==================
         [HttpGet]

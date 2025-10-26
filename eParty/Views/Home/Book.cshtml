@@ -78,7 +78,6 @@
                                     <option selected disabled>Loại tiệc</option>
                                     <option value="Vegetarian">Ăn chay</option>
                                     <option value="NonVegetarian">Không chay</option>
-                                    <!-- Nếu muốn thêm loại khác, thêm option ở đây -->
                                 </select>
                             </div>
 
@@ -128,32 +127,61 @@
                                 <!-- Hidden input để gửi MenuId -->
                                 <input type="hidden" id="SelectedMenuId" name="MenuId" />
 
-                                <div id="menuList" class="d-flex gap-2 overflow-auto mb-3">
-                                    @foreach (var menu in Model.Menus)
-                                    {
-                                        <div class="card p-2" style="min-width:150px; cursor:pointer;" data-menu-id="@menu.Id">
-                                            @menu.Name
-                                        </div>
-                                    }
-                                </div>
+                                <!-- Đây là nơi load menu qua AJAX -->
+                                <div id="menuListContainer"></div>
 
                                 <h6>Món trong menu</h6>
                                 <div id="selectedMenuFoods" class="list-group"></div>
-
-                                <div class="mt-3 d-flex justify-content-center" id="pagination"></div>
                             </div>
+
                             <!-- Nút hành động -->
                             <div class="col-12 text-center mt-3">
                                 <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill">
                                     Gửi ngay
                                 </button>
-                                <button type="button" class="btn btn-success px-5 py-3 rounded-pill ms-3"
-                                        data-bs-toggle="modal" data-bs-target="#plannedModal">
+                                <button type="button" class="btn btn-success px-5 py-3 rounded-pill ms-3" id="togglePlannedSection">
                                     Tôi đã có kế hoạch
                                 </button>
                             </div>
                         </div>
                     </form>
+
+                    <!-- Collapsible Custom Menu Section -->
+                    <div id="plannedSection" class="collapse mt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Chi tiết menu</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Left: Custom Menu -->
+                                    <div class="col-6">
+                                        <h6>Menu của bạn</h6>
+                                        <div class="mb-3">
+                                            <label for="customMenuName" class="form-label">Tên menu của bạn</label>
+                                            <input type="text" id="customMenuName" class="form-control" placeholder="Nhập tên menu">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="customMenuImage" class="form-label">Ảnh menu</label>
+                                            <input type="file" id="customMenuImage" class="form-control" accept="image/*">
+                                        </div>
+                                        <div id="customMenu" class="border p-2" style="min-height:320px;"></div>
+                                    </div>
+
+                                    <!-- Right: Food List -->
+                                    <div class="col-6">
+                                        <h6>Danh sách món ăn</h6>
+                                        <div id="foodList" class="row g-3 row-cols-3"></div>
+                                        <div class="mt-3 d-flex justify-content-center" id="paginationCustom"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-end">
+                                <button type="button" class="btn btn-secondary" id="cancelCustomMenu">Đóng</button>
+                                <button type="button" class="btn btn-primary" id="confirmCustomMenu">Xác nhận</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -165,67 +193,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="plannedModal" tabindex="-1" aria-labelledby="plannedModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="plannedModalLabel">Chi tiết menu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="row">
-                        <!-- Left: Custom Menu -->
-                        <div class="col-6">
-                            <h6>Menu của bạn</h6>
-                            <div class="mb-3">
-                                <label for="customMenuName" class="form-label">Tên menu của bạn</label>
-                                <input type="text" id="customMenuName" class="form-control" placeholder="Nhập tên menu">
-                            </div>
-                            <div class="mb-3">
-                                <label for="customMenuImage" class="form-label">Ảnh menu</label>
-                                <input type="file" id="customMenuImage" class="form-control" accept="image/*">
-                            </div>
-                            <div id="customMenu" class="border p-2" style="min-height:320px;"></div>
-                        </div>
-
-                        <!-- Right: Food List -->
-                        <div class="col-6">
-                            <h6>Danh sách món ăn</h6>
-                            <div id="foodList" class="row g-3"></div>
-                            <div class="mt-3 d-flex justify-content-center" id="paginationCustom"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary">Xác nhận</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-<script>
-    // JS chọn menu
-    const menuCards = document.querySelectorAll('#menuList .card');
-    const selectedMenuInput = document.getElementById('SelectedMenuId');
-
-    menuCards.forEach(card => {
-        card.addEventListener('click', () => {
-            // Bỏ highlight cũ
-            menuCards.forEach(c => c.classList.remove('border-primary', 'border-3'));
-
-            // Highlight menu được chọn
-            card.classList.add('border-primary', 'border-3');
-
-            // Lưu menuId vào hidden input
-            selectedMenuInput.value = card.dataset.menuId;
-        });
-    });
-</script>
 
 <script>
     // --- Tự động tính EndTime ---
@@ -252,7 +220,7 @@
 </script>
 
 <script>
-    // JS thêm món vào custom menu
+    // JS thêm món vào custom menu (fallback for non-AJAX loaded items)
     document.querySelectorAll('.food-item').forEach(btn => {
         btn.addEventListener('click', () => {
             const menu = document.getElementById('customMenu');
@@ -263,18 +231,8 @@
         });
     });
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<div id="foodList" class="d-flex flex-column gap-2"></div>
-
-<nav>
-    <ul id="pagination" class="pagination"></ul>
-</nav>
-
-<div id="foodList" class="d-flex flex-wrap gap-3"></div>
-
-<nav>
-    <ul id="pagination" class="pagination"></ul>
-</nav>
 
 <script>
 const foods = @Html.Raw(JsonConvert.SerializeObject(Model.DtoFoods));
@@ -282,11 +240,18 @@ const menuDetails = @Html.Raw(JsonConvert.SerializeObject(Model.menuDetails));
 
 const itemsPerPage = 6;
 let currentPage = 1;
-let selectedMenuId = null;
 
-const foodListEl = document.getElementById("foodList"); // chỉ 1 foodList duy nhất
-const paginationEl = document.getElementById("pagination");
+const foodListEl = document.getElementById("foodList");
+const paginationEl = document.getElementById("paginationCustom");
 const customMenuEl = document.getElementById("customMenu");
+const selectedMenuInput = document.getElementById("SelectedMenuId");
+
+// Load menu qua AJAX
+function loadMenu(page = 1) {
+    $.get('@Url.Action("MenuList")', { page: page }, function(data) {
+        $('#menuListContainer').html(data);
+    });
+}
 
 // Render món ăn
 function renderFoods(page) {
@@ -297,12 +262,10 @@ function renderFoods(page) {
 
     foodsToShow.forEach(food => {
         const col = document.createElement("div");
-        col.className = "col-4";
+        col.className = "col"; // Use Bootstrap row-cols-3 for 2x3 grid
 
         const card = document.createElement("div");
-        card.className = "card text-center p-2 food-item";
-        card.style.width = "150px";
-        card.style.margin = "0 auto";
+        card.className = "card text-center p-3 food-item h-100"; // Increased padding
         card.style.cursor = "pointer";
 
         const img = document.createElement("img");
@@ -311,7 +274,7 @@ function renderFoods(page) {
                     : food.ImageUrl;
         img.className = "card-img-top";
         img.style.width = "100%";
-        img.style.height = "100px";
+        img.style.height = "120px"; // Taller image
         img.style.objectFit = "cover";
 
         const title = document.createElement("div");
@@ -424,49 +387,63 @@ function renderPagination() {
 }
 
 // Chọn menu sẵn có
-        document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
+    // Load menu trang 1
+    loadMenu();
+
+    // Bắt sự kiện click pagination
+    $(document).on('click', '.menu-page-link', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        loadMenu(page);
+    });
+
+    // Bắt sự kiện chọn menu (event delegation)
+    document.addEventListener('click', (event) => {
+        const card = event.target.closest('#menuList .card');
+        if (card) {
+            // Xóa highlight cũ
+            document.querySelectorAll('#menuList .card').forEach(c => c.style.border = "1px solid #dee2e6");
+            // Highlight menu được chọn
+            card.style.border = "2px solid green";
+
+            const menuId = card.dataset.menuId;
+            selectedMenuInput.value = menuId;
+
+            // Cập nhật danh sách món
             const selectedMenuFoodsEl = document.getElementById("selectedMenuFoods");
             const customMenuEl = document.getElementById("customMenu");
+            customMenuEl.innerHTML = "";
+            selectedMenuFoodsEl.innerHTML = "";
 
-            document.querySelectorAll('#menuList .card').forEach(card => {
-                card.style.cursor = "pointer";
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('#menuList .card').forEach(c => c.style.border = "1px solid #dee2e6");
-                    card.style.border = "2px solid green";
-                    const selectedMenuId = card.dataset.menuId;
+            const menuFoods = menuDetails.filter(md => md.MenuId == parseInt(menuId));
+            menuFoods.forEach(md => {
+                const foodItem = foods.find(f => f.Id === md.FoodId);
+                if (foodItem) {
+                    // Thêm vào custom menu (nếu cần)
+                    addOrIncreaseFood(foodItem, md.Amount);
 
-                    customMenuEl.innerHTML = "";
-                    selectedMenuFoodsEl.innerHTML = "";
-
-                    const menuFoods = menuDetails.filter(md => md.MenuId == parseInt(selectedMenuId));
-                    menuFoods.forEach(md => {
-                        const foodItem = foods.find(f => f.Id === md.FoodId);
-                        if (foodItem) {
-                            // Thêm vào custom menu (nếu cần)
-                            addOrIncreaseFood(foodItem, md.Amount);
-
-                            // Thêm vào danh sách hiển thị kèm số lượng
-                            const li = document.createElement('li');
-                            li.className = "list-group-item list-group-item-action";
-                            li.textContent = `${foodItem.Name} - Số lượng: ${md.Amount}`;
-
-                            // Khi click vào món, hiển thị thông báo
-                            li.addEventListener('click', () => {
-                                alert(`Bạn đã chọn món: ${foodItem.Name}, số lượng: ${md.Amount}`);
-                            });
-
-                            selectedMenuFoodsEl.appendChild(li);
-                        }
+                    // Thêm vào danh sách hiển thị kèm số lượng
+                    const li = document.createElement('li');
+                    li.className = "list-group-item list-group-item-action";
+                    li.textContent = `${foodItem.Name} - Số lượng: ${md.Amount}`;
+                    li.addEventListener('click', () => {
+                        alert(`Bạn đã chọn món: ${foodItem.Name}, số lượng: ${md.Amount}`);
                     });
-
-                });
+                    selectedMenuFoodsEl.appendChild(li);
+                }
             });
-        });
+        }
+    });
+});
 
+// Toggle collapsible section
+document.getElementById('togglePlannedSection').addEventListener('click', () => {
+    $('#plannedSection').collapse('toggle');
+});
 
-
-// Gửi dữ liệu custom menu
-document.querySelector('#plannedModal .btn-primary').addEventListener('click', async () => {
+// Handle confirm button
+document.getElementById('confirmCustomMenu').addEventListener('click', async () => {
     const menuName = document.getElementById('customMenuName').value.trim();
     const menuImageFile = document.getElementById('customMenuImage').files[0];
 
@@ -507,7 +484,7 @@ document.querySelector('#plannedModal .btn-primary').addEventListener('click', a
         const result = await response.json();
         if (result.success) {
             alert("Lưu menu thành công!");
-            bootstrap.Modal.getInstance(document.getElementById('plannedModal')).hide();
+            $('#plannedSection').collapse('hide');
             setTimeout(() => location.reload(), 500);
         } else {
             alert("Lưu menu thất bại: " + (result.message || "Lỗi không xác định"));
@@ -518,11 +495,15 @@ document.querySelector('#plannedModal .btn-primary').addEventListener('click', a
     }
 });
 
+// Handle cancel button
+document.getElementById('cancelCustomMenu').addEventListener('click', () => {
+    $('#plannedSection').collapse('hide');
+});
+
 // Khởi tạo
 renderFoods(currentPage);
 renderPagination();
 </script>
-
 
 <style>
     .custom-counter {
@@ -553,5 +534,31 @@ renderPagination();
         .counter-btn:hover {
             background-color: #d4d4d4;
         }
-</style>
 
+    #plannedSection .card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    #plannedSection .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    #plannedSection .card-footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    #foodList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px 15px;
+        justify-content: center;
+    }
+
+        #foodList .card {
+            width: 150px; /* đảm bảo 3 thẻ 1 hàng */
+        }
+</style>
