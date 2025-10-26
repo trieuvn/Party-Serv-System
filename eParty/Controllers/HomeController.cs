@@ -61,11 +61,12 @@ namespace eParty.Controllers
         }
         public ActionResult MenuList(int page = 1, int pageSize = 5)
         {
-            // Lấy tổng số menu
-            var totalMenus = db.Menus.Count();
+            // Chỉ đếm menu Active
+            var totalMenus = db.Menus.Count(m => m.Status != null && m.Status.ToLower().Trim() == "active");
 
             // Lấy menu theo trang
             var menus = db.Menus
+                          .Where(m => m.Status != null && m.Status.ToLower().Trim() == "active")
                           .OrderBy(m => m.Id)
                           .Skip((page - 1) * pageSize)
                           .Take(pageSize)
@@ -75,7 +76,7 @@ namespace eParty.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalMenus / pageSize);
 
-            return PartialView(menus);
+            return PartialView("MenuList", menus); 
         }
 
         // ================== TRANG ĐẶT TIỆC ==================
@@ -102,11 +103,12 @@ namespace eParty.Controllers
 
             var viewModel = new HomeViewModel
             {
-                Menus = db.Menus.ToList(),
+                Menus = db.Menus
+                      .Where(m => m.Status != null && m.Status.Contains("Active"))
+                      .ToList(),
                 DtoFoods = foodsDto,
                 menuDetails = menuDetailsDto
             };
-
             return View(viewModel);
         }
 
@@ -114,14 +116,12 @@ namespace eParty.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Book(Party model)
         {
-            // ✅ Kiểm tra đăng nhập
             if (Session["UserEmail"] == null)
             {
                 TempData["LoginMessage"] = "Vui lòng đăng nhập để đặt tiệc.";
                 return RedirectToAction("Login", "Account");
             }
 
-            // ✅ Lấy email người dùng
             string userEmail = Session["UserEmail"].ToString();
             var currentUser = db.AppUsers.FirstOrDefault(u => u.Email == userEmail);
             if (currentUser == null)
@@ -274,6 +274,7 @@ namespace eParty.Controllers
                 var menu = new Menu
                 {
                     Name = request.Name,
+                    Status="Inactive",
                     Image = SaveBase64Image(request.ImageBase64)
                 };
                 db.Menus.Add(menu);
