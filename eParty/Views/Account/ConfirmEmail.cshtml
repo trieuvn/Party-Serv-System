@@ -1,11 +1,26 @@
 ﻿@{
-    ViewBag.Title = "Confirm Email";
+    ViewBag.Title = "Xác Nhận Email";
+    Layout = null;
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <div>
-        <p>
-            Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-        </p>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - eParty</title>
+    <link rel="stylesheet" href="~/Content/login/style.css">
+    <link rel="stylesheet" href="~/Content/login/SharedMessageTemplate.css">
+</head>
+<body>
+    <div class="wrapper">
+        <h2>@ViewBag.Title</h2>
+        <div>
+            <p>
+                Cảm ơn bạn đã xác nhận email.
+                Vui lòng @Html.ActionLink("nhấn vào đây để Đăng nhập", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+            </p>
+        </div>
     </div>
-</main>
+</body>
+</html>

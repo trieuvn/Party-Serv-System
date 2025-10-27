@@ -1,0 +1,35 @@
+﻿/* CSS cho các trang thông báo/lỗi đơn giản.
+  Giữ nguyên màu nền và hộp wrapper, nhưng căn giữa nội dung.
+*/
+.wrapper h2 {
+    font-size: 2em;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.wrapper h3 {
+    font-size: 1.2em;
+    color: #ff3860; /* Màu đỏ cho lỗi */
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.wrapper p {
+    font-size: 1em;
+    color: #eee;
+    text-align: center;
+    margin: 15px 0;
+    line-height: 1.6;
+}
+
+    .wrapper p a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .wrapper p a:hover {
+            text-decoration: underline;
+        }

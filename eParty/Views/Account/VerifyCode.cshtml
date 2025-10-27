@@ -1,40 +1,75 @@
 ﻿@model eParty.Models.VerifyCodeViewModel
 @{
-    ViewBag.Title = "Verify";
+    ViewBag.Title = "Xác Minh";
+    Layout = null;
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - eParty</title>
+    <link rel="stylesheet" href="~/Content/login/style.css">
 
-    @using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" })) {
-        @Html.AntiForgeryToken()
-        @Html.Hidden("provider", @Model.Provider)
-        @Html.Hidden("rememberMe", @Model.RememberMe)
-        <h4>Enter verification code</h4>
-        <hr />
-        @Html.ValidationSummary("", new { @class = "text-danger" })
-        <div class="row">
-            @Html.LabelFor(m => m.Code, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            <div class="offset-md-2 col-md-10">
-                <div class="checkbox">
-                    @Html.CheckBoxFor(m => m.RememberBrowser)
-                    @Html.LabelFor(m => m.RememberBrowser)
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="offset-md-2 col-md-10">
-                <input type="submit" class="btn btn-outline-dark" value="Submit" />
-            </div>
-        </div>
-    }
-</main>
+    <!-- CSS nội tuyến để hiển thị lỗi validation -->
+    <style>
+        .text-danger {
+            color: #ff3860;
+            font-size: 0.875em;
+            text-align: left;
+            width: 100%;
+            display: block;
+            padding-left: 5px;
+            margin-top: 5px;
+        }
 
-@section Scripts {
+        .validation-summary-errors {
+            color: #ff3860;
+            text-align: center;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        @using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("provider", @Model.Provider)
+            @Html.Hidden("rememberMe", @Model.RememberMe)
+
+            <h2>@ViewBag.Title</h2>
+            <h4 style="color: #ccc; text-align: center; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">
+                Nhập mã xác minh
+            </h4>
+
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+
+            <!-- Trường Nhập Mã -->
+            <div class="input-field">
+                @Html.TextBoxFor(m => m.Code, new { required = "required", autocomplete = "one-time-code", @class = "form-control" })
+                @Html.LabelFor(m => m.Code, "Mã xác minh")
+            </div>
+            @Html.ValidationMessageFor(m => m.Code, "", new { @class = "text-danger" })
+
+            <!-- Ghi nhớ trình duyệt -->
+            <div class="forget" style="margin-top: 15px;">
+                <label for="RememberBrowser">
+                    @Html.CheckBoxFor(m => m.RememberBrowser, new { id = "RememberBrowser" })
+                    Nhớ trình duyệt này?
+                </label>
+            </div>
+
+            <button type="submit" style="margin-top: 20px;">Gửi</button>
+        }
+    </div>
+
+    <!-- Scripts cho validation -->
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-}
+</body>
+</html>

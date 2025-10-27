@@ -1,38 +1,75 @@
 ﻿@model eParty.Models.ExternalLoginConfirmationViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Hoàn Tất Đăng Ký";
+    Layout = null;
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>Associate your @ViewBag.LoginProvider account.</h3>
 
-    @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
-    {
-        @Html.AntiForgeryToken()
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - eParty</title>
+    <link rel="stylesheet" href="~/Content/login/style.css">
 
-        <h4>Association Form</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <p class="text-info">
-            You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
-            Please enter a user name for this site below and click the Register button to finish
-            logging in.
-        </p>
-        <div class="row">
-            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+    <!-- CSS nội tuyến để hiển thị lỗi validation -->
+    <style>
+        .text-danger {
+            color: #ff3860;
+            font-size: 0.875em;
+            text-align: left;
+            width: 100%;
+            display: block;
+            padding-left: 5px;
+            margin-top: 5px;
+        }
+
+        .validation-summary-errors {
+            color: #ff3860;
+            text-align: center;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        .text-info {
+            color: #eee;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <h2>@ViewBag.Title</h2>
+            <h4 style="color: #ccc; text-align: center; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">
+                Liên kết với tài khoản @ViewBag.LoginProvider .
+            </h4>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <p class="text-info">
+                Bạn đã xác thực thành công với <strong>@ViewBag.LoginProvider</strong>.
+                Vui lòng nhập (hoặc xác nhận) email của bạn để hoàn tất.
+            </p>
+
+            <!-- Trường Email -->
+            <div class="input-field">
+                @Html.TextBoxFor(m => m.Email, new { required = "required", autocomplete = "email" })
+                @Html.LabelFor(m => m.Email, "Nhập địa chỉ email")
             </div>
-        </div>
-        <div class="row">
-            <div class="offset-md-2 col-md-10">
-                <input type="submit" class="btn btn-outline-dark" value="Register" />
-            </div>
-        </div>
-    }
-</main>
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
 
-@section Scripts {
+            <button type="submit" style="margin-top: 20px;">Đăng Ký</button>
+        }
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-}
+</body>
+</html>

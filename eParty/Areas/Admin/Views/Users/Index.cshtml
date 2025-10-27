@@ -1,4 +1,4 @@
-﻿@model IEnumerable<eParty.Models.User>
+﻿@model IEnumerable<eParty.Models.SystemUser>
 
 @{
     ViewBag.Title = "User Management";
@@ -45,9 +45,9 @@
                                 <td>@Html.DisplayFor(m => item.Email)</td>
                                 <td>@Html.DisplayFor(m => item.PhoneNumber)</td>
                                 <td>
-                                    @if (item.Role.Contains("Users"))
+                                    @if (item.Role.Contains("User"))
                                     {
-                                        <span class="badge bg-primary">Users</span>
+                                        <span class="badge bg-primary">User</span>
                                     }
                                     else if (item.Role.Contains("Admin"))
                                     {

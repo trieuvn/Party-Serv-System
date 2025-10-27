@@ -123,7 +123,7 @@ namespace eParty.Controllers
             }
 
             string userEmail = Session["UserEmail"].ToString();
-            var currentUser = db.AppUsers.FirstOrDefault(u => u.Email == userEmail);
+            var currentUser = db.SystemUsers.FirstOrDefault(u => u.Email == userEmail);
             if (currentUser == null)
             {
                 TempData["Error"] = "Tài khoản không tồn tại.";

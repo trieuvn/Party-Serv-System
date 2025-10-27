@@ -38,7 +38,7 @@
             public string User { get; set; }
 
             [ForeignKey(nameof(User))]
-            public virtual User Author { get; set; }
+            public virtual SystemUser Author { get; set; }
 
             public virtual ICollection<Comment> Comments { get; set; }
 

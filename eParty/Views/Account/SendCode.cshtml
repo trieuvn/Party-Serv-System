@@ -1,26 +1,85 @@
 ﻿@model eParty.Models.SendCodeViewModel
 @{
-    ViewBag.Title = "Send";
+    ViewBag.Title = "Gửi Mã Xác Minh";
+    Layout = null;
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - eParty</title>
+    <link rel="stylesheet" href="~/Content/login/style.css">
 
-    @using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" })) {
-        @Html.AntiForgeryToken()
-        @Html.Hidden("rememberMe", @Model.RememberMe)
-        <h4>Send verification code</h4>
-        <hr />
-        <div class="row">
-            <div class="col-md-8">
-                Select Two-Factor Authentication Provider:
-                @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers)
-                <input type="submit" value="Submit" class="btn btn-outline-dark" />
+    <!-- CSS nội tuyến cho DropDownList -->
+    <style>
+        .text-danger {
+            color: #ff3860;
+            font-size: 0.875em;
+            text-align: left;
+            width: 100%;
+            display: block;
+            padding-left: 5px;
+            margin-top: 5px;
+        }
+
+        /* CSS tùy chỉnh cho phần chọn provider */
+        .select-provider {
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+
+            .select-provider label {
+                display: block;
+                margin-bottom: 10px;
+                font-size: 0.9em;
+                text-align: left;
+                color: #eee;
+            }
+
+            .select-provider select {
+                width: 100%;
+                padding: 12px 10px;
+                background: transparent;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 5px;
+                color: #fff;
+                font-size: 1em;
+                font-family: 'Poppins', sans-serif;
+            }
+                /* Style cho các <option> bên trong */
+                .select-provider select option {
+                    background: #333; /* Nền tối cho các lựa chọn */
+                    color: #fff;
+                }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        @using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("rememberMe", @Model.RememberMe)
+
+            <h2>@ViewBag.Title</h2>
+            <h4 style="color: #ccc; text-align: center; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">
+                Chọn phương thức xác thực
+            </h4>
+
+            <!-- Vùng chọn Provider (Dropdown) -->
+            <div class="select-provider">
+                <label for="SelectedProvider">Chọn nhà cung cấp xác thực:</label>
+                @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers, new { @class = "form-control", id = "SelectedProvider" })
             </div>
-        </div>
-    }
-</main>
 
-@section Scripts {
+            <button type="submit">Gửi</button>
+        }
+    </div>
+
+    <!-- Scripts cho validation -->
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-}
+</body>
+</html>

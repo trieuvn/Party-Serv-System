@@ -33,7 +33,7 @@ namespace eParty.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Name,Subject,Description,Status,User,IsPublished")] News news, HttpPostedFileBase ImageFile)
         {
-            var author = db.AppUsers.Find(news.User);
+            var author = db.SystemUsers.Find(news.User);
             if (author == null)
             {
                 ModelState.AddModelError("User", "Selected user does not exist.");
@@ -82,7 +82,7 @@ namespace eParty.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Subject,Description,Status,User,IsPublished")] News news, HttpPostedFileBase ImageFile)
         {
-            var author = db.AppUsers.Find(news.User);
+            var author = db.SystemUsers.Find(news.User);
             if (author == null)
             {
                 ModelState.AddModelError("User", "Selected user does not exist.");
@@ -173,7 +173,7 @@ namespace eParty.Areas.Admin.Controllers
         /// <param name="selectedUsername"></param>
         private void PopulateUsersDropdown(string selectedUsername = null)
         {
-            var users = db.AppUsers
+            var users = db.SystemUsers
                 .Select(u => new SelectListItem
                 {
                     Value = u.Username,

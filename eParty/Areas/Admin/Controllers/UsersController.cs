@@ -9,34 +9,34 @@ using System.IO;
 
 namespace eParty.Areas.Admin.Controllers
 {
-    public class UsersController : Controller
+    public class SystemUsersController : Controller
     {
         private AppDbContext db = new AppDbContext();
 
-        // GET: Admin/Users
+        // GET: Admin/SystemUsers
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            return View(db.SystemUsers.ToList());
         }
 
-        // GET: Admin/Users/Details/5
+        // GET: Admin/SystemUsers/Details/5
         public ActionResult Details(string id)
         {
             if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(id);
+            var user = db.SystemUsers.Find(id);
             if (user == null) return HttpNotFound();
 
             return View(user);
         }
 
-        // GET: Admin/Users/Create
+        // GET: Admin/SystemUsers/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Users/Create
+        // POST: Admin/SystemUsers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] SystemUser user, HttpPostedFileBase avatarFile)
@@ -60,18 +60,18 @@ namespace eParty.Areas.Admin.Controllers
             return View(user);
         }
 
-        // GET: Admin/Users/Edit/5
+        // GET: Admin/SystemUsers/Edit/5
         public ActionResult Edit(string id)
         {
             if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(id);
+            var user = db.SystemUsers.Find(id);
             if (user == null) return HttpNotFound();
 
             return View(user);
         }
 
-        // POST: Admin/Users/Edit/5
+        // POST: Admin/SystemUsers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] SystemUser user, HttpPostedFileBase avatarFile)
@@ -104,28 +104,28 @@ namespace eParty.Areas.Admin.Controllers
             return View(user);
         }
 
-        // GET: Admin/Users/Delete/5
+        // GET: Admin/SystemUsers/Delete/5
         public ActionResult Delete(string id)
         {
             if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(id);
+            var user = db.SystemUsers.Find(id);
             if (user == null) return HttpNotFound();
 
             return View(user);
         }
 
-        // POST: Admin/Users/Delete/5
+        // POST: Admin/SystemUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
             if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var user = db.Users.Find(id);
+            var user = db.SystemUsers.Find(id);
             if (user == null) return HttpNotFound();
 
-            db.Users.Remove(user);
+            db.SystemUsers.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

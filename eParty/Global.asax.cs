@@ -39,10 +39,6 @@ namespace eParty
             {
                 var role = new IdentityRole(); role.Name = "User"; roleManager.Create(role);
             }
-            if (!roleManager.RoleExists("User"))
-            {
-                var role = new IdentityRole(); role.Name = "User"; roleManager.Create(role);
-            }
             if (!roleManager.RoleExists("Staff"))
             {
                 var role = new IdentityRole(); role.Name = "Staff"; roleManager.Create(role);
