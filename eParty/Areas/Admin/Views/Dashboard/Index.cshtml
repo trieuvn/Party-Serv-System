@@ -1,4 +1,4 @@
-﻿@model eParty.Models.HomeViewModel
+﻿@model eParty.Areas.Admin.Models.DashboardViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -66,8 +66,8 @@
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Sales</p>
-                                    <h4 class="card-title">@Model.TotalCost.ToString("C")</h4>
+                                    <p class="card-category">Total incomes</p>
+                                    <h4 class="card-title">@Model.TotalCost</h4>
                                 </div>
                             </div>
                         </div>
