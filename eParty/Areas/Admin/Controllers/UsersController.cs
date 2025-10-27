@@ -39,7 +39,7 @@ namespace eParty.Areas.Admin.Controllers
         // POST: Admin/Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] User user, HttpPostedFileBase avatarFile)
+        public ActionResult Create([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] SystemUser user, HttpPostedFileBase avatarFile)
         {
             if (ModelState.IsValid)
             {
@@ -52,7 +52,7 @@ namespace eParty.Areas.Admin.Controllers
                     }
                 }
 
-                db.AppUsers.Add(user);
+                db.SystemUsers.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -74,11 +74,11 @@ namespace eParty.Areas.Admin.Controllers
         // POST: Admin/Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] User user, HttpPostedFileBase avatarFile)
+        public ActionResult Edit([Bind(Include = "Username,Password,FirstName,LastName,Email,PhoneNumber,Role")] SystemUser user, HttpPostedFileBase avatarFile)
         {
             if (ModelState.IsValid)
             {
-                var userInDb = db.AppUsers.Find(user.Username);
+                var userInDb = db.SystemUsers.Find(user.Username);
                 if (userInDb == null) return HttpNotFound();
 
                 userInDb.FirstName = user.FirstName;

@@ -15,7 +15,8 @@ namespace eParty.Models
         {
         }
 
-        public DbSet<User> AppUsers { get; set; }
+        // [ĐÃ SỬA] Đổi DbSet<User> Users thành DbSet<SystemUser> SystemUsers
+        public DbSet<SystemUser> SystemUsers { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Party> Parties { get; set; }
         public DbSet<Menu> Menus { get; set; }

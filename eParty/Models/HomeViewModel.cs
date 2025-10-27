@@ -15,7 +15,7 @@ namespace eParty.Models
         public List<Food>Foods {  get; set; }
 
         public List<Ingredient> Ingredients { get; set; }
-        public List<User> RoleUsers { get; set; }
+        public List<SystemUser> RoleUsers { get; set; }
         public int TotalCost { get; set; }
 
     }

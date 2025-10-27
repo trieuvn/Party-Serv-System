@@ -172,6 +172,7 @@ namespace eParty.Controllers
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     // ĐÃ SỬA: Chuyển hướng đến view thông báo kiểm tra email
+                    await UserManager.AddToRoleAsync(user.Id, "User");
                     return View("RegisterConfirmation");
                 }
                 AddErrors(result);
