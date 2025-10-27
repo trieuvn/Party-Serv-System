@@ -353,7 +353,44 @@ namespace eParty.Controllers
             return View();
         }
 
-        public ActionResult News() => View();
+        public ActionResult News()
+        {
+            var oneWeekAgo = DateTime.Now.AddDays(-7);
+
+            var model = new NewsViewModel
+            {
+                TrendingNews = db.News
+                    .Where(n => n.IsPublished)
+                    .OrderByDescending(n => n.CreatedDate)
+                    .Take(3)
+                    .ToList(),
+
+                WhatsNew = db.News
+                    .Where(n => n.IsPublished)
+                    .OrderByDescending(n => n.CreatedDate)
+                    .Skip(3)
+                    .Take(5)
+                    .ToList(),
+
+                MostPopularNews = db.News
+                    .Where(n => n.IsPublished)
+                    .OrderByDescending(n => n.ViewCount)
+                    .Take(5)
+                    .ToList(),
+
+                RecentArticles = db.News
+                    .Where(n => n.IsPublished)
+                    .OrderByDescending(n => n.CreatedDate)
+                    .Take(6)
+                    .ToList(),
+
+                WeeklyNews = db.News
+                    .Where(n => n.IsPublished && n.CreatedDate >= oneWeekAgo)
+                    .ToList()
+            };
+
+            return View(model);
+        }
 
         [Authorize]
         public ActionResult RedirectToAdmin()

@@ -575,6 +575,10 @@
     <Compile Include="Migrations\202510160646570_InitialIdentitySchema.Designer.cs">
       <DependentUpon>202510160646570_InitialIdentitySchema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202510261433153_hello.cs" />
+    <Compile Include="Migrations\202510261433153_hello.Designer.cs">
+      <DependentUpon>202510261433153_hello.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -593,6 +597,7 @@
     <Compile Include="Models\MenuDetailDto.cs" />
     <Compile Include="Models\MenuViewModel.cs" />
     <Compile Include="Models\News.cs" />
+    <Compile Include="Models\NewsViewModel.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\Party.cs" />
     <Compile Include="Models\Poster.cs" />
@@ -2096,6 +2101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202510160646570_InitialIdentitySchema.resx">
       <DependentUpon>202510160646570_InitialIdentitySchema.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202510261433153_hello.resx">
+      <DependentUpon>202510261433153_hello.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
