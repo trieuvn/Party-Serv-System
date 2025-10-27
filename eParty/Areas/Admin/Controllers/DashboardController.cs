@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace eParty.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")] // <-- THÊM DÒNG NÀY
     public class DashboardController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -19,7 +20,7 @@ namespace eParty.Areas.Admin.Controllers
                 Foods = db.Foods.ToList(),
                 Ingredients = db.Ingredients.ToList(),
                 TotalCost = totalfoods,
-                RoleUsers= db.Users.Where(p=>p.Role == "User").ToList()
+                RoleUsers= db.SystemUsers.Where(p=>p.Role == "User").ToList()
             };
             return View(list);
         }

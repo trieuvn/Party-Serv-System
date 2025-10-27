@@ -1,65 +1,134 @@
 ﻿@using eParty.Models
 @model LoginViewModel
 @{
-    ViewBag.Title = "Log in";
+    // Đặt tiêu đề và không sử dụng layout
+    ViewBag.Title = "Đăng Nhập";
+    Layout = null;
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <div class="row">
-        <div class="col-md-8">
-            <section id="loginForm">
-                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <h4>Use a local account to log in.</h4>
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="row">
-                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="row">
-                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
-                        <div class="col-md-10">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="offset-md-2 col-md-10">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(m => m.RememberMe)
-                                @Html.LabelFor(m => m.RememberMe)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="offset-md-2 col-md-10">
-                            <input type="submit" value="Log in" class="btn btn-outline-dark" />
-                        </div>
-                    </div>
-                    <p>
-                        @Html.ActionLink("Register as a new user", "Register")
-                    </p>
-                    @* Enable this once you have account confirmation enabled for password reset functionality
-                        <p>
-                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                        </p>*@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - eParty</title>
+
+    <!-- Link đến file CSS của template mới -->
+    <link rel="stylesheet" href="~/Content/login/style.css">
+
+    <!-- CSS (Không thay đổi) -->
+    <style>
+        .text-danger {
+            color: #ff3860; /* Màu đỏ tươi cho lỗi */
+            font-size: 0.875em;
+            text-align: left;
+            width: 100%;
+            display: block;
+            padding-left: 5px;
+            margin-top: 5px; /* Khoảng cách với trường bên trên */
+        }
+
+        .validation-summary-errors {
+            color: #ff3860;
+            text-align: center;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        /* Căn giữa cho form đăng nhập bên ngoài */
+        #socialLoginForm {
+            text-align: center;
+        }
+
+            /* Chỉnh lại nút của social login nếu cần */
+            #socialLoginForm .btn {
+                margin: 5px;
+                /* Thêm CSS cho nút Social Login để giống nút "Đăng Nhập" */
+                width: 100%;
+                height: 45px;
+                background: #fff;
+                border: none;
+                outline: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1em;
+                color: #000;
+                font-weight: 600;
+                margin-bottom: 10px; /* Thêm khoảng cách giữa các nút social */
+                transition: background-color 0.3s ease;
+            }
+
+                #socialLoginForm .btn:hover {
+                    background: #eee;
                 }
-            </section>
-        </div>
-        <div class="col-md-4">
-            <section id="socialLoginForm">
-                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-            </section>
-        </div>
-    </div>
-</main>
+    </style>
+</head>
+<body>
+    <div class="wrapper">
 
-@section Scripts {
+        <!-- === FORM 1: ĐĂNG NHẬP LOCAL (Email/Password) === -->
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <h2>Đăng Nhập</h2>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <!-- Trường Email -->
+            <div class="input-field">
+                @Html.TextBoxFor(m => m.Email, new { required = "required", autocomplete = "email" })
+                @Html.LabelFor(m => m.Email, "Nhập địa chỉ email của bạn")
+            </div>
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+            <!-- Trường Password -->
+            <div class="input-field" style="margin-top: 15px;">
+                @Html.PasswordFor(m => m.Password, new { required = "required", autocomplete = "current-password" })
+                @Html.LabelFor(m => m.Password, "Nhập mật khẩu của bạn")
+            </div>
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+            <!-- Phần Ghi nhớ và Quên mật khẩu -->
+            <div class="forget">
+                <label for="RememberMe">
+                    @Html.CheckBoxFor(m => m.RememberMe, new { id = "RememberMe" })
+                    Nhớ tôi
+                </label>
+                @Html.ActionLink("Quên mật khẩu?", "ForgotPassword", "Account")
+            </div>
+
+            <button type="submit">Đăng Nhập</button>
+
+            <!-- Liên kết Đăng ký -->
+            <div class="register">
+                <p>Bạn chưa có tài khoản? @Html.ActionLink("Đăng ký", "Register", "Account")</p>
+            </div>
+        }
+        <!-- === KẾT THÚC FORM 1 === -->
+        <!-- === PHẦN ĐĂNG NHẬP BÊN NGOÀI (Google, Facebook...) === -->
+        <!--
+          Phần này được dời ra BÊN NGOÀI form "Login" ở trên.
+          Giờ nó là một phần riêng biệt, ngang hàng.
+          File Partial sẽ tự tạo <form> "ExternalLogin" của riêng nó.
+        -->
+        <div class="social-login" style="margin-top: 20px;">
+            <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.2);" />
+
+            <h5 style="color: #ccc; font-weight: 500; margin-bottom: 15px; text-align: center;">
+                Hoặc đăng nhập bằng
+            </h5>
+            <section id="socialLoginForm">
+                <!-- File partial này sẽ tự tạo FORM 2 (ExternalLogin) -->
+                @Html.Partial("_ExternalLoginsListPartial", new eParty.Models.ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            </section>
+        </div>
+
+    </div>
+
+    <!-- Scripts (Không thay đổi) -->
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-}
+</body>
+</html>

@@ -1,0 +1,113 @@
+﻿@model eParty.Models.News
+
+@{
+    ViewBag.Title = "Edit News";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">News Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "News")">News</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Edit</a></li>
+    </ul>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Edit", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.Image)
+
+            <div class="card">
+                <div class="card-header"><div class="card-title">Edit News: @Model.Name</div></div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Name -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Subject, new { @class = "form-label" })
+                            @Html.EditorFor(m => m.Subject, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-12 mb-3">
+                            @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.Description, 5, 1, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Status, new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.Status,
+                                new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "Draft", Value = "Draft", Selected = Model.Status == "Draft" },
+                                    new SelectListItem { Text = "Published", Value = "Published", Selected = Model.Status == "Published" }
+                                },
+                                "--- Select Status ---",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Author -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.User, "Author", new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.User,
+                                (IEnumerable<SelectListItem>)ViewBag.Users,
+                                "--- Select Author ---",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.User, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Current Image + Upload -->
+                        <div class="col-md-12 mb-3">
+                            <label>Current Image</label><br />
+                            @if (!string.IsNullOrEmpty(Model.Image))
+                            {
+                                <img src="data:image/jpeg;base64,@Model.Image" alt="@Model.Name" style="max-width: 200px; display: block; margin-bottom: 10px;" />
+                            }
+                            else
+                            {
+                                <img src="~/AssetsAdmin/img/no-image.png" alt="No Image" style="max-width:200px; display:block; margin-bottom:10px;" />
+                            }
+                            <label for="ImageFile">Upload new image</label>
+                            <input type="file" name="ImageFile" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Save News</button>
+                    <a href="@Url.Action("Index", "News")" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

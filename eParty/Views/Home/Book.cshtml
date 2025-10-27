@@ -1,90 +1,564 @@
-﻿
+﻿@model eParty.Models.HomeViewModel
+@using Newtonsoft.Json
 @{
-    ViewBag.Title = "Đặt";
+    ViewBag.Title = "Đặt dịch vụ";
     Layout = "~/Views/Shared/LayoutUser.cshtml";
 }
 <div class="container-fluid contact py-6 wow bounceInUp" data-wow-delay="0.1s">
     <div class="container">
         <div class="row g-0">
+            <!-- Ảnh bên trái -->
             <div class="col-1">
-                <img src="/Content/landingpage/img/background-site.jpg" class="img-fluid h-100 w-100 rounded-start" style="object-fit: cover; opacity: 0.7;" alt="">
+                <img src="/Content/landingpage/img/background-site.jpg"
+                     class="img-fluid h-100 w-100 rounded-start"
+                     style="object-fit: cover; opacity: 0.7;" alt="background left">
             </div>
+
+            <!-- Nội dung chính -->
             <div class="col-10">
                 <div class="border-bottom border-top border-primary bg-light py-5 px-4">
                     <div class="text-center">
-                        <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Đặt dịch vụ</small>
+                        <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
+                            Đặt dịch vụ
+                        </small>
                         <h1 class="display-5 mb-5">Bạn muốn chúng tôi phục vụ ở đâu?</h1>
                     </div>
-                    <div class="row g-4 form">
-                        <div class="col-lg-4 col-md-6">
-                            <select class="form-select border-primary p-2" aria-label="Default select example">
-                                <option selected>Chọn quốc gia</option>
-                                <option value="1">Việt Nam</option>
-                                <option value="2">Anh</option>
-                                <option value="3">Ấn Độ</option>
-                            </select>
+
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            @if (TempData["LoginMessage"] != null)
+                            {
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    @TempData["LoginMessage"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            }
+                            @if (TempData["Error"] != null)
+                            {
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    @TempData["Error"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            }
+                            @if (TempData["AdminMessage"] != null)
+                            {
+                                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                    @TempData["AdminMessage"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            }
                         </div>
-                        <div class="col-lg-4 col-md-6">
-                            <select class="form-select border-primary p-2" aria-label="Default select example">
-                                <option selected>Chọn thành phố</option>
-                                <option value="1">Tùy thuộc vào quốc gia</option>
-                                <option value="2">London</option>
-                                <option value="3">Mumbai</option>
-                            </select>
+                    </div>
+
+                    <form id="bookForm" asp-action="Book" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row g-4 form">
+                            <!-- Địa chỉ -->
+                            <div class="col-lg-4 col-md-6">
+                                <input type="text" name="Address" class="form-control border-primary p-2"
+                                       placeholder="Nhập địa điểm tổ chức" required>
+                            </div>
+
+                            <!-- Tên buổi tiệc -->
+                            <div class="col-lg-4 col-md-6">
+                                <input type="text" name="PartyName" class="form-control border-primary p-2"
+                                       placeholder="Tên buổi tiệc (VD: Sinh nhật, Hội nghị...)" required>
+                            </div>
+
+                            <!-- Số lượng khách -->
+                            <div class="col-lg-4 col-md-6">
+                                <input type="number" name="Slots" class="form-control border-primary p-2"
+                                       placeholder="Số lượng khách" min="1" required>
+                            </div>
+
+                            <!-- Ăn chay / Không chay -->
+                            <div class="col-lg-4 col-md-6">
+                                <select class="form-select border-primary p-2" name="Type" required>
+                                    <option selected disabled>Loại tiệc</option>
+                                    <option value="Vegetarian">Ăn chay</option>
+                                    <option value="NonVegetarian">Không chay</option>
+                                </select>
+                            </div>
+
+                            <!-- Thời gian bắt đầu -->
+                            <div class="col-lg-4 col-md-6">
+                                <input type="datetime-local" id="BeginTime" name="BeginTime"
+                                       class="form-control border-primary p-2" required>
+                            </div>
+
+                            <!-- Thời lượng -->
+                            <div class="col-lg-4 col-md-6">
+                                <div class="d-flex gap-2">
+                                    <input type="number" id="DurationHours" name="DurationHours"
+                                           class="form-control border-primary p-2"
+                                           placeholder="Giờ" min="0" value="2" required>
+                                    <input type="number" id="DurationMinutes" name="DurationMinutes"
+                                           class="form-control border-primary p-2"
+                                           placeholder="Phút" min="0" max="59" value="0" required>
+                                </div>
+                            </div>
+
+                            <!-- Hidden EndTime -->
+                            <input type="hidden" id="EndTime" name="EndTime">
+
+                            <!-- Email -->
+                            <div class="col-lg-4 col-md-6">
+                                <input type="email" name="Email" class="form-control border-primary p-2"
+                                       placeholder="Nhập email của bạn" required>
+                            </div>
+
+                            <!-- Số điện thoại -->
+                            <div class="col-lg-4 col-md-6">
+                                <input type="tel" name="Phone" class="form-control border-primary p-2"
+                                       placeholder="Số điện thoại của bạn" required>
+                            </div>
+
+                            <!-- Mô tả -->
+                            <div class="col-12">
+                                <textarea name="Description" class="form-control border-primary p-2"
+                                          rows="3" placeholder="Mô tả ngắn gọn về buổi tiệc..."></textarea>
+                            </div>
+
+                            <!-- Menu Section -->
+                            <div class="col-12">
+                                <h5>Chọn Menu</h5>
+
+                                <!-- Hidden input để gửi MenuId -->
+                                <input type="hidden" id="SelectedMenuId" name="MenuId" />
+
+                                <!-- Đây là nơi load menu qua AJAX -->
+                                <div id="menuListContainer"></div>
+
+                                <h6>Món trong menu</h6>
+                                <div id="selectedMenuFoods" class="list-group"></div>
+                            </div>
+
+                            <!-- Nút hành động -->
+                            <div class="col-12 text-center mt-3">
+                                <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill">
+                                    Gửi ngay
+                                </button>
+                                <button type="button" class="btn btn-success px-5 py-3 rounded-pill ms-3" id="togglePlannedSection">
+                                    Tôi đã có kế hoạch
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-lg-4 col-md-6">
-                            <select class="form-select border-primary p-2" aria-label="Default select example">
-                                <option selected>Chọn địa điểm</option>
-                                <option value="1">Tùy thuộc vào quốc gia</option>
-                                <option value="2">London</option>
-                                <option value="3">Mumbai</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <select class="form-select border-primary p-2" aria-label="Default select example">
-                                <option selected>Sự kiện nhỏ</option>
-                                <option value="1">Loại sự kiện</option>
-                                <option value="2">Sự kiện lớn</option>
-                                <option value="3">Sự kiện nhỏ</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <select class="form-select border-primary p-2" aria-label="Default select example">
-                                <option selected>Số lượng khách</option>
-                                <option value="1">100-200</option>
-                                <option value="2">300-400</option>
-                                <option value="3">500-600</option>
-                                <option value="4">700-800</option>
-                                <option value="5">900-1000</option>
-                                <option value="6">1000+</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <select class="form-select border-primary p-2" aria-label="Default select example">
-                                <option selected>Ăn chay</option>
-                                <option value="1">Ăn chay</option>
-                                <option value="2">Không chay</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <input type="mobile" class="form-control border-primary p-2" placeholder="Số điện thoại của bạn">
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <input type="date" class="form-control border-primary p-2" placeholder="Chọn ngày">
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <input type="email" class="form-control border-primary p-2" placeholder="Nhập email của bạn">
-                        </div>
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill">Gửi ngay</button>
+                    </form>
+
+                    <!-- Collapsible Custom Menu Section -->
+                    <div id="plannedSection" class="collapse mt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Chi tiết menu</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Left: Custom Menu -->
+                                    <div class="col-6">
+                                        <h6>Menu của bạn</h6>
+                                        <div class="mb-3">
+                                            <label for="customMenuName" class="form-label">Tên menu của bạn</label>
+                                            <input type="text" id="customMenuName" class="form-control" placeholder="Nhập tên menu">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="customMenuImage" class="form-label">Ảnh menu</label>
+                                            <input type="file" id="customMenuImage" class="form-control" accept="image/*">
+                                        </div>
+                                        <div id="customMenu" class="border p-2" style="min-height:320px;"></div>
+                                    </div>
+
+                                    <!-- Right: Food List -->
+                                    <div class="col-6">
+                                        <h6>Danh sách món ăn</h6>
+                                        <div id="foodList" class="row g-3 row-cols-3"></div>
+                                        <div class="mt-3 d-flex justify-content-center" id="paginationCustom"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-end">
+                                <button type="button" class="btn btn-secondary" id="cancelCustomMenu">Đóng</button>
+                                <button type="button" class="btn btn-primary" id="confirmCustomMenu">Xác nhận</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Ảnh bên phải -->
             <div class="col-1">
-                <img src="/Content/landingpage/img/background-site.jpg" class="img-fluid h-100 w-100 rounded-end" style="object-fit: cover; opacity: 0.7;" alt="">
+                <img src="/Content/landingpage/img/background-site.jpg"
+                     class="img-fluid h-100 w-100 rounded-end"
+                     style="object-fit: cover; opacity: 0.7;" alt="background right">
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    // --- Tự động tính EndTime ---
+    const beginInput = document.getElementById("BeginTime");
+    const hInput = document.getElementById("DurationHours");
+    const mInput = document.getElementById("DurationMinutes");
+    const endInput = document.getElementById("EndTime");
+
+    [beginInput, hInput, mInput].forEach(el => el.addEventListener("input", updateEndTime));
+
+    function updateEndTime() {
+        const beginVal = beginInput.value;
+        if (!beginVal) return;
+
+        const begin = new Date(beginVal);
+        const hours = parseInt(hInput.value) || 0;
+        const minutes = parseInt(mInput.value) || 0;
+
+        begin.setHours(begin.getHours() + hours);
+        begin.setMinutes(begin.getMinutes() + minutes);
+
+        endInput.value = begin.toISOString().slice(0, 16);
+    }
+</script>
+
+<script>
+    // JS thêm món vào custom menu (fallback for non-AJAX loaded items)
+    document.querySelectorAll('.food-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const menu = document.getElementById('customMenu');
+            const newItem = document.createElement('div');
+            newItem.textContent = btn.textContent;
+            newItem.className = 'border p-1 mb-1';
+            menu.appendChild(newItem);
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const foods = @Html.Raw(JsonConvert.SerializeObject(Model.DtoFoods));
+const menuDetails = @Html.Raw(JsonConvert.SerializeObject(Model.menuDetails));
+
+const itemsPerPage = 6;
+let currentPage = 1;
+
+const foodListEl = document.getElementById("foodList");
+const paginationEl = document.getElementById("paginationCustom");
+const customMenuEl = document.getElementById("customMenu");
+const selectedMenuInput = document.getElementById("SelectedMenuId");
+
+// Load menu qua AJAX
+function loadMenu(page = 1) {
+    $.get('@Url.Action("MenuList")', { page: page }, function(data) {
+        $('#menuListContainer').html(data);
+    });
+}
+
+// Render món ăn
+function renderFoods(page) {
+    foodListEl.innerHTML = "";
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const foodsToShow = foods.slice(start, end);
+
+    foodsToShow.forEach(food => {
+        const col = document.createElement("div");
+        col.className = "col"; // Use Bootstrap row-cols-3 for 2x3 grid
+
+        const card = document.createElement("div");
+        card.className = "card text-center p-3 food-item h-100"; // Increased padding
+        card.style.cursor = "pointer";
+
+        const img = document.createElement("img");
+        img.src = (!food.ImageUrl.startsWith("http") && !food.ImageUrl.startsWith("data:"))
+                    ? "data:image/png;base64," + food.ImageUrl
+                    : food.ImageUrl;
+        img.className = "card-img-top";
+        img.style.width = "100%";
+        img.style.height = "120px"; // Taller image
+        img.style.objectFit = "cover";
+
+        const title = document.createElement("div");
+        title.textContent = food.Name;
+        title.className = "mt-2";
+
+        card.appendChild(img);
+        card.appendChild(title);
+        col.appendChild(card);
+        foodListEl.appendChild(col);
+
+        // Click thêm món vào custom menu
+        card.addEventListener('click', () => addOrIncreaseFood(food));
+    });
+}
+
+// Thêm món vào custom menu hoặc tăng số lượng
+function addOrIncreaseFood(food, amount = null) {
+    const unit = food.Unit || 1;
+    const maxAmount = food.UnitMax || 100;
+    const addAmount = amount || unit;
+
+    let existing = Array.from(customMenuEl.children).find(c => c.dataset.foodId == food.Id);
+
+    if (existing) {
+        let countEl = existing.querySelector(".count");
+        let newCount = parseInt(countEl.textContent) + addAmount;
+        if (newCount > maxAmount) {
+            alert(`Món "${food.Name}" chỉ tối đa ${maxAmount} ${food.UnitName || 'đơn vị'}.`);
+            return;
+        }
+        countEl.textContent = newCount;
+    } else {
+        const newItem = document.createElement('div');
+        newItem.dataset.foodId = food.Id;
+        newItem.dataset.unit = unit;
+        newItem.className = 'border p-1 mb-1 d-flex justify-content-between align-items-center';
+        newItem.innerHTML = `
+            ${food.Name}
+            <div class="custom-counter">
+                <div class="counter-btn btn-decrease">-</div>
+                <span class="count">${addAmount}</span>
+                <div class="counter-btn btn-increase">+</div>
+            </div>
+        `;
+        customMenuEl.appendChild(newItem);
+
+        const btnDecrease = newItem.querySelector(".btn-decrease");
+        const btnIncrease = newItem.querySelector(".btn-increase");
+        const countEl = newItem.querySelector(".count");
+
+        btnIncrease.addEventListener('click', () => {
+            let newCount = parseInt(countEl.textContent) + unit;
+            if (newCount > maxAmount) {
+                alert(`Món "${food.Name}" chỉ tối đa ${maxAmount} ${food.UnitName || 'đơn vị'}.`);
+                return;
+            }
+            countEl.textContent = newCount;
+        });
+
+        btnDecrease.addEventListener('click', () => {
+            let newCount = parseInt(countEl.textContent) - unit;
+            if (newCount <= 0) {
+                customMenuEl.removeChild(newItem);
+            } else {
+                countEl.textContent = newCount;
+            }
+        });
+    }
+}
+
+// Render phân trang
+function renderPagination() {
+    paginationEl.innerHTML = "";
+    const totalPages = Math.ceil(foods.length / itemsPerPage);
+
+    const createPageItem = (text, disabled, callback) => {
+        const li = document.createElement("li");
+        li.className = "page-item" + (disabled ? " disabled" : "");
+        const a = document.createElement("a");
+        a.className = "page-link";
+        a.href = "#";
+        a.textContent = text;
+        a.addEventListener("click", callback);
+        li.appendChild(a);
+        return li;
+    };
+
+    paginationEl.appendChild(createPageItem("‹", currentPage === 1, e => {
+        e.preventDefault();
+        if (currentPage > 1) { currentPage--; renderFoods(currentPage); renderPagination(); }
+    }));
+
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement("li");
+        li.className = "page-item" + (i === currentPage ? " active" : "");
+        const a = document.createElement("a");
+        a.className = "page-link";
+        a.href = "#";
+        a.textContent = i;
+        a.addEventListener("click", (e) => { e.preventDefault(); currentPage = i; renderFoods(currentPage); renderPagination(); });
+        li.appendChild(a);
+        paginationEl.appendChild(li);
+    }
+
+    paginationEl.appendChild(createPageItem("›", currentPage === totalPages, e => {
+        e.preventDefault();
+        if (currentPage < totalPages) { currentPage++; renderFoods(currentPage); renderPagination(); }
+    }));
+}
+
+// Chọn menu sẵn có
+document.addEventListener("DOMContentLoaded", () => {
+    // Load menu trang 1
+    loadMenu();
+
+    // Bắt sự kiện click pagination
+    $(document).on('click', '.menu-page-link', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        loadMenu(page);
+    });
+
+    // Bắt sự kiện chọn menu (event delegation)
+    document.addEventListener('click', (event) => {
+        const card = event.target.closest('#menuList .card');
+        if (card) {
+            // Xóa highlight cũ
+            document.querySelectorAll('#menuList .card').forEach(c => c.style.border = "1px solid #dee2e6");
+            // Highlight menu được chọn
+            card.style.border = "2px solid green";
+
+            const menuId = card.dataset.menuId;
+            selectedMenuInput.value = menuId;
+
+            // Cập nhật danh sách món
+            const selectedMenuFoodsEl = document.getElementById("selectedMenuFoods");
+            const customMenuEl = document.getElementById("customMenu");
+            customMenuEl.innerHTML = "";
+            selectedMenuFoodsEl.innerHTML = "";
+
+            const menuFoods = menuDetails.filter(md => md.MenuId == parseInt(menuId));
+            menuFoods.forEach(md => {
+                const foodItem = foods.find(f => f.Id === md.FoodId);
+                if (foodItem) {
+                    // Thêm vào custom menu (nếu cần)
+                    addOrIncreaseFood(foodItem, md.Amount);
+
+                    // Thêm vào danh sách hiển thị kèm số lượng
+                    const li = document.createElement('li');
+                    li.className = "list-group-item list-group-item-action";
+                    li.textContent = `${foodItem.Name} - Số lượng: ${md.Amount}`;
+                    li.addEventListener('click', () => {
+                        alert(`Bạn đã chọn món: ${foodItem.Name}, số lượng: ${md.Amount}`);
+                    });
+                    selectedMenuFoodsEl.appendChild(li);
+                }
+            });
+        }
+    });
+});
+
+// Toggle collapsible section
+document.getElementById('togglePlannedSection').addEventListener('click', () => {
+    $('#plannedSection').collapse('toggle');
+});
+
+// Handle confirm button
+document.getElementById('confirmCustomMenu').addEventListener('click', async () => {
+    const menuName = document.getElementById('customMenuName').value.trim();
+    const menuImageFile = document.getElementById('customMenuImage').files[0];
+
+    if (!menuName) { alert("Vui lòng nhập tên menu"); return; }
+    if (!menuImageFile) { alert("Vui lòng chọn ảnh menu"); return; }
+
+    const customFoods = Array.from(customMenuEl.children).map(item => ({
+        FoodId: parseInt(item.dataset.foodId),
+        Amount: parseInt(item.querySelector('.count').textContent)
+    }));
+
+    if (customFoods.length === 0) { alert("Vui lòng chọn ít nhất 1 món"); return; }
+
+    const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Lỗi đọc file"));
+        reader.readAsDataURL(file);
+    });
+
+    try {
+        const base64Image = await readFileAsBase64(menuImageFile);
+        if (!base64Image.startsWith('data:image/')) { alert("File ảnh không hợp lệ"); return; }
+
+        const payload = { Name: menuName, ImageBase64: base64Image, Foods: customFoods };
+
+        const response = await fetch('/Home/SaveCustomMenuBase64', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error("Server lỗi: " + response.status);
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Lưu menu thành công!");
+            $('#plannedSection').collapse('hide');
+            setTimeout(() => location.reload(), 500);
+        } else {
+            alert("Lưu menu thất bại: " + (result.message || "Lỗi không xác định"));
+        }
+    } catch (err) {
+        console.error("Lỗi khi lưu menu:", err);
+        alert("Có lỗi xảy ra khi xử lý ảnh hoặc gửi dữ liệu. Vui lòng thử lại.");
+    }
+});
+
+// Handle cancel button
+document.getElementById('cancelCustomMenu').addEventListener('click', () => {
+    $('#plannedSection').collapse('hide');
+});
+
+// Khởi tạo
+renderFoods(currentPage);
+renderPagination();
+</script>
+
+<style>
+    .custom-counter {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .custom-counter span {
+            min-width: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+    .counter-btn {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        line-height: 23px;
+        text-align: center;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        cursor: pointer;
+        user-select: none;
+        font-weight: bold;
+    }
+
+        .counter-btn:hover {
+            background-color: #d4d4d4;
+        }
+
+    #plannedSection .card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    #plannedSection .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    #plannedSection .card-footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    #foodList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px 60px;
+        justify-content: flex-start;
+    }
+
+        #foodList .card {
+            width: 170px; 
+        }
+</style>

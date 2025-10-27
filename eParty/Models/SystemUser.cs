@@ -6,7 +6,8 @@ using System.Web;
 
 namespace eParty.Models
 {
-    public class User
+    // [ĐÃ SỬA] Đổi tên class từ User thành SystemUser
+    public class SystemUser
     {
         [Key, StringLength(50)]
         public string Username { get; set; }
@@ -54,7 +55,7 @@ namespace eParty.Models
         /// <param name="phoneNumber">Phone number (optional)</param>
         /// <param name="role">User role (default: "User")</param>
         /// <returns>True if registration is successful, false if username already exists</returns>
-        public static bool Register(string username, string password, string email, 
+        public static bool Register(string username, string password, string email,
             string firstName = "", string lastName = "", string phoneNumber = "", string role = "User")
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email))
@@ -63,7 +64,8 @@ namespace eParty.Models
             }
 
             // Create new user instance
-            var newUser = new User
+            // [ĐÃ SỬA] Đổi User thành SystemUser
+            var newUser = new SystemUser
             {
                 Username = username,
                 Password = password,

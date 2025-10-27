@@ -31,8 +31,10 @@ namespace eParty.Models
         // FK -> User
         [StringLength(50)]
         public string User { get; set; }
+
+        // [ĐÃ SỬA] Đổi User thành SystemUser
         [ForeignKey(nameof(User))]
-        public virtual User Owner { get; set; }
+        public virtual SystemUser Owner { get; set; }
 
         // FK -> Menu
         public int? Menu { get; set; }
@@ -236,5 +238,6 @@ namespace eParty.Models
                 }
             }
         }
+
     }
 }

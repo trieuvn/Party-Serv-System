@@ -1,0 +1,73 @@
+﻿@model eParty.Models.Poster
+
+@{
+    ViewBag.Title = "Create Poster";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Poster Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Posters")">Posters</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "Posters", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Add New Poster</div>
+                </div>
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter poster name" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="imageFile">Image</label>
+                                <input type="file" name="imageFile" id="imageFile" class="form-control" />
+                                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+                                <img id="previewImage" src="#" alt="Preview" style="width:100px;height:100px;object-fit:cover;display:none;margin-top:10px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Preview image before upload
+        document.getElementById('imageFile').addEventListener('change', function (e) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = document.getElementById('previewImage');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}

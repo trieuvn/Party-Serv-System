@@ -1,0 +1,104 @@
+﻿@model eParty.Models.News
+
+@{
+    ViewBag.Title = "Create New News";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">News Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "News")">News</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header"><div class="card-title">Add New News</div></div>
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Name)
+                            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter news title" } })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Subject)
+                            @Html.EditorFor(m => m.Subject, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter news subject" } })
+                            @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            @Html.LabelFor(m => m.Description)
+                            @Html.TextAreaFor(m => m.Description, 5, 1, new { @class = "form-control", placeholder = "Enter news description" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Status)
+                            @Html.DropDownListFor(m => m.Status,
+                                new List<SelectListItem> {
+                                    new SelectListItem { Text="Draft", Value="Draft" },
+                                    new SelectListItem { Text="Published", Value="Published" }
+                                },
+                                "--- Select Status ---",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.User, "Author")
+                            @Html.DropDownListFor(m => m.User,
+                                (IEnumerable<SelectListItem>)ViewBag.Users, // Value = Username
+                                "--- Select Author ---",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.User, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="imageFile">Image</label>
+                            <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/*" />
+                            @Html.ValidationMessageFor(m => m.Image, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index", "News")" class="btn btn-secondary">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // Convert image file to Base64 before submitting
+        $('form').submit(function (e) {
+            var fileInput = document.getElementById('imageFile');
+            if (fileInput.files.length > 0) {
+                e.preventDefault();
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    var base64 = evt.target.result.split(',')[1];
+                    $('<input>').attr({ type: 'hidden', name: 'Image', value: base64 }).appendTo('form');
+                    $('form')[0].submit();
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>
+}
