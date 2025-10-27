@@ -1,73 +1,111 @@
 ﻿@model eParty.Models.News
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit News";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Edit</h2>
+<div class="page-header">
+    <h3 class="fw-bold mb-3">News Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "News")">News</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Edit</a></li>
+    </ul>
+</div>
 
-
-@using (Html.BeginForm())
+@if (TempData["SuccessMessage"] != null)
 {
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>News</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.User, "User", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("User", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.User, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Edit", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.Image)
+
+            <div class="card">
+                <div class="card-header"><div class="card-title">Edit News: @Model.Name</div></div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Name -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Subject, new { @class = "form-label" })
+                            @Html.EditorFor(m => m.Subject, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-12 mb-3">
+                            @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.Description, 5, 1, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Status, new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.Status,
+                                new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "Draft", Value = "Draft", Selected = Model.Status == "Draft" },
+                                    new SelectListItem { Text = "Published", Value = "Published", Selected = Model.Status == "Published" }
+                                },
+                                "--- Select Status ---",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Author -->
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.User, "Author", new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.User,
+                                (IEnumerable<SelectListItem>)ViewBag.Users,
+                                "--- Select Author ---",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.User, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Current Image + Upload -->
+                        <div class="col-md-12 mb-3">
+                            <label>Current Image</label><br />
+                            @if (!string.IsNullOrEmpty(Model.Image))
+                            {
+                                <img src="data:image/jpeg;base64,@Model.Image" alt="@Model.Name" style="max-width: 200px; display: block; margin-bottom: 10px;" />
+                            }
+                            else
+                            {
+                                <img src="~/AssetsAdmin/img/no-image.png" alt="No Image" style="max-width:200px; display:block; margin-bottom:10px;" />
+                            }
+                            <label for="ImageFile">Upload new image</label>
+                            <input type="file" name="ImageFile" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Save News</button>
+                    <a href="@Url.Action("Index", "News")" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 @section Scripts {

@@ -1,6 +1,7 @@
 ﻿@model eParty.Models.NewsViewModel
 @using System.Linq
 @using eParty.Models
+@using System.IO
 
 <!-- Trending Area Start -->
 <div class="trending-area fix pt-25 gray-bg">
@@ -15,11 +16,11 @@
                             <div class="single-slider">
                                 <div class="trending-top mb-30">
                                     <div class="trend-top-img">
-                                        <img src="@news.ImageUrl" alt="@news.Name">
+                                        <img src="data:image/jpeg;base64,@news.Image" alt="@news.Name">
                                         <div class="trend-top-cap">
                                             <span class="bgr" data-animation="fadeInUp" data-delay=".2s" data-duration="1000ms">News</span>
                                             <h2><a href="@Url.Action("Details", "News", new { id = news.Id })" data-animation="fadeInUp" data-delay=".4s" data-duration="1000ms">@news.Subject</a></h2>
-                                            <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by @news.Author.GetFullName()- @news.CreatedDate.ToString("MMM dd, yyyy")</p>
+                                            <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by @news.Author.GetFullName() - @news.CreatedDate.ToString("MMM dd, yyyy")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -27,6 +28,7 @@
                         }
                     </div>
                 </div>
+
                 <!-- Right content -->
                 <div class="col-lg-4">
                     <div class="row">
@@ -35,11 +37,11 @@
                             <div class="col-lg-12 col-md-6 col-sm-6">
                                 <div class="trending-top mb-30">
                                     <div class="trend-top-img">
-                                        <img src="@news.ImageUrl" alt="@news.Name">
+                                        <img src="data:image/jpeg;base64,@news.Image" alt="@news.Name">
                                         <div class="trend-top-cap trend-top-cap2">
                                             <span class="bgb">News</span>
                                             <h2><a href="@Url.Action("Details", "News", new { id = news.Id })">@news.Subject</a></h2>
-                                            <p>by @news.Author.GetFullName()  - @news.CreatedDate.ToString("MMM dd, yyyy")</p>
+                                            <p>by @news.Author.GetFullName() - @news.CreatedDate.ToString("MMM dd, yyyy")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +59,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
-                <div class="whats-news-wrapper" style="height:847px">
+                <div class="whats-news-wrapper" style="height:900px">
                     <!-- Heading -->
                     <div class="row justify-content-between align-items-end mb-15">
                         <div class="col-xl-4">
@@ -66,21 +68,20 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- Tab content -->
                     <div class="row">
                         <div class="col-12">
                             <div class="tab-content" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel">
                                     <div class="row">
-                                        <!-- Left Details Caption -->
                                         @if (Model.WhatsNew != null && Model.WhatsNew.Count > 0)
                                         {
                                             var mainNews = Model.WhatsNew[0];
-
                                             <div class="col-xl-6 col-lg-12">
                                                 <div class="whats-news-single mb-40">
                                                     <div class="whates-img">
-                                                        <img src="@mainNews.ImageUrl" alt="@mainNews.Name">
+                                                        <img src="data:image/jpeg;base64,@mainNews.Image" alt="@mainNews.Name">
                                                     </div>
                                                     <div class="whates-caption">
                                                         <h4><a href="">@mainNews.Subject</a></h4>
@@ -90,19 +91,24 @@
                                                 </div>
                                             </div>
                                         }
-                                        <!-- Right single caption -->
                                         <div class="col-xl-6 col-lg-12">
                                             <div class="row">
                                                 @foreach (var news in Model.WhatsNew.Skip(1).Take(4))
                                                 {
                                                     <div class="col-xl-12 col-lg-6 col-md-6 col-sm-10">
-                                                        <div class="whats-right-single mb-20">
+                                                        <div class="whats-right-single mb-20" style="max-width: 500px;">
                                                             <div class="whats-right-img">
-                                                                <img src="@news.ImageUrl" alt="@news.Name">
+                                                                <img src="data:image/jpeg;base64,@news.Image"
+                                                                     alt="@news.Name"
+                                                                     style="width: 180px; height: 150px; object-fit: cover;">
                                                             </div>
                                                             <div class="whats-right-cap">
                                                                 <span class="colorb">News</span>
-                                                                <h4><a href="@Url.Action("Details", "News", new { id = news.Id })">@news.Subject</a></h4>
+                                                                <h4>
+                                                                    <a href="@Url.Action("Details", "News", new { id = news.Id })">
+                                                                        @news.Subject
+                                                                    </a>
+                                                                </h4>
                                                                 <p>@news.CreatedDate.ToString("MMM dd, yyyy")</p>
                                                             </div>
                                                         </div>
@@ -110,6 +116,7 @@
                                                 }
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -117,58 +124,31 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-4">
                 <!-- Flow Social -->
                 <div class="single-follow mb-45">
                     <div class="single-box">
-                        <div class="follow-us d-flex align-items-center">
-                            <div class="follow-social">
-                                <a href="#"><img src="~/Content/news/assets/img/news/icon-fb.png" alt=""></a>
+                        @foreach (var icon in new[] { "icon-fb.png", "icon-tw.png", "icon-ins.png", "icon-yo.png" })
+                        {
+                            <div class="follow-us d-flex align-items-center">
+                                <div class="follow-social">
+                                    <a href="#"><img src="data:image/jpeg;base64,@icon" alt=""></a>
+                                </div>
+                                <div class="follow-count"><span>8,045</span><p>Fans</p></div>
                             </div>
-                            <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                            </div>
-                        </div>
-                        <div class="follow-us d-flex align-items-center">
-                            <div class="follow-social">
-                                <a href="#"><img src="~/Content/news/assets/img/news/icon-tw.png" alt=""></a>
-                            </div>
-                            <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                            </div>
-                        </div>
-                        <div class="follow-us d-flex align-items-center">
-                            <div class="follow-social">
-                                <a href="#"><img src="~/Content/news/assets/img/news/icon-ins.png" alt=""></a>
-                            </div>
-                            <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                            </div>
-                        </div>
-                        <div class="follow-us d-flex align-items-center">
-                            <div class="follow-social">
-                                <a href="#"><img src="~/Content/news/assets/img/news/icon-yo.png" alt=""></a>
-                            </div>
-                            <div class="follow-count">
-                                <span>8,045</span>
-                                <p>Fans</p>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
-                <!-- Most Recent Area -->
-                <div class="most-recent-area">
-                    <div class="small-tittle mb-20">
-                        <h4>Most Recent</h4>
-                    </div>
-                    @foreach (var news in Model.RecentArticles.Take(3))
+
+                <!-- Most Recent -->
+                <div class="most-recent-area" style=" height: 660px !important;">
+                    <div class="small-tittle mb-20"><h4>Most Recent</h4></div>
+                    @foreach (var news in Model.RecentArticles.Take(2))
                     {
                         <div class="most-recent mb-40">
                             <div class="most-recent-img">
-                                <img src="@news.ImageUrl" alt="@news.Name">
+                                <img src="data:image/jpeg;base64,@news.Image" alt="@news.Name">
                                 <div class="most-recent-cap">
                                     <span class="bgbeg">News</span>
                                     <h4><a href="@Url.Action("Details", "News", new { id = news.Id })">@news.Subject</a></h4>
@@ -183,7 +163,7 @@
     </div>
 </section>
 <!-- Whats New End -->
-<!-- Weekly2-News start -->
+<!-- Weekly2-News -->
 <div class="weekly2-news-area pt-50 pb-30 gray-bg">
     <div class="container">
         <div class="weekly2-wrapper">
@@ -192,9 +172,7 @@
                     <div class="slider-wrapper">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="small-tittle mb-30">
-                                    <h4>Most Popular</h4>
-                                </div>
+                                <div class="small-tittle mb-30"><h4>Most Popular</h4></div>
                             </div>
                         </div>
                         <div class="row">
@@ -204,7 +182,7 @@
                                     {
                                         <div class="weekly2-single">
                                             <div class="weekly2-img">
-                                                <img src="@news.ImageUrl" alt="@news.Name">
+                                                <img src="data:image/jpeg;base64,@news.Image" alt="@news.Name">
                                             </div>
                                             <div class="weekly2-caption">
                                                 <h4><a href="@Url.Action("Details", "News", new { id = news.Id })">@news.Subject</a></h4>
@@ -221,17 +199,13 @@
         </div>
     </div>
 </div>
-<!-- End Weekly-News -->
-<!-- Recent Articles start -->
+
+<!-- Recent Articles -->
 <div class="recent-articles pt-80 pb-80">
     <div class="container">
         <div class="recent-wrapper">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-tittle mb-30">
-                        <h3>Trending News</h3>
-                    </div>
-                </div>
+                <div class="col-lg-12"><div class="section-tittle mb-30"><h3>Trending News</h3></div></div>
             </div>
             <div class="row">
                 <div class="col-12">
@@ -240,12 +214,14 @@
                         {
                             <div class="single-recent">
                                 <div class="what-img">
-                                    <img src="@news.ImageUrl" alt="@news.Name">
+                                    <img src="data:image/jpeg;base64,@news.Image" alt="@news.Name">
                                 </div>
                                 <div class="what-cap">
                                     <h4><a href="@Url.Action("Details", "News", new { id = news.Id })">@news.Subject</a></h4>
                                     <p>@news.CreatedDate.ToString("MMM dd, yyyy")</p>
-                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><span class="flaticon-play-button"></span></a>
+                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU">
+                                        <span class="flaticon-play-button"></span>
+                                    </a>
                                 </div>
                             </div>
                         }
@@ -255,8 +231,8 @@
         </div>
     </div>
 </div>
-<!-- Recent Articles End -->
-<!-- Weekly3-News start -->
+
+<!-- Weekly3-News -->
 <div class="weekly3-news-area pt-80 pb-130">
     <div class="container">
         <div class="weekly3-wrapper">
@@ -270,7 +246,7 @@
                                     {
                                         <div class="weekly3-single">
                                             <div class="weekly3-img">
-                                                <img src="@news.ImageUrl" alt="@news.Name">
+                                                <img src="data:image/jpeg;base64,@news.Image" alt="@news.Name">
                                             </div>
                                             <div class="weekly3-caption">
                                                 <h4><a href="@Url.Action("Details", "News", new { id = news.Id })">@news.Subject</a></h4>
@@ -287,7 +263,6 @@
         </div>
     </div>
 </div>
-<!-- End Weekly3-News -->
 
 @section Scripts {
     <script src="~/Content/news/assets/js/vendor/modernizr-3.5.0.min.js"></script>

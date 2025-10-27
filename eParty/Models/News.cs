@@ -15,8 +15,8 @@
             [DataType(DataType.DateTime)]
             public DateTime CreatedDate { get; set; }
 
-            [StringLength(200)]
-            public string ImageUrl { get; set; }
+        [Column(TypeName = "nvarchar(max)")]
+        public string Image { get; set; }
 
             public int ViewCount { get; set; }
 
