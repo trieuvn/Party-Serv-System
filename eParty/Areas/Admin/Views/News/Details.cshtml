@@ -23,29 +23,63 @@
                 <div class="card-title">Details for: @Model.Name</div>
             </div>
             <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-3">Author</dt>
-                    <dd class="col-sm-9">@Model.Author.FirstName @Model.Author.LastName</dd>
+                <div class="row">
+                    <!-- Image -->
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <img src="data:image/jpeg;base64,@Model.Image" alt="@Model.Name" class="img-fluid rounded" style="max-height:200px; object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/AssetsAdmin/img/no-image.png" alt="No Image" class="img-fluid rounded" style="max-height:200px; object-fit:cover;" />
+                        }
+                    </div>
 
-                    <dt class="col-sm-3">Author Password</dt>
-                    <dd class="col-sm-9">@Model.Author.Password</dd>
+                    <!-- Details -->
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-3">Title</dt>
+                            <dd class="col-sm-9">@Model.Name</dd>
 
-                    <dt class="col-sm-3">Title</dt>
-                    <dd class="col-sm-9">@Model.Name</dd>
+                            <dt class="col-sm-3">Subject</dt>
+                            <dd class="col-sm-9">@Model.Subject</dd>
 
-                    <dt class="col-sm-3">Subject</dt>
-                    <dd class="col-sm-9">@Model.Subject</dd>
+                            <dt class="col-sm-3">Description</dt>
+                            <dd class="col-sm-9">@Model.Description</dd>
 
-                    <dt class="col-sm-3">Description</dt>
-                    <dd class="col-sm-9">@Model.Description</dd>
+                            <dt class="col-sm-3">Author</dt>
+                            <dd class="col-sm-9">@((Model.Author != null) ? Model.Author.Username : (Model.User ?? "Unknown"))</dd>
 
-                    <dt class="col-sm-3">Status</dt>
-                    <dd class="col-sm-9">@Model.Status</dd>
-                </dl>
+                            <dt class="col-sm-3">Created Date</dt>
+                            <dd class="col-sm-9">@Model.CreatedDate.ToString("dd/MM/yyyy")</dd>
+
+                            <dt class="col-sm-3">Status</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.Status == "Published")
+                                {
+                                    <span class="badge bg-success">Published</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Draft</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-3">View Count</dt>
+                            <dd class="col-sm-9">@Model.ViewCount</dd>
+
+                            <dt class="col-sm-3">Average Stars</dt>
+                            <dd class="col-sm-9">@Model.GetAvgStar()</dd>
+                        </dl>
+                    </div>
+                </div>
             </div>
+
+            <!-- Actions -->
             <div class="card-action">
-                <a href="@Url.Action("Edit", "News", new { id = Model.Id })" class="btn btn-primary">Edit News</a>
-                <a href="@Url.Action("Index", "News")" class="btn btn-info">Back to List</a>
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">Edit News</a>
+                <a href="@Url.Action("Index")" class="btn btn-info">Back to List</a>
             </div>
         </div>
     </div>

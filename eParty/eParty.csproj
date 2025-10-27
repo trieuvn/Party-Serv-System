@@ -575,6 +575,17 @@
     <Compile Include="Migrations\202510160646570_InitialIdentitySchema.Designer.cs">
       <DependentUpon>202510160646570_InitialIdentitySchema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202510261433153_hello.cs" />
+    <Compile Include="Migrations\202510261433153_hello.Designer.cs">
+      <DependentUpon>202510261433153_hello.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202510270253329_pad.cs" />
+    <Compile Include="Migrations\202510270253329_pad.Designer.cs">
+      <DependentUpon>202510270253329_pad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202510270337201_news.cs" />
+    <Compile Include="Migrations\202510270337201_news.Designer.cs">
+      <DependentUpon>202510270337201_news.cs</DependentUpon>
     <Compile Include="Migrations\202510240914132_RenameUserToSystemUser.cs" />
     <Compile Include="Migrations\202510240914132_RenameUserToSystemUser.Designer.cs">
       <DependentUpon>202510240914132_RenameUserToSystemUser.cs</DependentUpon>
@@ -597,6 +608,7 @@
     <Compile Include="Models\MenuDetailDto.cs" />
     <Compile Include="Models\MenuViewModel.cs" />
     <Compile Include="Models\News.cs" />
+    <Compile Include="Models\NewsViewModel.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\Party.cs" />
     <Compile Include="Models\Poster.cs" />
@@ -2050,6 +2062,8 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\RegisterConfirmation.cshtml" />
+    <Content Include="Views\Home\ConfirmEmail.cshtml" />
+    <Content Include="Views\Home\MenuList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2099,6 +2113,14 @@
     <EmbeddedResource Include="Migrations\202510160646570_InitialIdentitySchema.resx">
       <DependentUpon>202510160646570_InitialIdentitySchema.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202510261433153_hello.resx">
+      <DependentUpon>202510261433153_hello.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202510270253329_pad.resx">
+      <DependentUpon>202510270253329_pad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202510270337201_news.resx">
+      <DependentUpon>202510270337201_news.cs</DependentUpon>
     <EmbeddedResource Include="Migrations\202510240914132_RenameUserToSystemUser.resx">
       <DependentUpon>202510240914132_RenameUserToSystemUser.cs</DependentUpon>
     </EmbeddedResource>

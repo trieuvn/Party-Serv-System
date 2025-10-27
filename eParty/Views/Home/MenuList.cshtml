@@ -1,0 +1,22 @@
+﻿@model List<eParty.Models.Menu>
+
+<div id="menuList" class="d-flex gap-2 overflow-auto mb-3">
+    @foreach (var menu in Model)
+    {
+        <div class="card p-2" style="min-width:150px; cursor:pointer;" data-menu-id="@menu.Id">
+            @menu.Name
+        </div>
+    }
+</div>
+
+<!-- Pagination -->
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link menu-page-link" href="#" data-page="@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>

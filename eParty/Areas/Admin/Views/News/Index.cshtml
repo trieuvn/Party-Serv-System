@@ -15,12 +15,15 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table id="news-datatables" class="display table table-striped table-hover">
-                    <thead>
+                <table id="news-datatables" class="display table table-striped table-hover align-middle">
+                    <thead class="table-light">
                         <tr>
-                            <th>Title</th>
+                            <th>Image</th>
+                            <th>Name</th>
                             <th>Subject</th>
                             <th>Description</th>
+                            <th>Author</th>
+                            <th>Created Date</th>
                             <th>Status</th>
                             <th style="width: 15%">Actions</th>
                         </tr>
@@ -29,28 +32,43 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Subject)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                 <td>
-                                    @if (item.Status == "Active")
+                                    @if (!string.IsNullOrEmpty(item.Image))
                                     {
-                                        <span class="badge bg-success">Active</span>
+                                        <img src="data:image/jpeg;base64,@item.Image" alt="@item.Name"
+                                             class="rounded" style="width: 80px; height: 60px; object-fit: cover;" />
                                     }
                                     else
                                     {
-                                        <span class="badge bg-danger">Inactive</span>
+                                        <img src="~/AssetsAdmin/img/no-image.png" alt="No Image"
+                                             class="rounded" style="width: 80px; height: 60px; object-fit: cover;" />
+                                    }
+                                </td>
+                                <td>@item.Name</td>
+                                <td>@item.Subject</td>
+                                <td>@(item.Description?.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description)</td>
+                                <td>@(item.Author != null ? item.Author.GetFullName() : item.User ?? "Unknown")</td>
+                                <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @if (item.Status == "Published")
+                                    {
+                                        <span class="badge bg-success">Published</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Draft</span>
                                     }
                                 </td>
                                 <td>
+
                                     <div class="d-flex gap-1">
-                                        <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-primary" title="Edit">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
                                         <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-sm btn-info" title="Details">
                                             <i class="fa fa-info-circle"></i>
                                         </a>
-                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-danger" title="Remove">
+                                        <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-primary" title="Edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-danger" title="Delete">
                                             <i class="fa fa-times"></i>
                                         </a>
                                     </div>
@@ -71,7 +89,7 @@
                 "pageLength": 5,
                 "lengthMenu": [5, 10, 20],
                 "columnDefs": [
-                    { "orderable": false, "targets": 4 } // cột Actions không sắp xếp
+                    { "orderable": false, "targets": [0, 7] } // Image + Actions không sắp xếp
                 ]
             });
         });

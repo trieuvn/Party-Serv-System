@@ -28,48 +28,55 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            @Html.LabelFor(model => model.Name, new { @class = "form-label" })
-                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter news title" } })
-                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            @Html.LabelFor(m => m.Name)
+                            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter news title" } })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            @Html.LabelFor(model => model.Subject, new { @class = "form-label" })
-                            @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter news subject" } })
-                            @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                            @Html.LabelFor(m => m.Subject)
+                            @Html.EditorFor(m => m.Subject, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter news subject" } })
+                            @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="col-md-12 mb-3">
-                            @Html.LabelFor(model => model.Description, new { @class = "form-label" })
-                            @Html.TextAreaFor(model => model.Description, 5, 1, new { @class = "form-control", placeholder = "Enter news description" })
-                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                            @Html.LabelFor(m => m.Description)
+                            @Html.TextAreaFor(m => m.Description, 5, 1, new { @class = "form-control", placeholder = "Enter news description" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            @Html.LabelFor(model => model.Status, new { @class = "form-label" })
-                            @Html.DropDownListFor(model => model.Status,
-                                new List<SelectListItem>
-                                {
-                                    new SelectListItem { Text = "Draft", Value = "Draft" },
-                                    new SelectListItem { Text = "Published", Value = "Published" }
+                            @Html.LabelFor(m => m.Status)
+                            @Html.DropDownListFor(m => m.Status,
+                                new List<SelectListItem> {
+                                    new SelectListItem { Text="Draft", Value="Draft" },
+                                    new SelectListItem { Text="Published", Value="Published" }
                                 },
                                 "--- Select Status ---",
                                 new { @class = "form-select" })
-                            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
                         </div>
 
-
                         <div class="col-md-6 mb-3">
-                            @Html.LabelFor(model => model.User, "User", new { @class = "form-label" })
-                            @Html.DropDownList("User", null, "--- Select User ---", new { @class = "form-select" })
-                            @Html.ValidationMessageFor(model => model.User, "", new { @class = "text-danger" })
+                            @Html.LabelFor(m => m.User, "Author")
+                            @Html.DropDownListFor(m => m.User,
+                                (IEnumerable<SelectListItem>)ViewBag.Users, // Value = Username
+                                "--- Select Author ---",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.User, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="imageFile">Image</label>
+                            <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/*" />
+                            @Html.ValidationMessageFor(m => m.Image, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
 
                 <div class="card-action">
                     <button type="submit" class="btn btn-success">Create</button>
-                    <a href="@Url.Action("Index", "News")" class="btn btn-danger">Cancel</a>
+                    <a href="@Url.Action("Index", "News")" class="btn btn-secondary">Cancel</a>
                 </div>
             </div>
         }
@@ -78,4 +85,20 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // Convert image file to Base64 before submitting
+        $('form').submit(function (e) {
+            var fileInput = document.getElementById('imageFile');
+            if (fileInput.files.length > 0) {
+                e.preventDefault();
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    var base64 = evt.target.result.split(',')[1];
+                    $('<input>').attr({ type: 'hidden', name: 'Image', value: base64 }).appendTo('form');
+                    $('form')[0].submit();
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>
 }

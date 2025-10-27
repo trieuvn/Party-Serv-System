@@ -26,8 +26,10 @@
                 </div>
                 <hr />
                 <dl class="row">
-                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Author.Password)</dt>
-                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Author.Password)</dd>
+                    <dt class="col-sm-3">Author</dt>
+                    <dd class="col-sm-9">
+                        @(Model.Author.Username ?? Model.User ?? "Unknown")
+                    </dd>
 
                     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
                     <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
@@ -40,6 +42,18 @@
 
                     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Status)</dt>
                     <dd class="col-sm-9">@Html.DisplayFor(model => model.Status)</dd>
+
+                    <dt class="col-sm-3">Image</dt>
+                    <dd class="col-sm-9">
+                        @if (!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <img src="data:image/jpeg;base64,@Model.Image" alt="@Model.Name" style="max-width: 200px; display:block;" />
+                        }
+                        else
+                        {
+                            <img src="~/AssetsAdmin/img/no-image.png" alt="No Image" style="max-width: 200px; display:block;" />
+                        }
+                    </dd>
                 </dl>
             </div>
             <div class="card-action">
