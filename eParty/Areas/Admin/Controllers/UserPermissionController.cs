@@ -18,6 +18,7 @@ namespace eParty.Areas.Admin.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private AppDbContext db = new AppDbContext();
 
         public UserPermissionController() { }
 
@@ -69,6 +70,7 @@ namespace eParty.Areas.Admin.Controllers
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await UserManager.CreateAsync(user, model.Password);
 
+            SystemUser systemUser = new SystemUser();
 
             if (result.Succeeded)
             {
@@ -76,10 +78,24 @@ namespace eParty.Areas.Admin.Controllers
                 {
                     await UserManager.AddToRoleAsync(user.Id, Role[i]);
 
+                    systemUser.Role = Role[i];
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                 }
                 return RedirectToAction("Index", "Dashboard");
             }
+
+            
+            systemUser.Username = user.Email;
+
+            systemUser.Password = "123456";
+
+            systemUser.Email = user.Email;
+
+            db.SystemUsers.Add(systemUser);
+            db.SaveChanges();
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error);

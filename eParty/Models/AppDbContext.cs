@@ -16,7 +16,6 @@ namespace eParty.Models
         }
 
         public DbSet<SystemUser> SystemUsers { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
         public DbSet<Party> Parties { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<MenuDetail> MenuDetails { get; set; }
