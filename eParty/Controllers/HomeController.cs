@@ -1,6 +1,4 @@
 ﻿using eParty.Models;
-using eParty.Service;
-using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +6,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Web;
 using System.Web.Mvc;
 
 namespace eParty.Controllers
@@ -44,7 +41,7 @@ namespace eParty.Controllers
         {
             return View();
         }
-        
+
 
         public ActionResult Menu()
         {
@@ -76,7 +73,7 @@ namespace eParty.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalMenus / pageSize);
 
-            return PartialView("MenuList", menus); 
+            return PartialView("MenuList", menus);
         }
 
         // ================== TRANG ĐẶT TIỆC ==================
@@ -152,38 +149,38 @@ namespace eParty.Controllers
                 model.Menu = null;
                 model.MenuRef = null;
             }
-                model.CreatedDate = DateTime.Now;
+            model.CreatedDate = DateTime.Now;
 
-                try
+            try
+            {
+                // Sinh mã xác nhận
+                string confirmationCode = new Random().Next(100000, 999999).ToString();
+                Session["ConfirmCode"] = confirmationCode;
+                Session["PendingParty"] = model;
+
+                // Gửi email xác nhận
+                using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    // Sinh mã xác nhận
-                    string confirmationCode = new Random().Next(100000, 999999).ToString();
-                    Session["ConfirmCode"] = confirmationCode;
-                    Session["PendingParty"] = model;
+                    smtpClient.EnableSsl = true;
+                    smtpClient.Credentials = new NetworkCredential("phucnguyen2716@gmail.com", "ooag phsw rzno onxy");
 
-                    // Gửi email xác nhận
-                    using (var smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                    var mail = new MailMessage("your_email@gmail.com", currentUser.Email)
                     {
-                        smtpClient.EnableSsl = true;
-                        smtpClient.Credentials = new NetworkCredential("phucnguyen2716@gmail.com", "ooag phsw rzno onxy");
+                        Subject = "Xác nhận đăng ký đặt tiệc",
+                        Body = $"Mã xác nhận của bạn là: {confirmationCode}"
+                    };
 
-                        var mail = new MailMessage("your_email@gmail.com", currentUser.Email)
-                        {
-                            Subject = "Xác nhận đăng ký đặt tiệc",
-                            Body = $"Mã xác nhận của bạn là: {confirmationCode}"
-                        };
-
-                        smtpClient.Send(mail);
-                    }
-
-                    return RedirectToAction("ConfirmEmail");
+                    smtpClient.Send(mail);
                 }
-                catch (Exception ex)
-                {
-                    TempData["Error"] = "Không thể gửi email xác nhận: " + ex.Message;
-                    return RedirectToAction("Book");
-                }
+
+                return RedirectToAction("ConfirmEmail");
             }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Không thể gửi email xác nhận: " + ex.Message;
+                return RedirectToAction("Book");
+            }
+        }
 
         // ================== XÁC NHẬN EMAIL ==================
         [HttpGet]
@@ -274,7 +271,7 @@ namespace eParty.Controllers
                 var menu = new Menu
                 {
                     Name = request.Name,
-                    Status="Inactive",
+                    Status = "Inactive",
                     Image = SaveBase64Image(request.ImageBase64)
                 };
                 db.Menus.Add(menu);
