@@ -1,0 +1,63 @@
+﻿@model eParty.Models.StaffParty
+
+@{
+    ViewBag.Title = "Edit Staff Assignment";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">StaffParty Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "StaffParties")">StaffParties</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Edit</a></li>
+    </ul>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm(null, null, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Staff)
+            @Html.HiddenFor(m => m.Party)
+
+            <div class="card">
+                <div class="card-header"><div class="card-title">Edit Staff Assignment</div></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.Label("Staff")
+                                @Html.DropDownListFor(m => m.Staff, (SelectList)ViewBag.Staff, "--- Select Staff ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Staff, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.Label("Party")
+                                @Html.DropDownListFor(m => m.Party, (SelectList)ViewBag.Party, "--- Select Party ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Party, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

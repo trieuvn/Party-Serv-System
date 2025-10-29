@@ -1,0 +1,185 @@
+﻿@model eParty.Models.Party
+
+@{
+    ViewBag.Title = "Create Party";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Party Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Party")">Party</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "Parties", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Add New Party</div>
+                </div>
+
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+
+                        <!-- Name -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Enter party name" })
+                                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Type -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Type, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Type, new { @class = "form-control", placeholder = "e.g., Birthday, Wedding" })
+                                @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Cost -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Cost, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Cost, new { @class = "form-control", type = "number", placeholder = "e.g., 5000000" })
+                                @Html.ValidationMessageFor(m => m.Cost, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Slots -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Slots, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Slots, new { @class = "form-control", type = "number", placeholder = "Max guests" })
+                                @Html.ValidationMessageFor(m => m.Slots, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Begin Time -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.BeginTime, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.BeginTime, new { @class = "form-control", type = "datetime-local" })
+                                @Html.ValidationMessageFor(m => m.BeginTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- End Time -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.EndTime, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.EndTime, new { @class = "form-control", type = "datetime-local" })
+                                @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Status, new { @class = "form-label" })
+                                @{
+                                    var statusList = new SelectList(
+                                        new List<SelectListItem>
+                                        {
+                                            new SelectListItem { Value = "Pending", Text = "Pending" },
+                                            new SelectListItem { Value = "Confirmed", Text = "Confirmed" },
+                                            new SelectListItem { Value = "Cancelled", Text = "Cancelled" },
+                                            new SelectListItem { Value = "Completed", Text = "Completed" }
+                    }, "Value", "Text");
+                                }
+                                @Html.DropDownListFor(m => m.Status, statusList, "--- Select Status ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- User (Host) -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.Label("Host", new { @class = "form-label" })
+                                @Html.DropDownList("User", ViewBag.User as SelectList, "--- Select Host ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.User, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Menu -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.Label("Menu", new { @class = "form-label" })
+                                @Html.DropDownList("Menu", ViewBag.Menu as SelectList, "--- Select Menu ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Menu, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Address, new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.Address, 3, 0, new { @class = "form-control", placeholder = "Full party address" })
+                                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Latitude -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Latitude, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Latitude, new { @class = "form-control", type = "number", step = "any", placeholder = "e.g., 10.7769" })
+                                @Html.ValidationMessageFor(m => m.Latitude, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Longitude -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Longitude, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Longitude, new { @class = "form-control", type = "number", step = "any", placeholder = "e.g., 106.7009" })
+                                @Html.ValidationMessageFor(m => m.Longitude, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.Description, 5, 0, new { @class = "form-control", placeholder = "Enter party details, theme, notes..." })
+                                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Party Image</label>
+                                <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*" />
+                                @Html.ValidationMessageFor(m => m.Image, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

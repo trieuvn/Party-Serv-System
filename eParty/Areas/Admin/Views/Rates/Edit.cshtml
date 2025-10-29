@@ -1,0 +1,71 @@
+﻿@model eParty.Models.Rate
+
+@{
+    ViewBag.Title = "Edit Rating";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header mb-4">
+    <h3 class="fw-bold">Edit Your Rating</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+            <a href="@Url.Action("Index", "Home")"><i class="icon-home"></i></a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("MyRates", "Rates")">My Ratings</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Edit</a></li>
+    </ul>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Edit", "Rates", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        @(Model.PartyRef != null ? Model.PartyRef.Name : "Unknown Party")
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    @Html.HiddenFor(m => m.User)
+                    @Html.HiddenFor(m => m.Party)
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(m => m.Stars, "Rating (1–5)", new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.Stars, new { @class = "form-control", type = "number", min = "1", max = "5", step = "1" })
+                        @Html.ValidationMessageFor(m => m.Stars, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(m => m.Comment, new { @class = "form-label fw-semibold" })
+                        @Html.TextAreaFor(m => m.Comment, 4, 1, new { @class = "form-control", placeholder = "Write your comment here..." })
+                        @Html.ValidationMessageFor(m => m.Comment, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="card-footer text-end">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="icon-save"></i> Save Changes
+                    </button>
+                    <a href="@Url.Action("MyRates", "Rates")" class="btn btn-secondary">
+                        <i class="icon-list"></i> Back to My Ratings
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

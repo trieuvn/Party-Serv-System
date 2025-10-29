@@ -1,0 +1,79 @@
+﻿@model IEnumerable<eParty.Models.Partner>
+@{
+    ViewBag.Title = "Partner Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Partner List</h4>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
+                    Create New
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="partner-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Name)</th>
+                            <th>@Html.DisplayNameFor(model => model.Subject)</th>
+                            <th>@Html.DisplayNameFor(model => model.Description)</th>
+                            <th style="width: 12%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                                <td>
+                                    <div style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="@item.Description">
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-button-action">
+                                        <a href="@Url.Action("Edit", new { id = item.Id })" data-bs-toggle="tooltip" title="Edit" class="btn btn-link btn-primary btn-lg">
+                                            Edit
+                                        </a>
+                                        <a href="@Url.Action("Details", new { id = item.Id })" data-bs-toggle="tooltip" title="Details" class="btn btn-link btn-info btn-lg">
+                                            Details
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" data-bs-toggle="tooltip" title="Remove" class="btn btn-link btn-danger">
+                                            Remove
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#partner-datatables').DataTable({
+                "pageLength": 5,
+                "columnDefs": [
+                    { "orderable": false, "targets": 3 }, // Không sort cột Action
+                    { "width": "25%", "targets": 0 }, // Name
+                    { "width": "20%", "targets": 1 }, // Subject
+                    { "width": "40%", "targets": 2 }  // Description
+                ]
+            });
+
+            // Khởi tạo tooltip
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}
