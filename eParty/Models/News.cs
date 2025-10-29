@@ -57,5 +57,42 @@
                 // Calculate average of all star ratings
                 return Comments.Average(c => c.Stars);
             }
+
+            /// <summary>
+            /// Gets the image source URL, converting base64 strings to data URI if needed.
+            /// Supports URL paths, base64 strings, and automatically detects image format.
+            /// </summary>
+            /// <returns>Image source URL or data URI</returns>
+            public string GetImageSrc()
+            {
+                if (string.IsNullOrEmpty(Image))
+                {
+                    return string.Empty;
+                }
+
+                var imageSrc = Image;
+
+                // Nếu đã là URL (http/https), đường dẫn tương đối (/ hoặc ~), hoặc data URI → giữ nguyên
+                if (imageSrc.StartsWith("http") || imageSrc.StartsWith("data:image") || 
+                    imageSrc.StartsWith("/") || imageSrc.StartsWith("~"))
+                {
+                    return imageSrc;
+                }
+
+                // Nếu không → coi như base64 và chuyển đổi sang data URI
+                // Tự động phát hiện format từ base64 signature
+                var imageFormat = "jpeg"; // Default format
+
+                if (imageSrc.StartsWith("iVBOR")) 
+                    imageFormat = "png";  // PNG signature
+                else if (imageSrc.StartsWith("R0lGO")) 
+                    imageFormat = "gif";  // GIF signature
+                else if (imageSrc.StartsWith("/9j/")) 
+                    imageFormat = "jpeg"; // JPEG signature
+                else if (imageSrc.StartsWith("UklGR"))
+                    imageFormat = "webp"; // WebP signature
+
+                return $"data:image/{imageFormat};base64,{imageSrc}";
+            }
         }
     }
