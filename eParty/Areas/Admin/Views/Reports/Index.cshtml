@@ -1,0 +1,356 @@
+﻿@model eParty.Areas.Admin.Models.ReportViewModel
+@using Newtonsoft.Json
+
+@{
+    ViewBag.Title = "Báo cáo Doanh thu";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Báo cáo Doanh thu</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Báo cáo</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Tùy chọn Báo cáo</div></div>
+            <div class="card-body">
+                @using (Html.BeginForm("Index", "Reports", FormMethod.Get))
+                {
+                    <div class="row align-items-end">
+                        <div class="col-md-3">
+                            <label for="reportType" class="form-label">Loại Báo cáo</label>
+                            @Html.DropDownList("reportType", Model.ReportTypes, new { @class = "form-select" })
+                        </div>
+                        <div class="col-md-3">
+                            <label for="startDate" class="form-label">Từ ngày (BeginTime)</label>
+                            <input type="date" name="startDate" id="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDate" class="form-label">Đến ngày (BeginTime)</label>
+                            <input type="date" name="endDate" id="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Lọc</button>
+                            <a href="@Url.Action("ExportToExcel", new { startDate = Model.StartDate.ToString("yyyy-MM-dd"), endDate = Model.EndDate.ToString("yyyy-MM-dd"), reportType = Model.ReportType })" class="btn btn-success ms-2">
+                                <i class="fas fa-file-excel"></i> Xuất Excel
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Biểu đồ (Nhóm theo Ngày): @Model.ReportTypes.First(r => r.Selected).Text</div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="min-height: 375px">
+                    <canvas id="reportChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header"><div class="card-title">Dữ liệu chi tiết (Theo từng Party)</div></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="report-datatables" class="display table table-striped table-hover">
+
+                        @* === SỬA ĐỔI: Tiêu đề bảng === *@
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên Party</th>
+                                <th>Ngày Bắt đầu</th>
+                                <th>Trạng thái</th>
+
+                                @if (Model.ReportType == "Summary" || Model.ReportType == "Revenue")
+                                {
+                                    <th>Doanh thu</th>
+                                }
+                                @if (Model.ReportType == "Summary" || Model.ReportType == "Costs")
+                                {
+                                    <th>Chi phí NVL (COGS)</th>
+                                    <th>Lợi nhuận</th>
+                                }
+                                @if (Model.ReportType == "Costs")
+                                {
+                                    <th>Chi phí PriceHistory</th>
+                                    <th>Giá Menu (Lý thuyết)</th>
+                                    <th>Giá Food (Lý thuyết)</th>
+                                }
+                            </tr>
+                        </thead>
+
+                        @* === SỬA ĐỔI: Nội dung bảng === *@
+                        <tbody>
+                            @foreach (var item in Model.TableData)
+                            {
+                                <tr>
+                                    <td>@item.PartyId</td>
+                                    <td>@item.PartyName</td>
+                                    <td>@item.BeginTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        @if (item.Status == "Completed")
+                                        {<span class="badge bg-secondary">Completed</span> }
+                                        else if (item.Status == "Upcoming")
+                                        { <span class="badge bg-primary">Upcoming</span> }
+                                        else if (item.Status == "Ongoing")
+                                        { <span class="badge bg-success">Ongoing</span> }
+                                        else
+                                        { <span class="badge bg-dark">@item.Status</span>}
+                                    </td>
+
+                                    @if (Model.ReportType == "Summary" || Model.ReportType == "Revenue")
+                                    {
+                                        <td>@item.Revenue.ToString("N0", culture) đ</td>
+                                    }
+                                    @if (Model.ReportType == "Summary" || Model.ReportType == "Costs")
+                                    {
+                                        <td>@item.IngredientCost.ToString("N0", culture) đ</td>
+                                        <td>@item.Profit.ToString("N0", culture) đ</td>
+                                    }
+                                    @if (Model.ReportType == "Costs")
+                                    {
+                                        <td>@item.PriceHistoryCost.ToString("N0", culture) đ</td>
+                                        <td>@item.MenuCost.ToString("N0", culture) đ</td>
+                                        <td>@item.FoodCost.ToString("N0", culture) đ</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+
+                        @* === SỬA ĐỔI: Dòng tổng cộng === *@
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td>TỔNG CỘNG</td>
+                                <td>(@Model.Totals.PartyCount Party)</td>
+                                <td></td>
+                                <td></td>
+
+                                @if (Model.ReportType == "Summary" || Model.ReportType == "Revenue")
+                                {
+                                    <td>@Model.Totals.Revenue.ToString("N0", culture) đ</td>
+                                }
+                                @if (Model.ReportType == "Summary" || Model.ReportType == "Costs")
+                                {
+                                    <td>@Model.Totals.IngredientCost.ToString("N0", culture) đ</td>
+                                    <td>@Model.Totals.Profit.ToString("N0", culture) đ</td>
+                                }
+                                @if (Model.ReportType == "Costs")
+                                {
+                                    <td>@Model.Totals.PriceHistoryCost.ToString("N0", culture) đ</td>
+                                    <td>@Model.Totals.MenuCost.ToString("N0", culture) đ</td>
+                                    <td>@Model.Totals.FoodCost.ToString("N0", culture) đ</td>
+                                }
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @* Script cho Bảng (DataTables) *@
+    <script>
+        $(document).ready(function () {
+            $('#report-datatables').DataTable({
+                "pageLength": 10,
+                "order": [[2, "asc"]] // Sắp xếp theo Ngày Bắt đầu
+            });
+        });
+    </script>
+
+    @* SỬA ĐỔI: Script cho Biểu đồ (Chart.js) (Giữ nguyên logic của lần trước) *@
+    <script>
+        var ctx = document.getElementById('reportChart').getContext('2d');
+        var chartData = @Html.Raw(JsonConvert.SerializeObject(Model.ChartData));
+        var reportType = @Html.Raw(JsonConvert.SerializeObject(Model.ReportType));
+
+        var datasets = [];
+
+        // Helper format tiền tệ
+        function formatCurrency(value) {
+             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        }
+        // Helper format số
+        function formatNumber(value) {
+             return new Intl.NumberFormat('vi-VN').format(value);
+        }
+
+        // 1. Xây dựng bộ dữ liệu (datasets) dựa trên reportType
+        switch(reportType) {
+            case "Revenue":
+                datasets.push({
+                    label: "Doanh thu (Party.Cost)",
+                    type: 'bar',
+                    backgroundColor: '#1d7af3',
+                    data: chartData.RevenueData,
+                    yAxisID: 'y-axis-currency' // Trục tiền tệ
+                });
+                break;
+            case "Costs":
+                datasets.push({
+                    label: "Chi phí NVL (COGS)",
+                    type: 'line',
+                    borderColor: '#f3545d',
+                    backgroundColor: 'rgba(243, 84, 93, 0.2)',
+                    fill: true,
+                    data: chartData.CostData,
+                    yAxisID: 'y-axis-currency'
+                });
+                 datasets.push({
+                    label: "Chi phí PriceHistory",
+                    type: 'bar',
+                    backgroundColor: '#fdaf4b',
+                    data: chartData.PriceHistoryCost,
+                    yAxisID: 'y-axis-currency'
+                });
+                datasets.push({
+                    label: "Chi phí Food (Lý thuyết)",
+                    type: 'bar',
+                    backgroundColor: '#888',
+                    data: chartData.FoodCost,
+                    yAxisID: 'y-axis-currency',
+                    hidden: true // Ẩn bớt 2 cột lý thuyết
+                });
+                datasets.push({
+                    label: "Chi phí Menu (Lý thuyết)",
+                    type: 'bar',
+                    backgroundColor: '#aaa',
+                    data: chartData.MenuCost,
+                    yAxisID: 'y-axis-currency',
+                    hidden: true // Ẩn bớt 2 cột lý thuyết
+                });
+                break;
+            case "PartyCount":
+                 datasets.push({
+                    label: "Số lượng Party",
+                    type: 'bar',
+                    backgroundColor: '#1cc88a',
+                    data: chartData.PartyCount,
+                    yAxisID: 'y-axis-count' // Trục số lượng
+                });
+                break;
+            case "Summary":
+            default:
+                 datasets.push({
+                    label: "Doanh thu (Party.Cost)",
+                    type: 'line',
+                    borderColor: '#1d7af3',
+                    backgroundColor: 'rgba(29, 122, 243, 0.2)',
+                    fill: true,
+                    data: chartData.RevenueData,
+                    yAxisID: 'y-axis-currency'
+                });
+                datasets.push({
+                    label: "Lợi nhuận (Revenue - COGS)",
+                    type: 'bar',
+                    backgroundColor: '#31ce36',
+                    data: chartData.ProfitData,
+                    yAxisID: 'y-axis-currency'
+                });
+                 datasets.push({
+                    label: "Chi phí NVL (COGS)",
+                    type: 'bar',
+                    backgroundColor: '#f3545d',
+                    data: chartData.CostData,
+                    yAxisID: 'y-axis-currency'
+                });
+                break;
+        }
+
+        // 2. Cấu hình biểu đồ
+        var reportChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.Labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (tooltipItem.yAxisID === 'y-axis-count') {
+                                label += formatNumber(tooltipItem.yLabel);
+                            } else {
+                                label += formatCurrency(tooltipItem.yLabel);
+                            }
+                            return label;
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            id: 'y-axis-currency',
+                            position: 'left',
+                            display: (reportType !== 'PartyCount'),
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value) {
+                                    return new Intl.NumberFormat('vi-VN', {
+                                        notation: 'compact',
+                                        compactDisplay: 'short'
+                                    }).format(value) + ' đ';
+                                }
+                            }
+                        },
+                        {
+                            id: 'y-axis-count',
+                            position: 'right',
+                            display: (reportType === 'PartyCount'),
+                            gridLines: {
+                                drawOnChartArea: false,
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value) {
+                                    // Đảm bảo chỉ hiển thị số nguyên cho "Số lượng"
+                                    if (value % 1 === 0) {
+                                        return formatNumber(value);
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    xAxes: [{
+                        ticks: {
+                            fontStyle: "500"
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+}

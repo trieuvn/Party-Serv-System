@@ -59,6 +59,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -609,10 +612,12 @@
     <Compile Include="Areas\Admin\Controllers\StaffPartiesController.cs" />
     <Compile Include="Areas\Admin\Controllers\SystemUsersController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserDiscountsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserPermissionController.cs" />
     <Compile Include="Areas\Admin\Models\DashboardViewModel.cs" />
     <Compile Include="Areas\Admin\Models\FoodRecipeViewModel.cs" />
     <Compile Include="Areas\Staff\Controllers\CalendarController.cs" />
+    <Compile Include="Areas\Admin\Models\ReportViewModel.cs" />
     <Compile Include="Areas\Staff\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Staff\Controllers\PersonalAccountController.cs" />
     <Compile Include="Areas\Staff\Models\UserInformation.cs" />
@@ -2057,6 +2062,9 @@
     <Content Include="Areas\Admin\Views\UserDiscounts\Index.cshtml" />
     <Content Include="Content\login\particles.json" />
     <Content Include="Areas\Staff\Views\Calendar\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
