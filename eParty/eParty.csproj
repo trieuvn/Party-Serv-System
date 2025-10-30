@@ -58,6 +58,9 @@
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -552,10 +555,12 @@
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
     <Compile Include="Areas\Admin\Controllers\PostersController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProvidersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserPermissionController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\DashboardViewModel.cs" />
     <Compile Include="Areas\Admin\Models\FoodRecipeViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\ReportViewModel.cs" />
     <Compile Include="Areas\Staff\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Staff\Controllers\PersonalAccountController.cs" />
     <Compile Include="Areas\Staff\Models\UserInformation.cs" />
@@ -1958,6 +1963,9 @@
     <Content Include="Areas\Staff\Views\PersonalAccount\ChangePassword.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\GoogleLink.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
