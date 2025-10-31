@@ -136,7 +136,7 @@ namespace eParty.Controllers
             // Gán thông tin cơ bản
             model.User = currentUser.Username;
             model.Owner = currentUser;
-            model.Status = "Active";
+            model.Status = "Pending";
             model.Type = Request.Form["Type"];
 
             if (int.TryParse(Request.Form["MenuId"], out int menuId))
