@@ -1,16 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
+﻿using eParty.Models;
+using Microsoft.AspNet.Identity.Owin;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using eParty.Models;
-using eParty;
-using System.Collections.Generic;
 
 namespace eParty.Areas.Admin.Controllers
 {
@@ -83,18 +77,17 @@ namespace eParty.Areas.Admin.Controllers
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                 }
+                systemUser.Username = user.Email;
+
+                systemUser.Password = "123456";
+
+                systemUser.Email = user.Email;
+
+                db.SystemUsers.Add(systemUser);
+                db.SaveChanges();
                 return RedirectToAction("Index", "Dashboard");
             }
 
-            
-            systemUser.Username = user.Email;
-
-            systemUser.Password = "123456";
-
-            systemUser.Email = user.Email;
-
-            db.SystemUsers.Add(systemUser);
-            db.SaveChanges();
 
             foreach (var error in result.Errors)
             {
