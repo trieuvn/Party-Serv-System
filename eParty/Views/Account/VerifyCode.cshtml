@@ -12,8 +12,18 @@
     <title>@ViewBag.Title - eParty</title>
     <link rel="stylesheet" href="~/Content/login/style.css">
 
-    <!-- CSS nội tuyến để hiển thị lỗi validation -->
     <style>
+        /* Hiệu ứng nền */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
         .text-danger {
             color: #ff3860;
             font-size: 0.875em;
@@ -31,11 +41,22 @@
             padding: 0;
             margin-bottom: 15px;
         }
+
+        .forget label {
+            color: #ddd;
+            font-size: 0.9em;
+        }
+
+        button {
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <!-- Hiệu ứng particles nền -->
+    <div id="particles-js"></div>
 
+    <div class="wrapper">
         @using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -44,14 +65,14 @@
 
             <h2>@ViewBag.Title</h2>
             <h4 style="color: #ccc; text-align: center; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">
-                Nhập mã xác minh
+                Nhập mã xác minh được gửi đến bạn
             </h4>
 
             @Html.ValidationSummary("", new { @class = "text-danger" })
 
-            <!-- Trường Nhập Mã -->
+            <!-- Trường mã xác minh -->
             <div class="input-field">
-                @Html.TextBoxFor(m => m.Code, new { required = "required", autocomplete = "one-time-code", @class = "form-control" })
+                @Html.TextBoxFor(m => m.Code, new { required = "required", autocomplete = "one-time-code", placeholder = "Nhập mã...", @class = "form-control" })
                 @Html.LabelFor(m => m.Code, "Mã xác minh")
             </div>
             @Html.ValidationMessageFor(m => m.Code, "", new { @class = "text-danger" })
@@ -64,12 +85,45 @@
                 </label>
             </div>
 
-            <button type="submit" style="margin-top: 20px;">Gửi</button>
+            <button type="submit">Xác Nhận</button>
         }
     </div>
 
-    <!-- Scripts cho validation -->
+    <!-- Scripts -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+
+    <!-- Script hiệu ứng Particles -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 75, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3, "random": true },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": { "enable": true, "speed": 3, "out_mode": "out" }
+            },
+            "interactivity": {
+                "events": {
+                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onclick": { "enable": true, "mode": "push" }
+                },
+                "modes": {
+                    "repulse": { "distance": 100 },
+                    "push": { "particles_nb": 4 }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
 </body>
 </html>
