@@ -1,15 +1,16 @@
-﻿using System;
+﻿using eParty;
+using eParty.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using eParty.Models;
-using eParty;
 
 namespace eParty.Controllers
 {
@@ -177,7 +178,7 @@ namespace eParty.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, HttpPostedFileBase avatar)
         {
             if (ModelState.IsValid)
             {
@@ -185,24 +186,35 @@ namespace eParty.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    // Bỏ tự động đăng nhập (ĐÚNG BẢO MẬT)
                     // Gửi email xác nhận
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account",
+                        $"Please confirm your account by clicking <a href=\"{callbackUrl}\">here</a>");
 
-                    // ĐÃ SỬA: Chuyển hướng đến view thông báo kiểm tra email
                     await UserManager.AddToRoleAsync(user.Id, "User");
 
-                    SystemUser systemUser = new SystemUser();
+                    // Tạo SystemUser
+                    SystemUser systemUser = new SystemUser
+                    {
+                        Username = user.Email,
+                        Password = "123456", 
+                        Email = user.Email,
+                        Role = "User",
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        PhoneNumber = model.PhoneNumber
+                    };
 
-                    systemUser.Username = user.Email;
-
-                    systemUser.Password = "123456";
-
-                    systemUser.Email = user.Email;
-
-                    systemUser.Role = "User";
+                    // Xử lý avatar Base64
+                    if (avatar != null && avatar.ContentLength > 0)
+                    {
+                        using (var binaryReader = new BinaryReader(avatar.InputStream))
+                        {
+                            byte[] imageData = binaryReader.ReadBytes(avatar.ContentLength);
+                            systemUser.Avatar = Convert.ToBase64String(imageData);
+                        }
+                    }
 
                     db.SystemUsers.Add(systemUser);
                     db.SaveChanges();
