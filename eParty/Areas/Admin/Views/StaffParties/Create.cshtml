@@ -1,0 +1,55 @@
+﻿@model eParty.Models.StaffParty
+
+@{
+    ViewBag.Title = "Create New Staff Assignment";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">StaffParty Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "StaffParties")">StaffParties</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "StaffParties", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header"><div class="card-title">Assign Staff to Party</div></div>
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Staff, "Staff", new { @class = "form-label" })
+                                @Html.DropDownList("Staff", (SelectList)ViewBag.Staff, "--- Select Staff ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Staff, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Party, "Party", new { @class = "form-label" })
+                                @Html.DropDownList("Party", (SelectList)ViewBag.Party, "--- Select Party ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Party, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,177 @@
+﻿@model eParty.Models.Party
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Party Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Parties")">Parties</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Party Details</div>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Id</dt>
+                    <dd class="col-sm-9">@Model.Id</dd>
+
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.Name</dd>
+
+                    <dt class="col-sm-3">Image</dt>
+                    <dd class="col-sm-9">
+                        @if (!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <img src="data:image/jpeg;base64,@Model.Image" alt="Party" style="max-width: 200px; border-radius: 8px;" />
+                        }
+                        else
+                        {
+                            <em class="text-muted">No image</em>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Type</dt>
+                    <dd class="col-sm-9">@Model.Type</dd>
+
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">
+                            @Model.Status
+                        </span>
+                    </dd>
+
+                    <!-- SỬA Cost: int → không dùng .HasValue -->
+                    <dt class="col-sm-3">Cost</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Cost > 0)
+                        {
+                            @String.Format("{0:N0} VND", Model.Cost)
+                        }
+                        else
+                        {
+                            <em class="text-muted">Not set</em>
+                        }
+                    </dd>
+
+                    <!-- BeginTime: DateTime? → OK -->
+                    <dt class="col-sm-3">BeginTime</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.BeginTime.HasValue)
+                        {
+                            @Model.BeginTime.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            <em class="text-muted">Not set</em>
+                        }
+                    </dd>
+
+                    <!-- EndTime: DateTime? → OK -->
+                    <dt class="col-sm-3">EndTime</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.EndTime.HasValue)
+                        {
+                            @Model.EndTime.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            <em class="text-muted">Not set</em>
+                        }
+                    </dd>
+
+                    <!-- CreatedDate: DateTime? → OK -->
+                    <dt class="col-sm-3">CreatedDate</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.CreatedDate.HasValue)
+                        {
+                            @Model.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            <em class="text-muted">Unknown</em>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">
+                        @if (!string.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            @Html.Raw(Model.Description.Replace("\n", "<br/>"))
+                        }
+                        else
+                        {
+                            <em class="text-muted">No description</em>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Slots</dt>
+                    <dd class="col-sm-9">@Model.Slots</dd>
+
+                    <dt class="col-sm-3">Address</dt>
+                    <dd class="col-sm-9">
+                        @if (!string.IsNullOrWhiteSpace(Model.Address))
+                        {
+                            @Model.Address
+                        }
+                        else
+                        {
+                            <em class="text-muted">No address</em>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Latitude</dt>
+                    <dd class="col-sm-9">@Model.Latitude</dd>
+
+                    <dt class="col-sm-3">Longitude</dt>
+                    <dd class="col-sm-9">@Model.Longitude</dd>
+
+                    <!-- [User] -->
+                    <dt class="col-sm-3">[User]</dt>
+                    <dd class="col-sm-9">
+                        @if (!string.IsNullOrEmpty(Model.User))
+                        {
+                            @Model.User
+                        }
+                        else
+                        {
+                            <em class="text-muted">Unknown</em>
+                        }
+                    </dd>
+
+                    <!-- SỬA Menu: int → không dùng .HasValue -->
+                    <dt class="col-sm-3">Menu</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Menu > 0)
+                        {
+                            @Model.Menu
+                        }
+                        else
+                        {
+                            <em class="text-muted">No menu</em>
+                        }
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="card-action">
+                <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">
+                    Edit
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

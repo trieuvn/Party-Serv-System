@@ -50,13 +50,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotnet-aspnet-codegenerator-design, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGeneration.Design.2.2.4\lib\net461\dotnet-aspnet-codegenerator-design.exe</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -190,8 +191,17 @@
     <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.2.8.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.2.8.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Razor, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Razor.2.2.0\lib\net46\Microsoft.CodeAnalysis.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.8.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.8.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -273,11 +283,35 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualStudio.Web.CodeGeneration, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGeneration.2.2.4\lib\netstandard2.0\Microsoft.VisualStudio.Web.CodeGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Web.CodeGeneration.Contracts, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGeneration.Contracts.2.2.4\lib\netstandard2.0\Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Web.CodeGeneration.Core, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGeneration.Core.2.2.4\lib\netstandard2.0\Microsoft.VisualStudio.Web.CodeGeneration.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.2.2.4\lib\netstandard2.0\Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Web.CodeGeneration.Templating, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGeneration.Templating.2.2.4\lib\netstandard2.0\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Web.CodeGeneration.Utils, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGeneration.Utils.2.2.4\lib\netstandard2.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Web.CodeGenerators.Mvc, Version=2.2.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.2.2.4\lib\netstandard2.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Frameworks, Version=4.7.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Frameworks.4.7.3\lib\net46\NuGet.Frameworks.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -303,6 +337,21 @@
       <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Composition.AttributedModel, Version=1.0.31.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Composition.AttributedModel.1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Convention, Version=1.0.31.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Composition.Convention.1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Hosting, Version=1.0.31.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Composition.Hosting.1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Runtime, Version=1.0.31.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Composition.Runtime.1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts, Version=1.0.31.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Composition.TypedParts.1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
+    </Reference>
     <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
       <Private>True</Private>
@@ -548,14 +597,22 @@
     <Compile Include="Areas\Admin\Controllers\FoodIngredientsController.cs" />
     <Compile Include="Areas\Admin\Controllers\FoodsController.cs" />
     <Compile Include="Areas\Admin\Controllers\IngredientsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MenuDetailsController.cs" />
     <Compile Include="Areas\Admin\Controllers\MenusController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PartiesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PartnersController.cs" />
     <Compile Include="Areas\Admin\Controllers\PostersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PriceHistoriesController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProvidersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RatesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StaffPartiesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SystemUsersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserDiscountsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserPermissionController.cs" />
-    <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\DashboardViewModel.cs" />
     <Compile Include="Areas\Admin\Models\FoodRecipeViewModel.cs" />
+    <Compile Include="Areas\Staff\Controllers\CalendarController.cs" />
     <Compile Include="Areas\Staff\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Staff\Controllers\PersonalAccountController.cs" />
     <Compile Include="Areas\Staff\Models\UserInformation.cs" />
@@ -567,15 +624,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202510290045549_seed.cs" />
-    <Compile Include="Migrations\202510290045549_seed.Designer.cs">
-      <DependentUpon>202510290045549_seed.cs</DependentUpon>
+    <Compile Include="Migrations\202510281609517_InitialCreate.cs" />
+    <Compile Include="Migrations\202510281609517_InitialCreate.Designer.cs">
+      <DependentUpon>202510281609517_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202510290246537_InitialCreate.cs" />
-    <Compile Include="Migrations\202510290246537_InitialCreate.Designer.cs">
-      <DependentUpon>202510290246537_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />     <Compile Include="Models\AccountViewModels.cs" /><Compile Include="Models\AppDbContext.cs" /><Compile Include="Models\ApplicationUser.cs" /><Compile Include="Models\Category.cs" /><Compile Include="Models\Comment.cs" /><Compile Include="Models\Discount.cs" /><Compile Include="Models\Food.cs" /><Compile Include="Models\FoodDto.cs" /><Compile Include="Models\FoodIngredient.cs" /><Compile Include="Models\HomeViewModel.cs" /><Compile Include="Models\Ingredient.cs" /><Compile Include="Models\ManageViewModels.cs" /><Compile Include="Models\Menu.cs" /><Compile Include="Models\MenuDetail.cs" /><Compile Include="Models\MenuDetailDto.cs" /><Compile Include="Models\MenuViewModel.cs" /><Compile Include="Models\News.cs" /><Compile Include="Models\NewsDetailViewModel.cs" /><Compile Include="Models\NewsViewModel.cs" /><Compile Include="Models\Partner.cs" /><Compile Include="Models\Party.cs" /><Compile Include="Models\Poster.cs" /><Compile Include="Models\PriceHistory.cs" /><Compile Include="Models\Provider.cs" /><Compile Include="Models\Rate.cs" /><Compile Include="Models\StaffParty.cs" /><Compile Include="Models\SystemUser.cs" /><Compile Include="Models\UserDiscount.cs" /><Compile Include="Properties\AssemblyInfo.cs" /><Compile Include="Service\EmailService.cs" /><Compile Include="Service\MenuService.cs" /><Compile Include="Service\PartyService.cs" /><Compile Include="Startup.cs" /><Compile Include="Utils\EmailUtils.cs" /><Compile Include="Utils\MapUtils.cs" /><Compile Include="Utils\StringUtils.cs" /></ItemGroup>
+    <Compile Include="Migrations\Configuration.cs" />     <Compile Include="Models\AccountViewModels.cs" /><Compile Include="Models\AppDbContext.cs" /><Compile Include="Models\ApplicationUser.cs" /><Compile Include="Models\Category.cs" /><Compile Include="Models\Comment.cs" /><Compile Include="Models\Discount.cs" /><Compile Include="Models\Food.cs" /><Compile Include="Models\FoodDto.cs" /><Compile Include="Models\FoodIngredient.cs" /><Compile Include="Models\HomeViewModel.cs" /><Compile Include="Models\Ingredient.cs" /><Compile Include="Models\ManageViewModels.cs" /><Compile Include="Models\Menu.cs" /><Compile Include="Models\MenuDetail.cs" /><Compile Include="Models\MenuDetailDto.cs" /><Compile Include="Models\MenuViewModel.cs" /><Compile Include="Models\News.cs" /><Compile Include="Models\NewsViewModel.cs" /><Compile Include="Models\Partner.cs" /><Compile Include="Models\Party.cs" /><Compile Include="Models\Poster.cs" /><Compile Include="Models\PriceHistory.cs" /><Compile Include="Models\Provider.cs" /><Compile Include="Models\Rate.cs" /><Compile Include="Models\StaffParty.cs" /><Compile Include="Models\SystemUser.cs" /><Compile Include="Models\UserDiscount.cs" /><Compile Include="Properties\AssemblyInfo.cs" /><Compile Include="Service\EmailService.cs" /><Compile Include="Service\MenuService.cs" /><Compile Include="Service\PartyService.cs" /><Compile Include="Startup.cs" /><Compile Include="Utils\EmailUtils.cs" /><Compile Include="Utils\MapUtils.cs" /><Compile Include="Utils\StringUtils.cs" /></ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin\calendar\css\fullcalendar.css" />
     <Content Include="Content\admin\calendar\src\fonts\dropways\dropways.css" />
@@ -1523,8 +1576,12 @@
     <Content Include="Content\landingpage\lib\waypoints\waypoints.min.js" />
     <Content Include="Content\landingpage\lib\wow\wow.js" />
     <Content Include="Content\landingpage\lib\wow\wow.min.js" />
+    <Content Include="Content\login\app.js" />
     <Content Include="Content\login\hero-bg.jpg" />
+    <Content Include="Content\login\particles.js" />
+    <Content Include="Content\login\particles.min.js" />
     <Content Include="Content\login\SharedMessageTemplate.css" />
+    <Content Include="Content\login\stats.js" />
     <Content Include="Content\login\style.css" />
     <Content Include="Content\news\assets\css\animate.min.css" />
     <Content Include="Content\news\assets\css\bootstrap.min.css" />
@@ -1958,6 +2015,48 @@
     <Content Include="Areas\Staff\Views\PersonalAccount\ChangePassword.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\GoogleLink.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Index.cshtml" />
+    <Content Include="Content\login\particles.json" />
+    <Content Include="Areas\Staff\Views\Calendar\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -2054,11 +2153,8 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202510290045549_seed.resx">
-      <DependentUpon>202510290045549_seed.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202510290246537_InitialCreate.resx">
-      <DependentUpon>202510290246537_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202510281609517_InitialCreate.resx">
+      <DependentUpon>202510281609517_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

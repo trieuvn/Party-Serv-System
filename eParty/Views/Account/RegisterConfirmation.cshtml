@@ -9,20 +9,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - eParty</title>
+
+    <!-- Giao diện chung -->
     <link rel="stylesheet" href="~/Content/login/style.css">
     <link rel="stylesheet" href="~/Content/login/SharedMessageTemplate.css">
+
+    <!-- Style bổ sung cho hiệu ứng nền -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('@Url.Content("~/Content/login/bg-auth.jpg")') no-repeat center center/cover;
+        }
+
+        /* Lớp particle nằm phía sau */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        /* Hộp wrapper hiển thị nội dung */
+        .wrapper {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px 30px;
+            width: 360px;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+
+            .wrapper h2 {
+                margin-bottom: 15px;
+                color: #fff;
+            }
+
+            .wrapper p {
+                font-size: 16px;
+                color: #e0e0e0;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+
+            .wrapper a {
+                color: #00BFFF;
+                font-weight: 600;
+                text-decoration: none;
+                transition: 0.3s;
+            }
+
+                .wrapper a:hover {
+                    color: #1E90FF;
+                    text-decoration: underline;
+                }
+    </style>
 </head>
+
 <body>
+    <!-- Nền particle -->
+    <div id="particles-js"></div>
+
+    <!-- Nội dung chính -->
     <div class="wrapper">
         <h2>@ViewBag.Title</h2>
         <div>
-            <p>
-                Vui lòng kiểm tra email của bạn để xác nhận tài khoản.
-            </p>
-            <p>
-                @Html.ActionLink("Quay lại trang Đăng nhập", "Login", "Account", routeValues: null, htmlAttributes: null)
-            </p>
+            <p>Vui lòng kiểm tra email của bạn để xác nhận tài khoản.</p>
+            <p>@Html.ActionLink("Quay lại trang Đăng nhập", "Login", "Account")</p>
         </div>
     </div>
+
+    <!-- Script particle -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#3B82F6" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.6, "random": true },
+                "size": { "value": 3, "random": true },
+                "move": { "enable": true, "speed": 1.5 }
+            },
+            "interactivity": {
+                "events": {
+                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onclick": { "enable": true, "mode": "push" }
+                },
+                "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 } }
+            },
+            "retina_detect": true
+        });
+    </script>
 </body>
 </html>
