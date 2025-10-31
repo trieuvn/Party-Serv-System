@@ -18,6 +18,7 @@ namespace eParty.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private AppDbContext db = new AppDbContext();
 
         public AccountController()
         {
@@ -173,6 +174,20 @@ namespace eParty.Controllers
 
                     // ĐÃ SỬA: Chuyển hướng đến view thông báo kiểm tra email
                     await UserManager.AddToRoleAsync(user.Id, "User");
+
+                    SystemUser systemUser = new SystemUser();
+
+                    systemUser.Username = user.Email;
+
+                    systemUser.Password = "123456";
+
+                    systemUser.Email = user.Email;
+
+                    systemUser.Role = "User";
+
+                    db.SystemUsers.Add(systemUser);
+                    db.SaveChanges();
+
                     return View("RegisterConfirmation");
                 }
                 AddErrors(result);

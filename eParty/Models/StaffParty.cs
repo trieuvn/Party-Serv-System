@@ -14,7 +14,7 @@ namespace eParty.Models
         [Key, Column(Order = 1)]
         public int Party { get; set; }
 
-        [ForeignKey(nameof(Staff))] public virtual Staff StaffRef { get; set; }
+        [ForeignKey(nameof(Staff))] public virtual SystemUser StaffRef { get; set; }
         [ForeignKey(nameof(Party))] public virtual Party PartyRef { get; set; }
     }
 }
