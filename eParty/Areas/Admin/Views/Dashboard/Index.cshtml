@@ -151,6 +151,41 @@
             </div>
         </div>
 
+        <div class="container">
+            <div class="page-inner">
+                <div class="row">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-round">
+                            <div class="card-header">
+                                <div class="card-title">Dự Đoán Doanh Thu (Hồi quy tuyến tính)</div>
+                                <div class="card-category">
+                                    Dự đoán chi phí thực tế cho tháng tiếp theo dựa trên xu hướng
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" style="min-height: 300px">
+                                    <canvas id="predictionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-4">
                 <div class="card card-round">
@@ -206,7 +241,7 @@
                 <div class="card card-round">
                     <div class="card-header">
                         <div class="card-head-row card-tools-still-right">
-                            <div class="card-title">Transaction History</div>
+                            <div class="card-title">Lịch sử giao dịch</div>
                             <div class="card-tools">
                                 <div class="dropdown">
                                     <button class="btn btn-icon btn-clean me-0"
@@ -442,6 +477,127 @@
                     }
                 }]
             }
+        }
+    });
+
+    // 4. Lấy dữ liệu dự đoán (danh sách) và tháng hiện tại từ Model
+    var predictedCosts = @Html.Raw(JsonConvert.SerializeObject(Model.PredictedCosts)); // VD: [150000, 160000, 170000]
+    var currentMonth = @Model.CurrentMonth; // VD: 10 (cho tháng 10)
+    var currentMonthIndex = currentMonth - 1; // Chuyển về 0-based index (VD: 9)
+
+    // 5. Chuẩn bị data cho biểu đồ dự đoán
+
+    // 5.1. Mảng nhãn (labels)
+    var allMonthLabels = [
+        "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+    ];
+
+    // Tạo nhãn dự đoán (VD: "T1 (Dự đoán)", "T2 (Dự đoán)")
+    var predictionLabels = [];
+    for (var i = 0; i < predictedCosts.length; i++) {
+        predictionLabels.push("T" + (i + 1) + " (Dự đoán)");
+    }
+
+    // Nối 2 mảng nhãn và CẮT (slice) từ tháng hiện tại
+    // VD: ["Tháng 10", "Tháng 11", "Tháng 12", "T1 (Dự đoán)", "T2 (Dự đoán)", "T3 (Dự đoán)"]
+    var filteredLabels = allMonthLabels.slice(currentMonthIndex).concat(predictionLabels);
+
+
+    // 5.2. Dữ liệu thực tế (Actual)
+    // CẮT (slice) dữ liệu thực tế từ tháng hiện tại
+    // VD: [data_T10, data_T11, data_T12]
+    var filteredActualData = partyCostData.slice(currentMonthIndex);
+    // Thêm 'null' vào cuối mảng cho các tháng dự đoán
+    for (var i = 0; i < predictedCosts.length; i++) {
+        filteredActualData.push(null);
+    }
+    // Kết quả VD: [data_T10, data_T11, data_T12, null, null, null]
+
+
+    // 5.3. Dữ liệu dự đoán (Prediction)
+    // Bắt đầu bằng 'null' cho các tháng thực tế
+    var predictionOffset = allMonthLabels.length - currentMonthIndex - 1; // (12 - 10 - 1 = 1)
+    var filteredPredictionData = new Array(predictionOffset).fill(null); // VD: [null]
+
+    // Thêm điểm cuối cùng của dữ liệu thực tế (để nối 2 đường)
+    filteredPredictionData.push(partyCostData[11]); // Lấy data T12 (luôn là tháng cuối năm)
+
+    // Nối với mảng dự đoán
+    filteredPredictionData = filteredPredictionData.concat(predictedCosts);
+    // Kết quả VD: [null (cho T10), null (cho T11), data_T12, predict_1, predict_2, predict_3]
+    // LƯU Ý: Nếu tháng hiện tại là T12, offset = 0, mảng sẽ là [data_T12, predict_1, ...] -> CHÍNH XÁC
+
+    // 6. Lấy context của canvas "predictionChart"
+    var ctxPrediction = document.getElementById("predictionChart").getContext("2d");
+
+    // 7. Vẽ biểu đồ dự đoán (với dữ liệu đã lọc)
+    var predictionChart = new Chart(ctxPrediction, {
+        type: 'line',
+        data: {
+            labels: filteredLabels, // Sử dụng nhãn đã lọc
+            datasets: [
+            {
+                label: "Chi phí Thực tế",
+                borderColor: '#177dff', // Xanh
+                pointRadius: 2,
+                backgroundColor: 'rgba(23, 125, 255, 0.1)',
+                fill: true,
+                borderWidth: 2,
+                data: filteredActualData // Sử dụng data thực tế đã lọc
+            },
+            {
+                label: "Chi phí Dự đoán (ML)",
+                borderColor: '#f3545d', // Đỏ
+                pointRadius: 4,
+                backgroundColor: 'rgba(243, 84, 93, 0.1)',
+                fill: false,
+                borderDash: [5, 5], // Nét đứt
+                borderWidth: 2,
+                data: filteredPredictionData // Sử dụng data dự đoán đã lọc
+            }]
+        },
+        options: {
+            // ... (Toàn bộ phần options: scales, tooltips, legend... giữ nguyên như cũ) ...
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: { fontColor: '#555', usePointStyle: true, padding: 20 }
+            },
+            tooltips: {
+                mode: "index",
+                intersect: false,
+                callbacks: {
+                    label: function (tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        var value = tooltipItem.yLabel;
+                        if (value === null) return null;
+                        return datasetLabel + ': ' + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+                    }
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontStyle: "500",
+                        beginAtZero: true,
+                        callback: function (value, index, values) {
+                            return new Intl.NumberFormat('vi-VN', {
+                                notation: 'compact',
+                                compactDisplay: 'short'
+                            }).format(value);
+                        }
+                    },
+                    gridLines: { display: false, drawBorder: false }
+                }],
+                xAxes: [{
+                    ticks: { fontStyle: "500" },
+                    gridLines: { display: false }
+                }]
+            }
+            // === HẾT PHẦN OPTIONS ===
         }
     });
 </script>
