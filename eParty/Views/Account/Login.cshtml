@@ -1,11 +1,6 @@
-﻿@using eParty.Models
-@model LoginViewModel
-@{
-    // Đặt tiêu đề và không sử dụng layout
-    ViewBag.Title = "Đăng Nhập";
-    Layout = null;
-}
-
+﻿﻿@using eParty.Models 
+@model LoginViewModel 
+@{ViewBag.Title = "Đăng Nhập"; Layout = null; }
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,122 +8,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - eParty</title>
 
-    <!-- Link đến file CSS của template mới -->
+    <!-- CSS -->
     <link rel="stylesheet" href="~/Content/login/style.css">
 
-    <!-- CSS (Không thay đổi) -->
-    <style>
-        .text-danger {
-            color: #ff3860; /* Màu đỏ tươi cho lỗi */
-            font-size: 0.875em;
-            text-align: left;
-            width: 100%;
-            display: block;
-            padding-left: 5px;
-            margin-top: 5px; /* Khoảng cách với trường bên trên */
-        }
-
-        .validation-summary-errors {
-            color: #ff3860;
-            text-align: center;
-            list-style: none;
-            padding: 0;
-            margin-bottom: 15px;
-        }
-
-        /* Căn giữa cho form đăng nhập bên ngoài */
-        #socialLoginForm {
-            text-align: center;
-        }
-
-            /* Chỉnh lại nút của social login nếu cần */
-            #socialLoginForm .btn {
-                margin: 5px;
-                /* Thêm CSS cho nút Social Login để giống nút "Đăng Nhập" */
-                width: 100%;
-                height: 45px;
-                background: #fff;
-                border: none;
-                outline: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 1em;
-                color: #000;
-                font-weight: 600;
-                margin-bottom: 10px; /* Thêm khoảng cách giữa các nút social */
-                transition: background-color 0.3s ease;
-            }
-
-                #socialLoginForm .btn:hover {
-                    background: #eee;
-                }
-    </style>
+    <!-- Thêm thư viện particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 </head>
 <body>
-    <div class="wrapper">
+    <!-- Hiệu ứng particle -->
+    <div id="particles-js"></div>
 
-        <!-- === FORM 1: ĐĂNG NHẬP LOCAL (Email/Password) === -->
+    <div class="wrapper" >
         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
         {
             @Html.AntiForgeryToken()
-
             <h2>Đăng Nhập</h2>
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <!-- Trường Email -->
             <div class="input-field">
                 @Html.TextBoxFor(m => m.Email, new { required = "required", autocomplete = "email" })
                 @Html.LabelFor(m => m.Email, "Nhập địa chỉ email của bạn")
             </div>
             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
 
-            <!-- Trường Password -->
-            <div class="input-field" style="margin-top: 15px;">
+            <div class="input-field">
                 @Html.PasswordFor(m => m.Password, new { required = "required", autocomplete = "current-password" })
                 @Html.LabelFor(m => m.Password, "Nhập mật khẩu của bạn")
             </div>
             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
 
-            <!-- Phần Ghi nhớ và Quên mật khẩu -->
             <div class="forget">
                 <label for="RememberMe">
-                    @Html.CheckBoxFor(m => m.RememberMe, new { id = "RememberMe" })
-                    Nhớ tôi
+                    @Html.CheckBoxFor(m => m.RememberMe, new { id = "RememberMe" }) Nhớ tôi
                 </label>
                 @Html.ActionLink("Quên mật khẩu?", "ForgotPassword", "Account")
             </div>
 
             <button type="submit">Đăng Nhập</button>
 
-            <!-- Liên kết Đăng ký -->
             <div class="register">
                 <p>Bạn chưa có tài khoản? @Html.ActionLink("Đăng ký", "Register", "Account")</p>
             </div>
         }
-        <!-- === KẾT THÚC FORM 1 === -->
-        <!-- === PHẦN ĐĂNG NHẬP BÊN NGOÀI (Google, Facebook...) === -->
-        <!--
-          Phần này được dời ra BÊN NGOÀI form "Login" ở trên.
-          Giờ nó là một phần riêng biệt, ngang hàng.
-          File Partial sẽ tự tạo <form> "ExternalLogin" của riêng nó.
-        -->
-        <div class="social-login" style="margin-top: 20px;">
-            <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.2);" />
 
-            <h5 style="color: #ccc; font-weight: 500; margin-bottom: 15px; text-align: center;">
-                Hoặc đăng nhập bằng
-            </h5>
+        <div class="social-login">
+            <hr>
+            <h5>Hoặc đăng nhập bằng</h5>
             <section id="socialLoginForm">
-                <!-- File partial này sẽ tự tạo FORM 2 (ExternalLogin) -->
                 @Html.Partial("_ExternalLoginsListPartial", new eParty.Models.ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
             </section>
         </div>
-
     </div>
 
-    <!-- Scripts (Không thay đổi) -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        /* === Particle Config === */
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 60 },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.4 },
+                size: { value: 3 },
+                line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.3, width: 1 },
+                move: { enable: true, speed: 1.5 }
+            },
+            interactivity: {
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
 </body>
 </html>
