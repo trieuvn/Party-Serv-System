@@ -1,7 +1,7 @@
 ﻿@model eParty.Models.RegisterViewModel
 @{
     ViewBag.Title = "Đăng Ký";
-    Layout = null; // Không dùng layout chính
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -10,9 +10,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - eParty</title>
+
+    <!-- CSS chung (đã chứa nền + blur + particle-ready) -->
     <link rel="stylesheet" href="~/Content/login/style.css">
 
-    <!-- CSS nội tuyến để hiển thị lỗi validation -->
+    <!-- Thư viện hiệu ứng particle -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
     <style>
         .text-danger {
             color: #ff3860;
@@ -34,52 +38,76 @@
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <!-- Lớp nền + particle -->
+    <div id="particles-js"></div>
 
+    <!-- Khung đăng ký -->
+    <div class="wrapper">
         @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
         {
             @Html.AntiForgeryToken()
 
             <h2>@ViewBag.Title</h2>
             <h4 style="color: #ccc; text-align: center; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">
-                Tạo tài khoản mới.
+                Tạo tài khoản mới
             </h4>
 
-            <!-- Hiển thị lỗi chung -->
             @Html.ValidationSummary("", new { @class = "text-danger" })
 
-            <!-- Trường Email -->
+            <!-- Email -->
             <div class="input-field">
                 @Html.TextBoxFor(m => m.Email, new { required = "required", autocomplete = "email" })
                 @Html.LabelFor(m => m.Email, "Nhập địa chỉ email")
             </div>
             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
 
-            <!-- Trường Password -->
+            <!-- Mật khẩu -->
             <div class="input-field" style="margin-top: 15px;">
                 @Html.PasswordFor(m => m.Password, new { required = "required", autocomplete = "new-password" })
                 @Html.LabelFor(m => m.Password, "Nhập mật khẩu")
             </div>
             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
 
-            <!-- Trường Confirm Password -->
+            <!-- Xác nhận mật khẩu -->
             <div class="input-field" style="margin-top: 15px;">
                 @Html.PasswordFor(m => m.ConfirmPassword, new { required = "required", autocomplete = "new-password" })
                 @Html.LabelFor(m => m.ConfirmPassword, "Xác nhận mật khẩu")
             </div>
             @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
 
-            <button type="submit" style="margin-top: 20px;">Đăng Ký</button>
+            <button type="submit" style="margin-top: 25px;">Đăng Ký</button>
 
-            <!-- Liên kết Đăng nhập -->
+            <!-- Liên kết đăng nhập -->
             <div class="register" style="margin-top: 25px;">
                 <p>Bạn đã có tài khoản? @Html.ActionLink("Đăng nhập ngay", "Login", "Account")</p>
             </div>
         }
     </div>
 
-    <!-- Scripts cho validation -->
+    <!-- Scripts -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    /* === Particle Config === */
+    particlesJS("particles-js", {
+        particles: {
+            number: { value: 60 },
+            color: { value: "#ffffff" },
+            shape: { type: "circle" },
+            opacity: { value: 0.4 },
+            size: { value: 3 },
+            line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.3, width: 1 },
+            move: { enable: true, speed: 1.5 }
+        },
+        interactivity: {
+            events: {
+                onhover: { enable: true, mode: "repulse" },
+                onclick: { enable: true, mode: "push" }
+            }
+        },
+        retina_detect: true
+    });
+</script>
 </body>
 </html>
