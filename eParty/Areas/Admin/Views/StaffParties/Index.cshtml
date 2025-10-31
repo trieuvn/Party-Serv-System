@@ -1,0 +1,64 @@
+﻿@model IEnumerable<eParty.Models.StaffParty>
+
+@{
+    ViewBag.Title = "StaffParty Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Staff Assignments</h4>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
+                    <i class="fa fa-plus"></i> Create New
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="staffparty-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Staff Username</th>
+                            <th>Party Name</th>
+                            <th style="width: 15%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.StaffRef.Username)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PartyRef.Name)</td>
+                                <td>
+                                    <div class="form-button-action">
+                                        <a href="@Url.Action("Edit", new { staff = item.Staff, party = item.Party })" data-bs-toggle="tooltip" title="Edit" class="btn btn-link btn-primary btn-lg">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", new { staff = item.Staff, party = item.Party })" data-bs-toggle="tooltip" title="Details" class="btn btn-link btn-info btn-lg">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { staff = item.Staff, party = item.Party })" data-bs-toggle="tooltip" title="Delete" class="btn btn-link btn-danger">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#staffparty-datatables').DataTable({
+                "pageLength": 5 // Hiển thị 5 mục mỗi trang
+            });
+        });
+    </script>
+}

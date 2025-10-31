@@ -1,0 +1,170 @@
+﻿@model IEnumerable<eParty.Models.Party>
+@{
+    ViewBag.Title = "Party Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Party List</h4>
+                <a href="@Url.Action("Create", "Parties")" class="btn btn-primary btn-round ms-auto">
+                    Create New Party
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="party-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>@Html.DisplayNameFor(model => model.Name)</th>
+                            <th>Menu</th>
+                            <th>@Html.DisplayNameFor(model => model.Type)</th>
+                            <th>@Html.DisplayNameFor(model => model.Status)</th>
+                            <th>@Html.DisplayNameFor(model => model.Cost)</th>
+                            <th>@Html.DisplayNameFor(model => model.BeginTime)</th>
+                            <th>@Html.DisplayNameFor(model => model.Slots)</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Image))
+                                    {
+                                        <img src="data:image/jpeg;base64,@item.Image"
+                                             alt="@item.Name"
+                                             style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+                                             style="width: 60px; height: 60px; font-size: 12px; color: #999;">
+                                            No Image
+                                        </div>
+                                    }
+                                </td>
+
+                                <td>
+                                    <strong>@Html.DisplayFor(modelItem => item.Name)</strong>
+                                    <br />
+                                    <small class="text-muted">@item.Address</small>
+                                </td>
+
+                                <td>
+                                    @if (item.MenuRef != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.MenuRef.Name)
+                                    }
+                                    else
+                                    {
+                                        <em class="text-muted">No menu</em>
+                                    }
+                                </td>
+
+                                <td>
+                                    <span class="badge @(item.Type == "Premium" ? "bg-primary" :
+                                                        item.Type == "VIP" ? "bg-warning text-dark" : "bg-secondary")">
+                                        @Html.DisplayFor(modelItem => item.Type)
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="badge @(item.Status == "Active" ? "bg-success" :
+                                                        item.Status == "Completed" ? "bg-info" :
+                                                        item.Status == "Cancelled" ? "bg-danger" : "bg-warning")">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (item.Cost > 0)
+                                    {
+                                        @String.Format("{0:N0} VND", item.Cost)
+                                    }
+                                    else
+                                    {
+                                        <em class="text-muted">Free</em>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (item.BeginTime.HasValue)
+                                    {
+                                        @item.BeginTime.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <em class="text-muted">Not set</em>
+                                    }
+                                </td>
+
+                                <td>
+                                    <span class="fw-bold">@Html.DisplayFor(modelItem => item.Slots)</span> slots
+                                </td>
+
+                                <td>
+                                    <div class="form-button-action">
+                                        @* === BẮT ĐẦU SỬA ĐỔI === *@
+                                        <a href="@Url.Action("Edit", "Parties", new { id = item.Id })"
+                                           data-bs-toggle="tooltip" title="Edit"
+                                           class="btn btn-primary btn-sm">
+                                            @* Xóa btn-link, btn-lg. Thêm btn-sm và icon *@
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", "Parties", new { id = item.Id })"
+                                           data-bs-toggle="tooltip" title="Details"
+                                           class="btn btn-info btn-sm">
+                                            @* Xóa btn-link, btn-lg. Thêm btn-sm và icon *@
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Parties", new { id = item.Id })"
+                                           data-bs-toggle="tooltip" title="Remove"
+                                           class="btn btn-danger btn-sm" @* Xóa btn-link. Thêm btn-sm và icon *@
+                                           onclick="return confirm('Are you sure you want to delete this party?');">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                        @* === KẾT THÚC SỬA ĐỔI === *@
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#party-datatables').DataTable({
+                "pageLength": 10,
+                "lengthMenu": [5, 10, 25, 50],
+                "order": [[6, "desc"]],
+                "columnDefs": [
+                    { "orderable": false, "targets": [0, 8] },
+                    { "searchable": false, "targets": [0, 8] }
+                ],
+                "language": {
+                    "search": "Search parties:",
+                    "lengthMenu": "Show _MENU_ parties per page",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ parties",
+                    "paginate": {
+                        "previous": "Prev",
+                        "next": "Next"
+                    }
+                }
+            });
+            // Tooltip
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        });
+    </script>
+}

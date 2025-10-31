@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.props" Condition="Exists('..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.props')" />
+  <Import Project="..\packages\Microsoft.ML.CpuMath.4.0.3\build\netstandard2.0\Microsoft.ML.CpuMath.props" Condition="Exists('..\packages\Microsoft.ML.CpuMath.4.0.3\build\netstandard2.0\Microsoft.ML.CpuMath.props')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.AspNetCore.Identity.UI.9.0.10\build\Microsoft.AspNetCore.Identity.UI.props" Condition="Exists('..\packages\Microsoft.AspNetCore.Identity.UI.9.0.10\build\Microsoft.AspNetCore.Identity.UI.props')" />
   <Import Project="..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props" Condition="Exists('..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props')" />
@@ -55,11 +57,12 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -187,6 +190,9 @@
     <Reference Include="Microsoft.AspNetCore.WebUtilities, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.WebUtilities.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.WebUtilities.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.Numerics, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Numerics.8.0.0\lib\net462\Microsoft.Bcl.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.8.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
@@ -263,6 +269,30 @@
     <Reference Include="Microsoft.Extensions.WebEncoders, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.WebEncoders.2.2.0\lib\netstandard2.0\Microsoft.Extensions.WebEncoders.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ML.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.4.0.3\lib\netstandard2.0\Microsoft.ML.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.CpuMath, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.CpuMath.4.0.3\lib\netstandard2.0\Microsoft.ML.CpuMath.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.4.0.3\lib\netstandard2.0\Microsoft.ML.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.DataView, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.DataView.4.0.3\lib\netstandard2.0\Microsoft.ML.DataView.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.KMeansClustering, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.4.0.3\lib\netstandard2.0\Microsoft.ML.KMeansClustering.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.PCA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.4.0.3\lib\netstandard2.0\Microsoft.ML.PCA.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.StandardTrainers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.4.0.3\lib\netstandard2.0\Microsoft.ML.StandardTrainers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.Transforms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.4.0.3\lib\netstandard2.0\Microsoft.ML.Transforms.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
@@ -329,11 +359,14 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.CodeDom, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.CodeDom.8.0.0\lib\net462\System.CodeDom.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.8.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
@@ -408,13 +441,16 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    <Reference Include="System.Numerics.Tensors, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Tensors.8.0.0\lib\net462\System.Numerics.Tensors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.0\lib\net462\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
@@ -429,8 +465,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.0\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
@@ -487,8 +523,11 @@
     <Reference Include="System.Text.Encodings.Web, Version=4.0.5.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.4.7.2\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    <Reference Include="System.Threading.Channels, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Channels.8.0.0\lib\net462\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Thread, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
@@ -599,15 +638,24 @@
     <Compile Include="Areas\Admin\Controllers\FoodIngredientsController.cs" />
     <Compile Include="Areas\Admin\Controllers\FoodsController.cs" />
     <Compile Include="Areas\Admin\Controllers\IngredientsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MenuDetailsController.cs" />
     <Compile Include="Areas\Admin\Controllers\MenusController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PartiesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PartnersController.cs" />
     <Compile Include="Areas\Admin\Controllers\PostersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PriceHistoriesController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProvidersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RatesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StaffPartiesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SystemUsersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserDiscountsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserPermissionController.cs" />
-    <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\DashboardViewModel.cs" />
     <Compile Include="Areas\Admin\Models\FoodRecipeViewModel.cs" />
     <Compile Include="Areas\Staff\Controllers\CalendarController.cs" />
+    <Compile Include="Areas\Admin\Models\ReportViewModel.cs" />
     <Compile Include="Areas\Staff\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Staff\Controllers\PersonalAccountController.cs" />
     <Compile Include="Areas\Staff\Models\UserInformation.cs" />
@@ -624,8 +672,44 @@
     <Compile Include="Migrations\202510281609517_InitialCreate.Designer.cs">
       <DependentUpon>202510281609517_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />     <Compile Include="Models\AccountViewModels.cs" /><Compile Include="Models\AppDbContext.cs" /><Compile Include="Models\ApplicationUser.cs" /><Compile Include="Models\Category.cs" /><Compile Include="Models\Comment.cs" /><Compile Include="Models\Discount.cs" /><Compile Include="Models\Food.cs" /><Compile Include="Models\FoodDto.cs" /><Compile Include="Models\FoodIngredient.cs" /><Compile Include="Models\HomeViewModel.cs" /><Compile Include="Models\Ingredient.cs" /><Compile Include="Models\ManageViewModels.cs" /><Compile Include="Models\Menu.cs" /><Compile Include="Models\MenuDetail.cs" /><Compile Include="Models\MenuDetailDto.cs" /><Compile Include="Models\MenuViewModel.cs" /><Compile Include="Models\News.cs" /><Compile Include="Models\NewsDetailViewModel.cs" /><Compile Include="Models\NewsViewModel.cs" /><Compile Include="Models\Partner.cs" /><Compile Include="Models\Party.cs" /><Compile Include="Models\Poster.cs" /><Compile Include="Models\PriceHistory.cs" /><Compile Include="Models\Provider.cs" /><Compile Include="Models\Rate.cs" /><Compile Include="Models\StaffParty.cs" /><Compile Include="Models\SystemUser.cs" /><Compile Include="Models\UserDiscount.cs" /><Compile Include="Properties\AssemblyInfo.cs" /><Compile Include="Service\EmailService.cs" /><Compile Include="Service\MenuService.cs" /><Compile Include="Service\PartyService.cs" /><Compile Include="Startup.cs" /><Compile Include="Utils\EmailUtils.cs" /><Compile Include="Utils\MapUtils.cs" /><Compile Include="Utils\StringUtils.cs" /></ItemGroup>
-  <ItemGroup>
+    <Compile Include="Migrations\Configuration.cs" />     
+<Compile Include="Models\AccountViewModels.cs" />
+<Compile Include="Models\AppDbContext.cs" />
+<Compile Include="Models\NewsDetailViewModel.cs" />
+<Compile Include="Models\ApplicationUser.cs" />
+<Compile Include="Models\Category.cs" />
+<Compile Include="Models\Comment.cs" />
+<Compile Include="Models\Discount.cs" />
+<Compile Include="Models\Food.cs" />
+<Compile Include="Models\FoodDto.cs" />
+<Compile Include="Models\FoodIngredient.cs" />
+<Compile Include="Models\HomeViewModel.cs" />
+<Compile Include="Models\Ingredient.cs" />
+<Compile Include="Models\ManageViewModels.cs" />
+<Compile Include="Models\Menu.cs" />
+<Compile Include="Models\MenuDetail.cs" />
+<Compile Include="Models\MenuDetailDto.cs" />
+<Compile Include="Models\MenuViewModel.cs" />
+<Compile Include="Models\News.cs" />
+<Compile Include="Models\NewsViewModel.cs" />
+<Compile Include="Models\Partner.cs" />
+<Compile Include="Models\Party.cs" />
+<Compile Include="Models\Poster.cs" />
+<Compile Include="Models\PriceHistory.cs" />
+<Compile Include="Models\Provider.cs" />
+<Compile Include="Models\Rate.cs" />
+<Compile Include="Models\StaffParty.cs" />
+<Compile Include="Models\SystemUser.cs" />
+<Compile Include="Models\UserDiscount.cs" />
+<Compile Include="Properties\AssemblyInfo.cs" />
+<Compile Include="Service\EmailService.cs" />
+<Compile Include="Service\MenuService.cs" />
+<Compile Include="Service\PartyService.cs" />
+<Compile Include="Startup.cs" />
+<Compile Include="Utils\EmailUtils.cs" />
+<Compile Include="Utils\MapUtils.cs" />
+<Compile Include="Utils\StringUtils.cs" />
+</ItemGroup>
     <Content Include="Content\admin\calendar\css\fullcalendar.css" />
     <Content Include="Content\admin\calendar\src\fonts\dropways\dropways.css" />
     <Content Include="Content\admin\calendar\src\fonts\dropways\dropways.svg" />
@@ -2011,8 +2095,55 @@
     <Content Include="Areas\Staff\Views\PersonalAccount\ChangePassword.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\GoogleLink.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Index.cshtml" />
     <Content Include="Content\login\particles.json" />
     <Content Include="Areas\Staff\Views\Calendar\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\ChangePassword.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\GoogleLink.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\UpdateInfo.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -2157,8 +2288,12 @@
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ML.CpuMath.4.0.3\build\netstandard2.0\Microsoft.ML.CpuMath.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.CpuMath.4.0.3\build\netstandard2.0\Microsoft.ML.CpuMath.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets" Condition="Exists('..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.2.0\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets')" />
   <Import Project="..\packages\Microsoft.AspNetCore.Identity.UI.9.0.10\build\Microsoft.AspNetCore.Identity.UI.targets" Condition="Exists('..\packages\Microsoft.AspNetCore.Identity.UI.9.0.10\build\Microsoft.AspNetCore.Identity.UI.targets')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.targets" Condition="Exists('..\packages\Microsoft.ML.4.0.3\build\netstandard2.0\Microsoft.ML.targets')" />
 </Project>

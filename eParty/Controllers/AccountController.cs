@@ -60,7 +60,8 @@ namespace eParty.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            // Sửa lỗi NullReferenceException bằng cách khởi tạo model
+            return View(new LoginViewModel());
         }
 
         //
@@ -82,12 +83,30 @@ namespace eParty.Controllers
             {
                 case SignInStatus.Success:
                     {
-                        // Lấy user hiện tại
-                        var user = await UserManager.FindByEmailAsync(model.Email);
-                        if (user != null)
+                        // === BẮT ĐẦU SỬA ĐỔI: Lấy SystemUser và lưu vào Session ===
+                        var identityUser = await UserManager.FindByEmailAsync(model.Email);
+                        if (identityUser != null)
                         {
-                            Session["UserEmail"] = user.Email;
+                            // Dùng email (cũng là Username) để tìm SystemUser tương ứng
+                            var systemUser = db.SystemUsers.Find(identityUser.Email);
+                            if (systemUser != null)
+                            {
+                                // Lưu các thông tin cần thiết vào Session
+                                Session["UserEmail"] = systemUser.Email;
+                                Session["UserFullname"] = systemUser.FirstName;
+                                Session["UserAvatar"] = systemUser.Avatar; // Đây là trường bạn muốn!
+                                Session["UserRole"] = systemUser.Role;
+                            }
+                            else
+                            {
+                                // Dự phòng nếu SystemUser không tồn tại
+                                Session["UserEmail"] = identityUser.Email;
+                                Session["UserFullname"] = identityUser.Email; // Dùng tạm email
+                                Session["UserAvatar"] = null;
+                                Session["UserRole"] = "User"; // Giả định
+                            }
                         }
+                        // === KẾT THÚC SỬA ĐỔI ===
 
                         return RedirectToLocal(returnUrl);
                     }
@@ -416,6 +435,12 @@ namespace eParty.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+
+            // === BẮT ĐẦU SỬA ĐỔI: Xóa Session khi đăng xuất ===
+            Session.Clear();
+            Session.Abandon();
+            // === KẾT THÚC SỬA ĐỔI ===
+
             return RedirectToAction("Index", "Home");
         }
 

@@ -1,6 +1,21 @@
 ﻿@{
-    var title = ViewBag.Title ?? "Dashboard"; // Đặt tiêu đề mặc định nếu ViewBag.Title null
+    var title = ViewBag.Title ?? "Dashboard";
+
+    // === Lấy thông tin user từ Session ===
+    var userFullname = Session["UserFullname"] != null ? Session["UserFullname"].ToString() : (User.Identity.IsAuthenticated ? User.Identity.Name : "Guest");
+    var userEmail = Session["UserEmail"] != null ? Session["UserEmail"].ToString() : (User.Identity.IsAuthenticated ? User.Identity.Name : "guest@example.com");
+    var userAvatar = Session["UserAvatar"] != null ? Session["UserAvatar"].ToString() : null;
+
+    var avatarSrc = "/Content/admin/dashboard/img/profile.jpg"; // Ảnh mặc định
+    if (!string.IsNullOrEmpty(userAvatar))
+    {
+        // Giả định là Base64
+        avatarSrc = "data:image/jpeg;base64," + userAvatar;
+        // Nếu là URL, dùng dòng này:
+        // avatarSrc = userAvatar;
+    }
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -174,12 +189,12 @@ toggle-sidebar">
                                     <div class="avatar-sm">
                                         @* Lấy ảnh đại diện thực tế nếu có *@
 
-                                        <img src="/Content/admin/dashboard/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
+                                        <img src="@avatarSrc" alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
 
                                         <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">@User.Identity.Name</span> @* Hiển thị tên user đăng nhập *@
+                                        <span class="fw-bold">@userFullname</span>
 
                                     </span>
                                 </a>
@@ -190,13 +205,13 @@ toggle-sidebar">
                                         <div class="user-box">
 
                                             <div class="avatar-lg">
-                                                <img src="/Content/admin/dashboard/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
+                                                <img src="@avatarSrc" alt="image profile" class="avatar-img rounded" />
 
                                             </div>
                                             <div class="u-text">
 
-                                                <h4>@User.Identity.Name</h4> @* Tên user *@
-                                                <p class="text-muted">@User.Identity.Name</p> @* Email user *@
+                                                <h4>@userFullname</h4>
+                                                <p class="text-muted">@userEmail</p>
 
                                                 <a href="@Url.Action("Index", "PersonalAccount", new { area = "Staff" })" class="btn btn-xs btn-secondary btn-sm">View Profile</a> @* Link đến trang cá nhân *@
                                             </div>
