@@ -1,4 +1,5 @@
-﻿@model eParty.Models.ApplicationUser
+﻿@model eParty.Areas.Staff.Models.UserInformation
+@using System.Runtime
 @{
     ViewBag.Title = "Tài khoản cá nhân";
     Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
@@ -16,10 +17,35 @@
         <div class="card p-3 mb-3">
             <h5>Thông tin cá nhân</h5>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
-                <li class="list-group-item"><strong>Số điện thoại:</strong> @Model.PhoneNumber</li>
-                <li class="list-group-item"><strong>Email đã xác nhận:</strong> @(Model.EmailConfirmed ? "Có" : "Chưa")</li>
-                <li class="list-group-item"><strong>2FA:</strong> @(Model.TwoFactorEnabled ? "Bật" : "Tắt")</li>
+                <li class="list-group-item d-flex align-items-center">
+                    <strong style="min-width: 130px;">Avatar: </strong>
+                    @if (!string.IsNullOrEmpty(Model.systemUser.Avatar))
+                    {
+                        string avatarSrc = Model.systemUser.Avatar;
+
+                        // Kiểm tra xem chuỗi Base64 đã có tiền tố Data URI (ví dụ: data:image/png;base64,) chưa
+                        if (!avatarSrc.StartsWith("data:image"))
+                        {
+                            // Nếu chưa, thêm vào.
+                            // Giả sử là ảnh PNG, bạn có thể đổi 'png' thành 'jpeg' nếu cần.
+                            avatarSrc = "data:image/png;base64," + avatarSrc;
+                        }
+
+                        <img src="@avatarSrc" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <span>(Chưa có ảnh)</span>
+                        @* Hoặc bạn có thể dùng một ảnh placeholder mặc định *@
+                        @* <img src="/path/to/default-avatar.png" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;" /> *@
+                    }
+                </li>
+                <li class="list-group-item"><strong>Họ: </strong> @Model.systemUser.FirstName</li>
+                <li class="list-group-item"><strong>Tên: </strong> @Model.systemUser.LastName</li>
+                <li class="list-group-item"><strong>Email: </strong> @Model.user.Email</li>
+                <li class="list-group-item"><strong>Số điện thoại: </strong> @Model.user.PhoneNumber</li>
+                <li class="list-group-item"><strong>Email đã xác nhận: </strong> @(Model.user.EmailConfirmed ? "Có" : "Chưa")</li>
+                <li class="list-group-item"><strong>2FA: </strong> @(Model.user.TwoFactorEnabled ? "Bật" : "Tắt")</li>
             </ul>
         </div>
 
@@ -34,7 +60,7 @@
         <div class="card p-3">
             <h5>Trạng thái liên kết Google</h5>
             @{
-                var googleLogin = Model.Logins.FirstOrDefault(l => l.LoginProvider == "Google");
+                var googleLogin = Model.user.Logins.FirstOrDefault(l => l.LoginProvider == "Google");
             }
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">

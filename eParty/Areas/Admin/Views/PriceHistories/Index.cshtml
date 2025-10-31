@@ -1,0 +1,118 @@
+﻿@model IEnumerable<eParty.Models.PriceHistory>
+@{
+    ViewBag.Title = "Price History Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Price History List</h4>
+                <a href="@Url.Action("Create", "PriceHistories", new { area = "Admin" })" class="btn btn-primary btn-round ms-auto">
+                    Create New
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="pricehistory-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Food</th>
+                            <th>Party / Event</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <!-- Food -->
+                                <td>
+                                    <strong>@(item.FoodRef != null ? item.FoodRef.Name : "N/A")</strong>
+                                </td>
+
+                                <!-- Party -->
+                                <td>
+                                    <span class="badge bg-info text-dark">
+                                        @(item.PartyRef != null ? item.PartyRef.Name : "N/A")
+                                    </span>
+                                </td>
+
+                                <!-- Unit Price -->
+                                <td>
+                                    <strong class="text-success">
+                                        @string.Format("{0:N0} VND", item.Cost)
+                                    </strong>
+                                </td>
+
+                                <!-- Quantity -->
+                                <td>
+                                    <span class="badge bg-secondary">@item.Amount</span>
+                                </td>
+
+                                <!-- Total -->
+                                <td>
+                                    <strong class="text-primary">
+                                        @string.Format("{0:N0} VND", (item.Cost * item.Amount))
+                                    </strong>
+                                </td>
+
+                                <!-- Action -->
+                                <td>
+                                    <div class="form-button-action">
+                                        <a href="@Url.Action("Edit", "PriceHistories", new { area = "Admin", party = item.Party, food = item.Food })"
+                                           class="btn btn-link btn-primary btn-lg" title="Edit">
+                                            Edit
+                                        </a>
+
+                                        <a href="@Url.Action("Details", "PriceHistories", new { area = "Admin", party = item.Party, food = item.Food })"
+                                           class="btn btn-link btn-info btn-lg" title="Details">
+                                            Details
+                                        </a>
+
+                                        <a href="@Url.Action("Delete", "PriceHistories", new { area = "Admin", party = item.Party, food = item.Food })"
+                                           class="btn btn-link btn-danger" title="Delete">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#pricehistory-datatables').DataTable({
+                "pageLength": 10,
+                "lengthMenu": [5, 10, 25, 50],
+                "order": [[4, "desc"]],
+                "columnDefs": [
+                    { "orderable": false, "targets": 5 }
+                ],
+                "language": {
+                    "search": "Search:",
+                    "lengthMenu": "Show _MENU_ entries",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ records",
+                    "paginate": {
+                        "previous": "Prev",
+                        "next": "Next"
+                    }
+                }
+            });
+
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

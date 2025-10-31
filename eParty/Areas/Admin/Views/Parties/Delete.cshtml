@@ -1,0 +1,169 @@
+﻿@model eParty.Models.Party
+@{
+    ViewBag.Title = "Delete Party";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Party Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Parties")">Parties</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Delete</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Confirm Deletion</div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning!</strong> Are you sure you want to delete this party? <br />
+                    <small class="ms-2">This action <strong>cannot be undone</strong>.</small>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <dl class="row mb-0">
+                            <!-- Name -->
+                            <dt class="col-sm-3 fw-bold">Party Name</dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.Name)</dd>
+
+                            <!-- Image -->
+                            @if (!string.IsNullOrEmpty(Model.Image))
+                            {
+                                <dt class="col-sm-3 fw-bold">Image</dt>
+                                <dd class="col-sm-9">
+                                    <img src="data:image/jpeg;base64,@Model.Image"
+                                         alt="@Model.Name"
+                                         class="img-thumbnail"
+                                         style="max-width: 200px; border-radius: 8px;" />
+                                </dd>
+                            }
+
+                            <!-- Type -->
+                            <dt class="col-sm-3 fw-bold">Type</dt>
+                            <dd class="col-sm-9">
+                                <span class="badge bg-primary">@Html.DisplayFor(m => m.Type)</span>
+                            </dd>
+
+                            <!-- Status -->
+                            <dt class="col-sm-3 fw-bold">Status</dt>
+                            <dd class="col-sm-9">
+                                <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">
+                                    @Html.DisplayFor(m => m.Status)
+                                </span>
+                            </dd>
+
+                            <!-- Cost -->
+                            <dt class="col-sm-3 fw-bold">Cost</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.Cost > 0)
+                                {
+                                    <strong>@String.Format("{0:N0} VND", Model.Cost)</strong>
+                                }
+                                else
+                                {
+                                    <em class="text-muted">Free</em>
+                                }
+                            </dd>
+
+                            <!-- Time -->
+                            <dt class="col-sm-3 fw-bold">Time</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.BeginTime.HasValue && Model.EndTime.HasValue)
+                                {
+                                    <text>
+                                        <i class="far fa-clock"></i>
+                                        @Model.BeginTime.Value.ToString("dd/MM/yyyy HH:mm") → @Model.EndTime.Value.ToString("HH:mm")
+                                    </text>
+                                }
+                                else
+                                {
+                                    <em class="text-muted">Not set</em>
+                                }
+                            </dd>
+
+                            <!-- Created Date -->
+                            <dt class="col-sm-3 fw-bold">Created</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.CreatedDate.HasValue)
+                                {
+                                    @Model.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm")
+                                }
+                                else
+                                {
+                                    <em class="text-muted">Unknown</em>
+                                }
+                            </dd>
+
+                            <!-- Slots -->
+                            <dt class="col-sm-3 fw-bold">Slots</dt>
+                            <dd class="col-sm-9">
+                                <span class="fw-bold">@Model.Slots</span> guests
+                            </dd>
+
+                            <!-- Address -->
+                            <dt class="col-sm-3 fw-bold">Address</dt>
+                            <dd class="col-sm-9">
+                                @if (!string.IsNullOrWhiteSpace(Model.Address))
+                                {
+                                    <i class="fas fa-map-marker-alt text-danger"></i> @Model.Address
+                                }
+                                else
+                                {
+                                    <em class="text-muted">No address</em>
+                                }
+                            </dd>
+
+                            <!-- Menu -->
+                            <dt class="col-sm-3 fw-bold">Menu</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.MenuRef != null)
+                                {
+                                    @Model.MenuRef.Name
+                                }
+                                else
+                                {
+                                    <em class="text-muted">No menu</em>
+                                }
+                            </dd>
+
+                            <!-- Owner -->
+                            <dt class="col-sm-3 fw-bold">Owner</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.Owner != null)
+                                {
+                                    <i class="fas fa-user"></i> <strong>@Model.Owner.Username</strong>
+                                }
+                                else
+                                {
+                                    <em class="text-muted">Unknown</em>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-action">
+                @using (Html.BeginForm("Delete", "Parties", new { id = Model.Id }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Yes, Delete
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">
+                        <i class="fas fa-ban"></i> Cancel
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

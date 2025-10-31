@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using eParty.Areas.Staff.Models;
+using eParty.Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.VisualBasic.ApplicationServices;
+using System.Data.Entity;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -12,6 +17,7 @@ namespace eParty.Areas.Staff.Controllers
     public class PersonalAccountController : Controller
     {
         private ApplicationUserManager _userManager;
+        private AppDbContext db = new AppDbContext();
         public ApplicationUserManager UserManager
         {
             get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
@@ -26,27 +32,83 @@ namespace eParty.Areas.Staff.Controllers
         {
             var userId = User.Identity.GetUserId();
             var user = await UserManager.FindByIdAsync(userId);
+
             if (user == null) return HttpNotFound();
-            return View(user);
+            UserInformation userInfo = new UserInformation
+            {
+                user = user,
+                systemUser = db.SystemUsers.FirstOrDefault(su => su.Username == user.Email)
+            };
+            return View(userInfo);
         }
 
         // POST: Update info
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateInfo(string phoneNumber)
+        // Tên phương thức phải KHỚP VỚI action trong Form (ví dụ: "UpdateProfile" hoặc "UpdateInfo")
+        // 1. Thêm tất cả các tham số từ form
+        public async Task<ActionResult> UpdateInfo(string FirstName, string LastName, string Avatar, string PhoneNumber)
         {
             var userId = User.Identity.GetUserId();
             var user = await UserManager.FindByIdAsync(userId);
-            if (user == null) return HttpNotFound();
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
 
-            user.PhoneNumber = phoneNumber;
-            var result = await UserManager.UpdateAsync(user);
+            // --- 2. Cập nhật ApplicationUser (Identity) ---
+            user.PhoneNumber = PhoneNumber;
+            var identityResult = await UserManager.UpdateAsync(user);
 
-            TempData["Message"] = result.Succeeded
-                ? "Cập nhật thông tin thành công!"
-                : "Cập nhật thất bại: " + string.Join(", ", result.Errors);
+            // --- 3. Cập nhật SystemUser (Database) ---
+            bool dbUpdateSucceeded = false;
+            string dbErrors = string.Empty;
 
-            return RedirectToAction("UpdateInfo");
+            try
+            {
+                // Tìm SystemUser dựa trên Email của Identity user
+                var systemUser = await db.SystemUsers.FirstOrDefaultAsync(su => su.Username == user.Email);
+
+                if (systemUser != null)
+                {
+                    systemUser.FirstName = FirstName;
+                    systemUser.LastName = LastName;
+                    systemUser.PhoneNumber = PhoneNumber;
+
+                    // Chỉ cập nhật Avatar nếu người dùng có chọn ảnh mới
+                    // (input 'Avatar' sẽ chứa chuỗi Base64 mới)
+                    // Nếu bạn muốn giữ ảnh cũ nếu người dùng không chọn, 
+                    // logic của file JS (ở câu trả lời trước) đã xử lý việc này.
+                    systemUser.Avatar = Avatar; // Đây là chuỗi Base64
+
+                    await db.SaveChangesAsync();
+                    dbUpdateSucceeded = true;
+                }
+                else
+                {
+                    dbErrors = "Lỗi: Không tìm thấy SystemUser tương ứng.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // (Nên log lỗi 'ex' vào hệ thống của bạn)
+                dbErrors = "Lỗi CSDL khi cập nhật thông tin.";
+            }
+
+            // --- 4. Gửi thông báo dựa trên KẾT QUẢ CỦA CẢ HAI ---
+            if (identityResult.Succeeded && dbUpdateSucceeded)
+            {
+                TempData["Message"] = "Cập nhật thông tin thành công!";
+            }
+            else
+            {
+                string identityErrors = !identityResult.Succeeded ? string.Join(", ", identityResult.Errors) : "";
+                TempData["Message"] = ("Cập nhật thất bại: " + identityErrors + " " + dbErrors).Trim();
+            }
+
+            // Chuyển hướng về trang xem/cập nhật thông tin
+            // (RedirectToAction("Index") để xem, hoặc "UpdateInfo" để ở lại form)
+            return RedirectToAction("Index");
         }
 
         // GET: Change password
@@ -139,10 +201,14 @@ namespace eParty.Areas.Staff.Controllers
         {
             var userId = User.Identity.GetUserId();
             var user = await UserManager.FindByIdAsync(userId);
-
             if (user == null) return HttpNotFound();
+            UserInformation userInfo = new UserInformation
+            {
+                user = user,
+                systemUser = db.SystemUsers.FirstOrDefault(su => su.Username == user.Email)
+            };
 
-            return View(user);
+            return View(userInfo);
         }
     }
 
