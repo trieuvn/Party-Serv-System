@@ -1,177 +1,286 @@
 ﻿@model eParty.Models.Party
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Party Details";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Tùy chỉnh cho văn bản chỉ đọc trong form layout */
+        .form-control-plaintext {
+            padding-top: .375rem;
+            padding-bottom: .375rem;
+            font-weight: 500;
+        }
+
+        .card-body .row {
+            margin-bottom: 1rem;
+        }
+
+        #party-map {
+            height: 300px;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+}
+
 <div class="page-header">
-    <h3 class="fw-bold mb-3">Party Management</h3>
+    <h3 class="fw-bold mb-3">@ViewBag.Title</h3>
     <ul class="breadcrumbs mb-3">
         <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
         <li class="separator"><i class="icon-arrow-right"></i></li>
         <li class="nav-item"><a href="@Url.Action("Index", "Parties")">Parties</a></li>
         <li class="separator"><i class="icon-arrow-right"></i></li>
-        <li class="nav-item"><a href="#">Details</a></li>
+        <li class="nav-item"><a>Details</a></li>
     </ul>
 </div>
 
+@* === BẮT ĐẦU CẤU TRÚC LAYOUT (ĐÃ HOÁN ĐỔI) === *@
 <div class="row">
-    <div class="col-md-12">
+
+    @* --- CỘT BÊN TRÁI (THÔNG TIN CHI TIẾT) --- *@
+    <div class="col-md-8">
+
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Party Details</div>
+                <div class="card-title"><i class="fas fa-info-circle me-2"></i>Party Information</div>
             </div>
             <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-3">Id</dt>
-                    <dd class="col-sm-9">@Model.Id</dd>
 
-                    <dt class="col-sm-3">Name</dt>
-                    <dd class="col-sm-9">@Model.Name</dd>
+                @* Chuyển đổi từ <dl> sang layout <form> (chỉ đọc) *@
 
-                    <dt class="col-sm-3">Image</dt>
-                    <dd class="col-sm-9">
-                        @if (!string.IsNullOrEmpty(Model.Image))
-                        {
-                            <img src="data:image/jpeg;base64,@Model.Image" alt="Party" style="max-width: 200px; border-radius: 8px;" />
-                        }
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Name</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext"><strong>@Model.Name</strong></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Type</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            <span class="badge @(Model.Type == "Premium" ? "bg-primary" : Model.Type == "VIP" ? "bg-warning text-dark" : "bg-secondary")">
+                                @Model.Type
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Status</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            <span class="badge @(Model.Status == "Active" ? "bg-success" : Model.Status == "Completed" ? "bg-info" : Model.Status == "Cancelled" ? "bg-danger" : "bg-warning")">
+                                @Model.Status
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Cost</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            @if (Model.Cost > 0)
+                            {@String.Format("{0:N0} VND", Model.Cost) }
                         else
-                        {
-                            <em class="text-muted">No image</em>
-                        }
-                    </dd>
+                        { <em class="text-muted">Not set</em>}
+                        </p>
+                    </div>
+                </div>
 
-                    <dt class="col-sm-3">Type</dt>
-                    <dd class="col-sm-9">@Model.Type</dd>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Slots</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">@Model.Slots</p>
+                    </div>
+                </div>
 
-                    <dt class="col-sm-3">Status</dt>
-                    <dd class="col-sm-9">
-                        <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">
-                            @Model.Status
-                        </span>
-                    </dd>
-
-                    <!-- SỬA Cost: int → không dùng .HasValue -->
-                    <dt class="col-sm-3">Cost</dt>
-                    <dd class="col-sm-9">
-                        @if (Model.Cost > 0)
-                        {
-                            @String.Format("{0:N0} VND", Model.Cost)
-                        }
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Begin Time</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            @if (Model.BeginTime.HasValue)
+                            {@Model.BeginTime.Value.ToString("dd/MM/yyyy HH:mm") }
                         else
-                        {
-                            <em class="text-muted">Not set</em>
-                        }
-                    </dd>
+                        { <em class="text-muted">Not set</em>}
+                        </p>
+                    </div>
+                </div>
 
-                    <!-- BeginTime: DateTime? → OK -->
-                    <dt class="col-sm-3">BeginTime</dt>
-                    <dd class="col-sm-9">
-                        @if (Model.BeginTime.HasValue)
-                        {
-                            @Model.BeginTime.Value.ToString("dd/MM/yyyy HH:mm")
-                        }
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">End Time</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            @if (Model.EndTime.HasValue)
+                            {@Model.EndTime.Value.ToString("dd/MM/yyyy HH:mm") }
                         else
-                        {
-                            <em class="text-muted">Not set</em>
-                        }
-                    </dd>
+                        { <em class="text-muted">Not set</em>}
+                        </p>
+                    </div>
+                </div>
 
-                    <!-- EndTime: DateTime? → OK -->
-                    <dt class="col-sm-3">EndTime</dt>
-                    <dd class="col-sm-9">
-                        @if (Model.EndTime.HasValue)
-                        {
-                            @Model.EndTime.Value.ToString("dd/MM/yyyy HH:mm")
-                        }
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Created Date</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            @if (Model.CreatedDate.HasValue)
+                            {@Model.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm") }
                         else
-                        {
-                            <em class="text-muted">Not set</em>
-                        }
-                    </dd>
+                        { <em class="text-muted">Unknown</em>}
+                        </p>
+                    </div>
+                </div>
 
-                    <!-- CreatedDate: DateTime? → OK -->
-                    <dt class="col-sm-3">CreatedDate</dt>
-                    <dd class="col-sm-9">
-                        @if (Model.CreatedDate.HasValue)
-                        {
-                            @Model.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm")
-                        }
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Owner (User)</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            @if (!string.IsNullOrEmpty(Model.User))
+                            {@Model.User }
                         else
-                        {
-                            <em class="text-muted">Unknown</em>
-                        }
-                    </dd>
+                        { <em class="text-muted">Unknown</em>}
+                        </p>
+                    </div>
+                </div>
 
-                    <dt class="col-sm-3">Description</dt>
-                    <dd class="col-sm-9">
-                        @if (!string.IsNullOrWhiteSpace(Model.Description))
-                        {
-                            @Html.Raw(Model.Description.Replace("\n", "<br/>"))
-                        }
-                        else
-                        {
-                            <em class="text-muted">No description</em>
-                        }
-                    </dd>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Menu</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            @if (Model.Menu > 0)
+                            {@Model.Menu } @* Sửa: Hiển thị tên Menu thay vì ID *@
+                            else
+                            { <em class="text-muted">No menu</em>}
+                        </p>
+                    </div>
+                </div>
 
-                    <dt class="col-sm-3">Slots</dt>
-                    <dd class="col-sm-9">@Model.Slots</dd>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Description</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext" style="white-space: pre-wrap; background-color: #f8f9fa; border-radius: 4px; padding: 10px;">
+                            @if (!string.IsNullOrWhiteSpace(Model.Description))
+                            {
+                                @Model.Description
+                            }
+                            else
+                            {
+                                <em class="text-muted">No description</em>
+                            }
+                        </div>
+                    </div>
+                </div>
 
-                    <dt class="col-sm-3">Address</dt>
-                    <dd class="col-sm-9">
-                        @if (!string.IsNullOrWhiteSpace(Model.Address))
-                        {
-                            @Model.Address
-                        }
-                        else
-                        {
-                            <em class="text-muted">No address</em>
-                        }
-                    </dd>
-
-                    <dt class="col-sm-3">Latitude</dt>
-                    <dd class="col-sm-9">@Model.Latitude</dd>
-
-                    <dt class="col-sm-3">Longitude</dt>
-                    <dd class="col-sm-9">@Model.Longitude</dd>
-
-                    <!-- [User] -->
-                    <dt class="col-sm-3">[User]</dt>
-                    <dd class="col-sm-9">
-                        @if (!string.IsNullOrEmpty(Model.User))
-                        {
-                            @Model.User
-                        }
-                        else
-                        {
-                            <em class="text-muted">Unknown</em>
-                        }
-                    </dd>
-
-                    <!-- SỬA Menu: int → không dùng .HasValue -->
-                    <dt class="col-sm-3">Menu</dt>
-                    <dd class="col-sm-9">
-                        @if (Model.Menu > 0)
-                        {
-                            @Model.Menu
-                        }
-                        else
-                        {
-                            <em class="text-muted">No menu</em>
-                        }
-                    </dd>
-                </dl>
             </div>
+        </div>
 
-            <div class="card-action">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title"><i class="fas fa-map-marked-alt me-2"></i>Location</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Address</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            @if (!string.IsNullOrWhiteSpace(Model.Address))
+                            {@Model.Address }
+                        else
+                        { <em class="text-muted">No address</em>}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Coordinates</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-plaintext">
+                            Lat: @(Model.Latitude.HasValue ? Model.Latitude.Value.ToString() : "N/A"),
+                            Lng: @(Model.Longitude.HasValue ? Model.Longitude.Value.ToString() : "N/A")
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="party-map" style="display: none;"></div>
+                        <em id="map-none" class="text-muted" style="display: block;">(No location data provided)</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* --- CỘT BÊN PHẢI (ẢNH & HÀNH ĐỘNG) --- *@
+    <div class="col-md-4">
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title"><i class="fas fa-image me-2"></i>Party Image</div>
+            </div>
+            <div class="card-body text-center">
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img src="data:image/jpeg;base64,@Model.Image" alt="@Model.Name" class="img-fluid rounded" style="max-height: 300px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px; border: 1px dashed #ddd;">
+                        <em class="text-muted">No image provided</em>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title"><i class="fas fa-cogs me-2"></i>Actions</div>
+            </div>
+            <div class="card-body d-grid gap-2">
                 <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">
-                    Edit
+                    <i class="fas fa-edit me-1"></i> Edit this Party
                 </a>
                 <a href="@Url.Action("Index")" class="btn btn-secondary">
-                    Back to List
+                    <i class="fas fa-arrow-left me-1"></i> Back to List
                 </a>
             </div>
         </div>
     </div>
+
 </div>
+@* === KẾT THÚC CẤU TRÚC LAYOUT === *@
+
+
+@section scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        $(document).ready(function () {
+            var lat = @(Model.Latitude.HasValue ? Model.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null");
+            var lng = @(Model.Longitude.HasValue ? Model.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null");
+
+            var mapDiv = $('#party-map');
+            var noMapDiv = $('#map-none');
+
+            if (lat != null && lng != null) {
+                mapDiv.show();
+                noMapDiv.hide();
+
+                var map = L.map('party-map').setView([lat, lng], 15);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup('@Html.Raw(Model.Name.Replace("'", "\\'"))')
+                    .openPopup();
+            } else {
+                mapDiv.hide();
+                noMapDiv.show();
+            }
+        });
+    </script>
+}
