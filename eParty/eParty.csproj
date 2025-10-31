@@ -55,11 +55,9 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -599,12 +597,19 @@
     <Compile Include="Areas\Admin\Controllers\FoodIngredientsController.cs" />
     <Compile Include="Areas\Admin\Controllers\FoodsController.cs" />
     <Compile Include="Areas\Admin\Controllers\IngredientsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MenuDetailsController.cs" />
     <Compile Include="Areas\Admin\Controllers\MenusController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PartiesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PartnersController.cs" />
     <Compile Include="Areas\Admin\Controllers\PostersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PriceHistoriesController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProvidersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RatesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StaffPartiesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SystemUsersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserDiscountsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserPermissionController.cs" />
-    <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\DashboardViewModel.cs" />
     <Compile Include="Areas\Admin\Models\FoodRecipeViewModel.cs" />
     <Compile Include="Areas\Staff\Controllers\CalendarController.cs" />
@@ -2010,6 +2015,46 @@
     <Content Include="Areas\Staff\Views\PersonalAccount\ChangePassword.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\GoogleLink.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MenuDetails\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Partners\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Parties\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceHistories\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Rates\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\StaffParties\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SystemUsers\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\UserDiscounts\Index.cshtml" />
     <Content Include="Content\login\particles.json" />
     <Content Include="Areas\Staff\Views\Calendar\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />

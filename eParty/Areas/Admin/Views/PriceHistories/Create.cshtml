@@ -1,0 +1,82 @@
+﻿@model eParty.Models.PriceHistory
+@{
+    ViewBag.Title = "Create New Price History";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Price History Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "PriceHistories")">Price History</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "PriceHistories", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Add New Price Record</div>
+                </div>
+
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <!-- Party -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Party, "Party", new { @class = "form-label" })
+                                @Html.DropDownList("Party", null, "--- Select Party ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Party, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Food -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Food, "Food", new { @class = "form-label" })
+                                @Html.DropDownList("Food", null, "--- Select Food ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Food, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Cost -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Cost, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g., 55000", type = "number", min = "0", step = "1000" } })
+                                @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Amount, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g., 100", type = "number", min = "1" } })
+                                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">
+                        Create
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-danger">
+                        Cancel
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

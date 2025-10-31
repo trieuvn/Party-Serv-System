@@ -1,0 +1,97 @@
+﻿@model eParty.Models.Rate
+
+@{
+    ViewBag.Title = "Rate Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Rate Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+            <a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "Rates")">Rates</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    Details for: <strong>@(Model.PartyRef?.Name ?? "N/A")</strong>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <!-- Ảnh sự kiện -->
+                    <div class="col-md-4 text-center">
+                        @{
+                            string imageSrc = !string.IsNullOrEmpty(Model.PartyRef?.Image)
+                                ? Url.Content("~/Uploads/Parties/" + Model.PartyRef.Image)
+                                : null;
+                        }
+
+                        @if (!string.IsNullOrEmpty(imageSrc))
+                        {
+                            <img src="@imageSrc"
+                                 alt="@Model.PartyRef?.Name"
+                                 class="img-fluid rounded shadow-sm"
+                                 style="max-height: 250px;" />
+                        }
+                        else
+                        {
+                            <div class="p-5 bg-light text-muted rounded text-center">
+                                <i class="icon-image fs-1"></i>
+                                <p>No image available</p>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Thông tin chi tiết -->
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-3">Party</dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.PartyRef.Name)</dd>
+
+                            <dt class="col-sm-3">User</dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.UserRef.Username)</dd>
+
+                            <dt class="col-sm-3">Stars</dt>
+                            <dd class="col-sm-9">
+                                <span class="text-warning">
+                                    @for (int i = 0; i < Model.Stars; i++)
+                                    {
+                                        <i class="icon-star"></i>
+                                    }
+                                    @for (int i = Model.Stars; i < 5; i++)
+                                    {
+                                        <i class="icon-star-empty"></i>
+                                    }
+                                </span>
+                                (@Model.Stars / 5)
+                            </dd>
+
+                            <dt class="col-sm-3">Comment</dt>
+                            <dd class="col-sm-9">@Model.Comment</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-action text-end">
+                <a href="@Url.Action("Edit", new { user = Model.User, party = Model.Party })" class="btn btn-primary me-2">
+                    <i class="icon-pencil"></i> Edit
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="icon-list"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+﻿@model IEnumerable<eParty.Models.Rate>
+
+@{
+    ViewBag.Title = "Rate Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Rate List</h4>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
+                    <i class="fa fa-plus"></i>
+                    Create New
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="rate-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Party</th>
+                            <th>User</th>
+                            <th>Stars</th>
+                            <th>Comment</th>
+                            <th style="width: 12%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@(item.PartyRef != null ? item.PartyRef.Name : "—")</td>
+                                <td>@(item.UserRef != null ? item.UserRef.GetFullName() : item.User)</td>
+                                <td>
+                                    <span class="text-warning">
+                                        @for (int i = 0; i < item.Stars; i++)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                        }
+                                        @for (int i = item.Stars; i < 5; i++)
+                                        {
+                                            <i class="fa fa-star-o"></i>
+                                        }
+                                    </span>
+                                </td>
+                                <td>@item.Comment</td>
+                                <td>
+                                    <div class="form-button-action">
+                                        <a href="@Url.Action("Edit", new { user = item.User, party = item.Party })" data-bs-toggle="tooltip" title="Edit" class="btn btn-link btn-primary btn-lg">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", new { user = item.User, party = item.Party })" data-bs-toggle="tooltip" title="Details" class="btn btn-link btn-info btn-lg">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { user = item.User, party = item.Party })" data-bs-toggle="tooltip" title="Remove" class="btn btn-link btn-danger btn-lg">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#rate-datatables').DataTable({
+                "pageLength": 5
+            });
+        });
+    </script>
+}

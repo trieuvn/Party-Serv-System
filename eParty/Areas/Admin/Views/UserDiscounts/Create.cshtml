@@ -1,0 +1,63 @@
+﻿@model eParty.Models.UserDiscount
+
+@{
+    ViewBag.Title = "Create New User Discount";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">User Discount Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="@Url.Action("Index", "UserDiscounts")">User Discounts</a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "UserDiscounts", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header"><div class="card-title">Add New User Discount</div></div>
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.User, "User", new { @class = "form-label" })
+                                @Html.DropDownList("User", (SelectList)ViewBag.User, "--- Select a User ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Discount, "Discount", new { @class = "form-label" })
+                                @Html.DropDownList("Discount", (SelectList)ViewBag.Discount, "--- Select a Discount ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Amount, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter discount amount" } })
+                                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index", "UserDiscounts")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
