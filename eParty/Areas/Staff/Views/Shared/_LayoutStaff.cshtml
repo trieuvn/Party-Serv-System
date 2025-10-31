@@ -1,5 +1,5 @@
 ﻿@{
-    var title = ViewBag.Title ?? "Dashboard";
+    var title = ViewBag.Title ?? "Dashboard"; // Đặt tiêu đề mặc định nếu ViewBag.Title null
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -15,15 +15,17 @@
             google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
                 families: [
-                    "Font Awesome 5 Solid",
-                    "Font Awesome 5 Regular",
-                    "Font Awesome 5 Brands",
-                    "simple-line-icons",
+
+                    "Font Awesome 5 Solid", // Icon solid của Font Awesome
+                    "Font Awesome 5 Regular", // Icon regular của Font Awesome
+                    "Font Awesome 5 Brands", // Icon brand của Font Awesome
+                    "simple-line-icons", // Bộ icon Simple Line Icons
+
                 ],
-                urls: ["/Content/admin/dashboard/css/fonts.min.css"],
+                urls: ["/Content/admin/dashboard/css/fonts.min.css"], // Đường dẫn đến file CSS chứa font
             },
             active: function () {
-                sessionStorage.fonts = true;
+                sessionStorage.fonts = true; // Đánh dấu font đã tải xong
             },
         });
     </script>
@@ -31,77 +33,98 @@
     <link rel="stylesheet" href="/Content/admin/dashboard/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/Content/admin/dashboard/css/plugins.min.css" />
     <link rel="stylesheet" href="/Content/admin/dashboard/css/kaiadmin.min.css" />
+
     <link rel="stylesheet" href="/Content/admin/dashboard/css/demo.css" />
-    @RenderSection("Styles", required: false)
+    @RenderSection("Styles", required: false) @* Cho phép các View con thêm CSS riêng *@
 </head>
 <body>
     <div class="wrapper">
         <div class="sidebar" data-background-color="dark">
             <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="dark">
+
                     <a href="/Admin/Dashboard" class="logo">
+                        @* Sửa link thành trang chủ Staff nếu cần *@
                         <img src="/Content/admin/dashboard/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
                     </a>
                     <div class="nav-toggle">
-                        <button class="btn btn-toggle toggle-sidebar">
+                        <button class="btn btn-toggle
+toggle-sidebar">
+                            @* Nút thu gọn/mở rộng sidebar *@
                             <i class="gg-menu-right"></i>
                         </button>
                         <button class="btn btn-toggle sidenav-toggler">
+                            @* Nút thu gọn sidebar thành mini icon *@
+
                             <i class="gg-menu-left"></i>
                         </button>
                     </div>
                     <button class="topbar-toggler more">
+                        @* Nút hiển thị topbar trên mobile *@
                         <i class="gg-more-vertical-alt"></i>
                     </button>
                 </div>
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
+
                     <ul class="nav nav-secondary">
-                        <li class="nav-item active">
-                            <a href="/Admin/Dashboard">
+                        @* Menu chính của sidebar *@
+                        <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Dashboard" ? "active" : "")">
+                            @* Active nếu đang ở Dashboard *@
+                            <a href="@Url.Action("Index", "Dashboard", new { area = "Staff" })">
                                 <i class="fas fa-home"></i>
+
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         <li class="nav-section">
+                            @* Phân cách mục menu *@
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
                             </span>
-                            <h4 class="text-section">Components</h4>
+
+                            <h4 class="text-section">Modules</h4> @* Tiêu đề phân cách *@
                         </li>
-                        <li class="nav-item">
-                            <a data-bs-toggle="collapse" href="#base">
-                                <i class="fas fa-th-list"></i>
-                                <p>Material management</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="base">
-                                <ul class="nav nav-collapse">
-                                    <li>
-                                        <a href="/Admin/Foods">
-                                            <span class="sub-item">Food</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/Admin/Ingredients">
-                                            <span class="sub-item">Ingredient</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/Admin/Providers">
-                                            <span class="sub-item">Provider</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/Admin/Calendar">
-                                <i class="fas fa-calendar"></i>
-                                <p>Schedule</p>
+                        @* Thêm các mục menu khác cho Staff ở đây *@
+                        <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Calendar" ? "active" : "")">
+                            @* Mục Lịch làm việc *@
+                            <a href="@Url.Action("Index", "Calendar", new { area = "Staff" })">
+                                <i class="fas fa-calendar-alt"></i>
+                                <p>Lịch làm việc</p>
                             </a>
                         </li>
+                        <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "PersonalAccount" ? "active" : "")">
+                            @* Mục Tài khoản cá nhân *@
+                            <a href="@Url.Action("Index", "PersonalAccount", new { area = "Staff" })">
+                                <i class="fas fa-user-cog"></i>
+                                <p>Tài khoản</p>
+                            </a>
+                        </li>
+
+                        @* Ví dụ thêm mục Quản lý Party (nếu Staff có quyền)
+                            <li class="nav-item">
+                                <a data-bs-toggle="collapse" href="#partyManagement">
+                                    <i class="fas fa-glass-cheers"></i>
+                                    <p>Party Management</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="partyManagement">
+                                    <ul class="nav nav-collapse">
+                                        <li>
+                                            <a href="/Staff/Parties/Assigned">
+                                                <span class="sub-item">Assigned Parties</span>
+                                            </a>
+                                        </li>
+                                         <li>
+                                            <a href="/Staff/Parties/History">
+                                                <span class="sub-item">Party History</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        *@
                     </ul>
                 </div>
             </div>
@@ -111,13 +134,16 @@
                 <div class="main-header-logo">
                     <div class="logo-header" data-background-color="dark">
                         <a href="index.html" class="logo">
+
                             <img src="/Content/admin/dashboard/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
                         </a>
                         <div class="nav-toggle">
                             <button class="btn btn-toggle toggle-sidebar">
+
                                 <i class="gg-menu-right"></i>
                             </button>
                             <button class="btn btn-toggle sidenav-toggler">
+
                                 <i class="gg-menu-left"></i>
                             </button>
                         </div>
@@ -128,39 +154,72 @@
                 </div>
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
-                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                        @* Có thể thêm nút Search hoặc thông báo ở đây nếu cần *@
+                        @* <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button type="submit" class="btn btn-search pe-1">
+                                            <i class="fa fa-search search-icon"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" placeholder="Search ..." class="form-control" />
+                                </div>
+                            </nav> *@
 
+                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                            @* Menu người dùng (Avatar, Tên, Logout) *@
                             <li class="nav-item topbar-user dropdown hidden-caret">
+
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
+                                        @* Lấy ảnh đại diện thực tế nếu có *@
+
                                         <img src="/Content/admin/dashboard/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
+
                                         <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">Trieu</span>
+                                        <span class="fw-bold">@User.Identity.Name</span> @* Hiển thị tên user đăng nhập *@
+
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
+
                                     <div class="dropdown-user-scroll scrollbar-outer">
                                     <li>
                                         <div class="user-box">
+
                                             <div class="avatar-lg">
                                                 <img src="/Content/admin/dashboard/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
+
                                             </div>
                                             <div class="u-text">
-                                                <h4>Trieu</h4>
-                                                <p class="text-muted">trieunn22@uef.edu.vn</p>
-                                                <a href="/Home" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+
+                                                <h4>@User.Identity.Name</h4> @* Tên user *@
+                                                <p class="text-muted">@User.Identity.Name</p> @* Email user *@
+
+                                                <a href="@Url.Action("Index", "PersonalAccount", new { area = "Staff" })" class="btn btn-xs btn-secondary btn-sm">View Profile</a> @* Link đến trang cá nhân *@
                                             </div>
+
                                         </div>
                                     </li>
                                     <li>
+
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">My Profile</a>
-                                        <a class="dropdown-item" href="/Home">Logout</a>
+                                        <a class="dropdown-item" href="@Url.Action("Index", "PersonalAccount", new { area = "Staff" })">My Profile</a>
+                                        @* Thêm các link khác nếu cần *@
+                                        <div class="dropdown-divider"></div>
+                                        @* Nút Logout - Sử dụng form để gửi POST request *@
+                                        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutFormStaff" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <a class="dropdown-item" href="javascript:document.getElementById('logoutFormStaff').submit()">Logout</a>
+                                        }
                                     </li>
                     </div>
                     </ul>
+
                     </li>
                     </ul>
             </div>
@@ -169,17 +228,22 @@
 
         <div class="container">
             <div class="page-inner">
-                @RenderBody()
+                @RenderBody() @* Nội dung chính của các View con sẽ được hiển thị ở đây *@
+
             </div>
         </div>
+
         <footer class="footer">
             <div class="container-fluid">
+                @* Có thể thêm menu footer hoặc thông tin khác *@
                 <div class="copyright ms-auto">
                     @DateTime.Now.Year, made with <i class="fa fa-heart heart text-danger"></i> by <a href="#">eParty Team</a>
                 </div>
+
             </div>
         </footer>
     </div>
+
     <script src="/Content/admin/dashboard/js/core/jquery-3.7.1.min.js"></script>
     <script src="/Content/admin/dashboard/js/core/popper.min.js"></script>
     <script src="/Content/admin/dashboard/js/core/bootstrap.min.js"></script>
@@ -203,6 +267,10 @@
 
     <script src="/Content/admin/dashboard/js/kaiadmin.min.js"></script>
 
-    @RenderSection("scripts", required: false)
+    @* Có thể bỏ qua các script demo nếu không cần *@
+    @* <script src="/Content/admin/dashboard/js/setting-demo.js"></script>
+        <script src="/Content/admin/dashboard/js/demo.js"></script> *@
+
+    @RenderSection("scripts", required: false) @* Cho phép các View con thêm Javascript riêng *@
 </body>
 </html>

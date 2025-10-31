@@ -32,25 +32,34 @@ document.addEventListener('DOMContentLoaded', function () {
     // App State
     let currentView = 'month';
     let currentDate = new Date();
+    // Lấy events từ biến global (nếu có) hoặc localStorage
     let events = (typeof window.serverEvents !== 'undefined' && Array.isArray(window.serverEvents))
         ? window.serverEvents
         : (JSON.parse(localStorage.getItem('events')) || []);
     let selectedEventId = null;
+    // Biến global kiểm tra chế độ chỉ xem (lấy từ ViewBag trong View)
+    let isCalendarReadOnly = (typeof window.isCalendarReadOnly !== 'undefined') ? window.isCalendarReadOnly : false;
+
 
     // *** SỬA LỖI (Patch #4): Đọc chiều cao từ biến CSS --hour-h ***
-    // (Lưu ý: Sẽ đọc sau khi init() để đảm bảo CSS đã tải)
     let pxPerHour = 50; // Giá trị fallback
 
     // Initialize
     function init() {
         // Đọc giá trị pxPerHour sau khi DOM load
-        pxPerHour = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hour-h') || '50');
+        try {
+            pxPerHour = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hour-h') || '50');
+        } catch (e) {
+            console.warn("Could not read --hour-h CSS variable, using fallback 50px.");
+            pxPerHour = 50;
+        }
 
-        console.log("Initializing calendar with events:", events, "Hour Height:", pxPerHour);
+
+        console.log("Initializing calendar with events:", events, "Hour Height:", pxPerHour, "Read Only:", isCalendarReadOnly);
         renderCalendar();
         renderEventsList();
         setupEventListeners();
-        requestNotificationPermission();
+        requestNotificationPermission(); // Có thể bỏ nếu không cần reminder
     }
 
     // Setup Event Listeners
@@ -59,22 +68,33 @@ document.addEventListener('DOMContentLoaded', function () {
         prevBtn?.addEventListener('click', navigatePrevious);
         nextBtn?.addEventListener('click', navigateNext);
         viewOptions.forEach(option => option.addEventListener('click', () => switchView(option.dataset.view)));
-        addEventBtn?.addEventListener('click', () => openEventModal());
+
+        // *** THÊM KIỂM TRA isCalendarReadOnly ***
+        if (!isCalendarReadOnly) {
+            console.log("Setting up editable calendar event listeners.");
+            addEventBtn?.addEventListener('click', () => openEventModal());
+            eventForm?.addEventListener('submit', saveOrUpdateEvent);
+            deleteEventBtn?.addEventListener('click', deleteEvent);
+            editEventBtn?.addEventListener('click', () => {
+                if (!selectedEventId) return;
+                if (eventDetailsModal) eventDetailsModal.style.display = 'none';
+                openEventModal(selectedEventId);
+            });
+            // Listener cho việc click vào ô trống (vẫn có thể giữ để mở modal, hàm openEventModalForTime sẽ kiểm tra)
+        } else {
+            console.log("Read-only mode: Disabling add/edit/delete listeners.");
+            if (addEventBtn) addEventBtn.style.display = 'none'; // Ẩn nút Add nếu tồn tại
+        }
+
+
         closeBtns.forEach(btn => btn.addEventListener('click', closeModals));
-        eventForm?.addEventListener('submit', saveOrUpdateEvent);
-        deleteEventBtn?.addEventListener('click', deleteEvent);
-
-        editEventBtn?.addEventListener('click', () => {
-            if (!selectedEventId) return;
-            if (eventDetailsModal) eventDetailsModal.style.display = 'none';
-            openEventModal(selectedEventId);
-        });
-
         window.addEventListener('click', (e) => { if (e.target === eventModal || e.target === eventDetailsModal) closeModals(); });
+        // Giữ nguyên phần toggle sidebar
         const toggleBtn = document.getElementById('toggle-sidebar'); const sidebar = document.getElementById('event-sidebar');
         if (toggleBtn && sidebar) { toggleBtn.addEventListener('click', () => sidebar.classList.toggle('open')); }
         else { console.warn("Sidebar toggle button or sidebar element not found."); }
     }
+
 
     // Render Main Calendar View
     function renderCalendar() {
@@ -88,18 +108,36 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCurrentDateDisplay();
     }
 
-    // --- Render Month View (Giữ nguyên) ---
+    // --- Render Month View ---
     function renderMonthView() {
         const monthContainer = document.createElement('div'); monthContainer.className = 'month-view'; const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1); const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0); const daysInMonth = lastDayOfMonth.getDate(); const startingDayOfWeek = firstDayOfMonth.getDay(); const monthHeader = document.createElement('div'); monthHeader.className = 'month-header';['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => { const dayElement = document.createElement('div'); dayElement.className = 'day-header'; dayElement.textContent = day; monthHeader.appendChild(dayElement); }); monthContainer.appendChild(monthHeader); const daysGrid = document.createElement('div'); daysGrid.className = 'month-days'; const daysInPrevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate(); for (let i = 0; i < startingDayOfWeek; i++) { const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, daysInPrevMonth - startingDayOfWeek + i + 1); daysGrid.appendChild(createDayCell(dayDate, true)); } const today = new Date(); for (let i = 1; i <= daysInMonth; i++) { const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i); const isToday = dayDate.toDateString() === today.toDateString(); daysGrid.appendChild(createDayCell(dayDate, false, isToday)); } const totalCells = startingDayOfWeek + daysInMonth; const remainingCells = (Math.ceil(totalCells / 7) * 7) - totalCells; for (let i = 1; i <= remainingCells; i++) { const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, i); daysGrid.appendChild(createDayCell(dayDate, true)); } monthContainer.appendChild(daysGrid); calendarView.appendChild(monthContainer);
     }
+    // *** SỬA HÀM createDayCell ĐỂ KIỂM TRA isCalendarReadOnly ***
     function createDayCell(date, isOtherMonth, isToday = false) {
-        const dayCell = document.createElement('div'); dayCell.className = `day-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'current-day' : ''}`; const dayNumber = document.createElement('div'); dayNumber.className = 'day-number'; dayNumber.textContent = date.getDate(); dayCell.appendChild(dayNumber); const dayEventsContainer = document.createElement('div'); dayEventsContainer.className = 'day-events'; const dayEvents = getEventsForDate(date); const maxEventsToShow = 2; let eventsShownCount = 0; dayEvents.forEach(event => { if (eventsShownCount < maxEventsToShow) { const eventElement = document.createElement('div'); eventElement.className = 'day-event'; eventElement.textContent = event.title; eventElement.style.backgroundColor = event.color; eventElement.dataset.eventId = event.id; eventElement.addEventListener('click', (e) => { e.stopPropagation(); showEventDetails(event.id); }); dayEventsContainer.appendChild(eventElement); eventsShownCount++; } }); if (dayEvents.length > maxEventsToShow) { const moreEvents = document.createElement('div'); moreEvents.className = 'more-events'; moreEvents.textContent = `+${dayEvents.length - maxEventsToShow} more`; dayEventsContainer.appendChild(moreEvents); } dayCell.appendChild(dayEventsContainer); dayCell.addEventListener('click', () => { currentDate = new Date(date); if (isOtherMonth) { renderCalendar(); } else { switchView('day'); } }); return dayCell;
+        const dayCell = document.createElement('div'); dayCell.className = `day-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'current-day' : ''}`; const dayNumber = document.createElement('div'); dayNumber.className = 'day-number'; dayNumber.textContent = date.getDate(); dayCell.appendChild(dayNumber); const dayEventsContainer = document.createElement('div'); dayEventsContainer.className = 'day-events'; const dayEvents = getEventsForDate(date); const maxEventsToShow = 2; let eventsShownCount = 0; dayEvents.forEach(event => { if (eventsShownCount < maxEventsToShow) { const eventElement = document.createElement('div'); eventElement.className = 'day-event'; eventElement.textContent = event.title; eventElement.style.backgroundColor = event.color; eventElement.dataset.eventId = event.id; eventElement.addEventListener('click', (e) => { e.stopPropagation(); showEventDetails(event.id); }); dayEventsContainer.appendChild(eventElement); eventsShownCount++; } }); if (dayEvents.length > maxEventsToShow) { const moreEvents = document.createElement('div'); moreEvents.className = 'more-events'; moreEvents.textContent = `+${dayEvents.length - maxEventsToShow} more`; dayEventsContainer.appendChild(moreEvents); } dayCell.appendChild(dayEventsContainer);
+
+        // *** THÊM KIỂM TRA isCalendarReadOnly TRƯỚC KHI GẮN EVENT CLICK ***
+        if (!isCalendarReadOnly) {
+            dayCell.addEventListener('click', () => {
+                currentDate = new Date(date);
+                if (isOtherMonth) {
+                    renderCalendar(); // Chỉ render lại nếu là tháng khác
+                } else {
+                    // Mở modal tạo event hoặc chuyển sang Day view tùy logic bạn muốn
+                    openEventModalForTime(date, 9); // Ví dụ: mở modal lúc 9h sáng
+                    // switchView('day'); // Hoặc chuyển sang Day view
+                }
+            });
+        } else {
+            // Optional: Thêm class để visual feedback là không click được
+            dayCell.style.cursor = 'default';
+        }
+        return dayCell;
     }
 
-    // --- SỬA LỖI DAY VIEW DURATION (Patch #2 - đã áp dụng) ---
+    // --- Render Day View ---
     function renderDayView() {
         const dayContainer = document.createElement('div'); dayContainer.className = 'day-view';
-        //const dayHeader = document.createElement('div'); dayHeader.className = 'day-header-full'; dayHeader.innerHTML = `<h2>${currentDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</h2>`; dayContainer.appendChild(dayHeader);
         const dayGrid = document.createElement('div'); dayGrid.className = 'day-grid';
 
         for (let hour = 0; hour < 24; hour++) {
@@ -107,15 +145,20 @@ document.addEventListener('DOMContentLoaded', function () {
             dayGrid.appendChild(hourLabel);
             const timeBlock = document.createElement('div'); timeBlock.className = 'day-time-block';
             dayGrid.appendChild(timeBlock);
-            timeBlock.addEventListener('click', () => openEventModalForTime(currentDate, hour));
+            // *** THÊM KIỂM TRA isCalendarReadOnly KHI CLICK Ô TRỐNG ***
+            timeBlock.addEventListener('click', () => {
+                if (!isCalendarReadOnly) {
+                    openEventModalForTime(currentDate, hour);
+                }
+            });
         }
 
         const overlay = document.createElement('div');
         overlay.className = 'events-overlay';
-        dayContainer.appendChild(overlay); // đặt overlay ra ngoài grid
+        dayContainer.appendChild(overlay);
         overlay.style.position = 'absolute';
         overlay.style.top = '0';
-        overlay.style.left = '60px'; // đúng cột timeline sau cột giờ
+        overlay.style.left = '60px';
         overlay.style.right = '0';
         overlay.style.bottom = '0';
         overlay.style.pointerEvents = 'none';
@@ -124,12 +167,9 @@ document.addEventListener('DOMContentLoaded', function () {
         dayContainer.appendChild(dayGrid);
         calendarView.appendChild(dayContainer);
 
-        // *** SỬA LỖI (Patch #2 - Đo chiều cao thật) ***
-        // Đo chiều cao 1 ô giờ (sau khi đã append vào DOM)
         const probe = dayGrid.querySelector('.day-time-block');
-        const hourH = probe ? probe.getBoundingClientRect().height : pxPerHour; // Dùng pxPerHour làm fallback
-        const pxPerMinute = hourH / 60; // Tính pixel mỗi phút
-        // *** KẾT THÚC SỬA LỖI ***
+        const hourH = probe ? probe.getBoundingClientRect().height : pxPerHour;
+        const pxPerMinute = hourH / 60;
 
         const todaysEvents = events.filter(ev => { try { const s = new Date(ev.startTime); return s.toDateString() === currentDate.toDateString(); } catch (e) { return false; } });
 
@@ -142,11 +182,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const el = document.createElement('div'); el.className = 'day-event-abs';
                 el.textContent = `${formatTime(s)} - ${ev.title}`;
                 el.style.position = 'absolute';
-
-                // *** SỬA LỖI (Patch #2): Tính toán dựa trên chiều cao đo được ***
                 el.style.top = (minutesFromStartOfDay * pxPerMinute) + 'px';
                 el.style.height = (durationMinutes * pxPerMinute) + 'px';
-
                 el.style.background = ev.color;
                 el.dataset.eventId = ev.id;
                 el.title = `${formatTime(s)} - ${formatTime(eDate)}: ${ev.title}`;
@@ -156,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- SỬA LỖI WEEK VIEW TRỐNG (Patch #3 - đã áp dụng) ---
+    // --- Render Week View ---
     function renderWeekView() {
         const weekContainer = document.createElement('div'); weekContainer.className = 'week-view';
         const startOfWeek = new Date(currentDate); startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); startOfWeek.setHours(0, 0, 0, 0);
@@ -170,20 +207,24 @@ document.addEventListener('DOMContentLoaded', function () {
             for (let d = 0; d < 7; d++) {
                 const timeBlock = document.createElement('div'); timeBlock.className = 'week-time-block';
                 const blockDate = new Date(startOfWeek); blockDate.setDate(startOfWeek.getDate() + d);
-                timeBlock.dataset.date = ymdLocal(blockDate); // Dùng YYYY-MM-DD local
+                timeBlock.dataset.date = ymdLocal(blockDate);
                 timeBlock.dataset.hour = hour;
-                timeBlock.addEventListener('click', () => openEventModalForTime(blockDate, hour)); grid.appendChild(timeBlock);
+                // *** THÊM KIỂM TRA isCalendarReadOnly KHI CLICK Ô TRỐNG ***
+                timeBlock.addEventListener('click', () => {
+                    if (!isCalendarReadOnly) {
+                        openEventModalForTime(blockDate, hour);
+                    }
+                });
+                grid.appendChild(timeBlock);
             }
         }
 
-        weekContainer.appendChild(grid); // Thêm grid vào DOM TRƯỚC khi đo
-        calendarView.appendChild(weekContainer); // Thêm container vào DOM
+        weekContainer.appendChild(grid);
+        calendarView.appendChild(weekContainer);
 
-        // *** SỬA LỖI (Patch #3 - Đo chiều cao thật) ***
         const probeWeek = grid.querySelector('.week-time-block');
         const hourHWeek = probeWeek ? probeWeek.getBoundingClientRect().height : pxPerHour;
-        const ppmWeek = hourHWeek / 60; // px Per Minute Week
-        // *** KẾT THÚC SỬA LỖI ***
+        const ppmWeek = hourHWeek / 60;
 
         const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(startOfWeek.getDate() + 7);
         const weekEvents = events.filter(ev => { try { const s = new Date(ev.startTime); return s >= startOfWeek && s < endOfWeek; } catch (e) { return false; } });
@@ -205,14 +246,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (targetBlock) {
                         const el = document.createElement('div'); el.className = 'week-event'; el.style.position = 'absolute';
-
-                        // *** SỬA LỖI (Patch #3): Tính toán dựa trên chiều cao đo được ***
                         el.style.top = (startMinutes * ppmWeek) + 'px';
                         const eventHeight = durationMinutes * ppmWeek;
-                        // Giới hạn chiều cao tối đa là 24h trừ đi vị trí bắt đầu
                         const maxHeight = (24 * hourHWeek) - (startMinutes * ppmWeek);
                         el.style.height = Math.min(eventHeight, maxHeight) + 'px';
-
                         el.style.background = ev.color;
                         el.textContent = `${formatTime(s)} ${ev.title}`; el.title = `${formatTime(s)} - ${formatTime(eDate)}: ${ev.title}`; el.dataset.eventId = ev.id;
                         el.addEventListener('click', (e) => { e.stopPropagation(); showEventDetails(ev.id); }); targetBlock.appendChild(el);
@@ -220,13 +257,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 } catch (error) { console.error("Error rendering week event:", ev, error); }
             });
         }
-        // calendarView.appendChild(weekContainer); // Đã move lên trên
     }
 
 
-    // --- Render Sidebar List (Giữ nguyên) ---
+    // --- Render Sidebar List ---
     function renderEventsList() {
-        if (!eventsList) { return; }
+        if (!eventsList) { return; } // Dừng nếu không tìm thấy element
         eventsList.innerHTML = '';
         const today = new Date(); today.setHours(0, 0, 0, 0);
         const upcomingEvents = events
@@ -252,12 +288,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Helper Functions for Event Filtering ---
     function getEventsForDate(date) {
+        if (!date || isNaN(date.getTime())) return []; // Thêm kiểm tra date hợp lệ
         const targetStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const targetEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
         return events.filter(event => {
             if (!event || !event.startTime) return false;
             try {
                 const eventStartDate = new Date(event.startTime); if (isNaN(eventStartDate.getTime())) return false;
+                // Sửa logic: Chỉ cần event bắt đầu trong ngày đó
                 return eventStartDate >= targetStart && eventStartDate < targetEnd;
             } catch (e) { console.error("Error filtering event date:", e); return false; }
         });
@@ -288,17 +326,26 @@ document.addEventListener('DOMContentLoaded', function () {
         currentDate = new Date(); renderCalendar();
     }
     function openEventModal(eventIdToEdit = null) {
-        if (!eventModal || !eventForm) return; eventForm.reset(); eventForm.onsubmit = saveOrUpdateEvent; if (eventIdToEdit) { const event = events.find(e => e.id === eventIdToEdit); if (!event) return; modalTitle.textContent = "Edit Event"; eventIdInput.value = event.id; eventTitleInput.value = event.title; try { const startDate = new Date(event.startTime); const endDate = new Date(event.endTime); eventDateInput.value = startDate.toISOString().split('T')[0]; eventStartTimeInput.value = `${startDate.getHours().toString().padStart(2, '0')}:${startDate.getMinutes().toString().padStart(2, '0')}`; eventEndTimeInput.value = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`; } catch (e) { eventDateInput.valueAsDate = new Date(); eventStartTimeInput.value = '09:00'; eventEndTimeInput.value = '10:00'; } eventDescriptionInput.value = event.description || ''; eventColorInput.value = event.color || '#4e73df'; eventReminderInput.checked = event.reminder || false; } else { modalTitle.textContent = "Add New Event"; eventIdInput.value = ""; const defaultDate = (currentDate instanceof Date && !isNaN(currentDate)) ? currentDate : new Date(); try { eventDateInput.value = defaultDate.toISOString().split('T')[0]; } catch (e) { eventDateInput.value = new Date().toISOString().split('T')[0]; } eventStartTimeInput.value = '09:00'; eventEndTimeInput.value = '10:00'; eventColorInput.value = '#4e73df'; eventReminderInput.checked = false; } eventModal.style.display = 'flex';
+        // *** THÊM KIỂM TRA: Nếu read-only và không phải là edit thì không mở modal ***
+        // (Vẫn cho phép mở để edit từ nút Edit trong showEventDetails nếu không phải read-only)
+        if (isCalendarReadOnly && !eventIdToEdit) {
+            console.log("Read-only: Prevented opening add modal.");
+            return;
+        }
+        if (!eventModal || !eventForm) return; eventForm.reset(); eventForm.onsubmit = saveOrUpdateEvent; if (eventIdToEdit) { const event = events.find(e => e.id === eventIdToEdit); if (!event) return; modalTitle.textContent = "Edit Event"; eventIdInput.value = event.id; eventTitleInput.value = event.title; try { const startDate = new Date(event.startTime); const endDate = new Date(event.endTime); eventDateInput.value = startDate.toISOString().split('T')[0]; eventStartTimeInput.value = `${startDate.getHours().toString().padStart(2, '0')}:${startDate.getMinutes().toString().padStart(2, '0')}`; eventEndTimeInput.value = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`; } catch (e) { eventDateInput.valueAsDate = new Date(); eventStartTimeInput.value = '09:00'; eventEndTimeInput.value = '10:00'; console.error("Error parsing date for edit:", event, e); } eventDescriptionInput.value = event.description || ''; eventColorInput.value = event.color || '#4e73df'; eventReminderInput.checked = event.reminder || false; } else { modalTitle.textContent = "Add New Event"; eventIdInput.value = ""; const defaultDate = (currentDate instanceof Date && !isNaN(currentDate)) ? currentDate : new Date(); try { eventDateInput.value = defaultDate.toISOString().split('T')[0]; } catch (e) { eventDateInput.value = new Date().toISOString().split('T')[0]; } eventStartTimeInput.value = '09:00'; eventEndTimeInput.value = '10:00'; eventColorInput.value = '#4e73df'; eventReminderInput.checked = false; } eventModal.style.display = 'flex';
     }
+    // *** SỬA HÀM openEventModalForTime ĐỂ KIỂM TRA isCalendarReadOnly ***
     function openEventModalForTime(date, hour) {
+        if (isCalendarReadOnly) {
+            console.log("Read-only: Prevented opening modal from time block click.");
+            return; // Không làm gì nếu chỉ xem
+        }
         openEventModal(); try { eventDateInput.value = date.toISOString().split('T')[0]; } catch (e) { eventDateInput.value = new Date().toISOString().split('T')[0]; } const startTime = `${hour.toString().padStart(2, '0')}:00`; const endTime = `${(hour + 1 > 23 ? 23 : hour + 1).toString().padStart(2, '0')}:${hour + 1 > 23 ? '59' : '00'}`; eventStartTimeInput.value = startTime; eventEndTimeInput.value = endTime;
     }
     function closeModals() {
         if (eventModal) eventModal.style.display = 'none'; if (eventDetailsModal) eventDetailsModal.style.display = 'none'; selectedEventId = null; if (eventForm) eventForm.onsubmit = saveOrUpdateEvent; if (modalTitle) modalTitle.textContent = "Add New Event"; if (eventIdInput) eventIdInput.value = "";
     }
 
-    // *** SỬA LỖI (Patch #4): Lưu thời gian local, KHÔNG DÙNG toISOString() ***
-    // Helper mới để tạo chuỗi local
     const toLocalIsoNoZ = (d) => {
         if (!(d instanceof Date) || isNaN(d.getTime())) return "";
         const y = d.getFullYear();
@@ -311,14 +358,21 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     function saveOrUpdateEvent(e) {
-        e.preventDefault(); if (!eventForm) return; const eventId = eventIdInput.value; const dateValue = eventDateInput.value; const startTimeValue = eventStartTimeInput.value; const endTimeValue = eventEndTimeInput.value; if (!dateValue || !startTimeValue || !endTimeValue || !eventTitleInput.value.trim()) { alert("Please fill in title, date, start time, and end time."); return; } let startDateTime, endDateTime; try { startDateTime = new Date(`${dateValue}T${startTimeValue}`); endDateTime = new Date(`${dateValue}T${endTimeValue}`); if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) throw new Error("Invalid date/time"); } catch (error) { alert("Invalid date or time format."); return; } if (endDateTime <= startDateTime) { alert("End time must be after start time."); return; }
+        e.preventDefault();
+        // *** THÊM KIỂM TRA: Không cho lưu nếu read-only ***
+        if (isCalendarReadOnly) {
+            console.warn("Attempted to save event in read-only mode.");
+            closeModals(); // Đóng modal lại
+            return;
+        }
 
-        // *** SỬA LỖI (Patch #4): Sử dụng helper toLocalIsoNoZ ***
+        if (!eventForm) return; const eventId = eventIdInput.value; const dateValue = eventDateInput.value; const startTimeValue = eventStartTimeInput.value; const endTimeValue = eventEndTimeInput.value; if (!dateValue || !startTimeValue || !endTimeValue || !eventTitleInput.value.trim()) { alert("Please fill in title, date, start time, and end time."); return; } let startDateTime, endDateTime; try { startDateTime = new Date(`${dateValue}T${startTimeValue}`); endDateTime = new Date(`${dateValue}T${endTimeValue}`); if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) throw new Error("Invalid date/time"); } catch (error) { alert("Invalid date or time format."); return; } if (endDateTime <= startDateTime) { alert("End time must be after start time."); return; }
+
         const eventData = {
             id: eventId || Date.now().toString(),
             title: eventTitleInput.value.trim(),
-            startTime: toLocalIsoNoZ(startDateTime), // <— dùng chuỗi local
-            endTime: toLocalIsoNoZ(endDateTime),   // <— dùng chuỗi local
+            startTime: toLocalIsoNoZ(startDateTime),
+            endTime: toLocalIsoNoZ(endDateTime),
             description: eventDescriptionInput.value.trim(),
             color: eventColorInput.value,
             reminder: eventReminderInput.checked
@@ -326,29 +380,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (eventId) { const index = events.findIndex(ev => ev.id === eventId); if (index > -1) events[index] = eventData; } else { events.push(eventData); }
 
-        saveEventsToStorage(); // Lưu chuỗi local mới
+        saveEventsToStorage();
         renderCalendar();
         renderEventsList();
         closeModals();
         if (eventData.reminder) setReminder(eventData);
     }
+
+    // *** SỬA HÀM showEventDetails ĐỂ ẨN NÚT EDIT/DELETE KHI read-only ***
     function showEventDetails(eventId) {
-        const event = events.find(e => e.id === eventId); if (!event || !eventDetailsModal) return; selectedEventId = eventId; detailsTitle.textContent = event.title; let startDate, endDate; try { startDate = new Date(event.startTime); endDate = new Date(event.endTime); detailsDate.textContent = startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }); detailsTime.textContent = `${formatTime(startDate)} - ${formatTime(endDate)}`; } catch (e) { detailsDate.textContent = "Invalid date"; detailsTime.textContent = "Invalid time"; } detailsDescription.textContent = event.description || 'No description provided.'; eventDetailsModal.style.display = 'flex';
+        const event = events.find(e => e.id === eventId); if (!event || !eventDetailsModal) return; selectedEventId = eventId;
+        detailsTitle.textContent = event.title;
+        let startDate, endDate;
+        try {
+            startDate = new Date(event.startTime);
+            endDate = new Date(event.endTime);
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) throw new Error("Invalid date");
+            detailsDate.textContent = startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            detailsTime.textContent = `${formatTime(startDate)} - ${formatTime(endDate)}`;
+        } catch (e) {
+            detailsDate.textContent = "Invalid date";
+            detailsTime.textContent = "Invalid time";
+            console.error("Error parsing date for details modal:", event, e);
+        }
+        detailsDescription.textContent = event.description || 'No description provided.';
+
+        // *** THÊM KIỂM TRA isCalendarReadOnly ĐỂ ẨN NÚT ***
+        if (editEventBtn) editEventBtn.style.display = isCalendarReadOnly ? 'none' : 'inline-block';
+        if (deleteEventBtn) deleteEventBtn.style.display = isCalendarReadOnly ? 'none' : 'inline-block';
+
+        eventDetailsModal.style.display = 'flex';
     }
     function deleteEvent() {
-        if (!selectedEventId) return; const eventToDelete = events.find(e => e.id === selectedEventId); if (!eventToDelete) return; if (confirm(`Are you sure you want to delete the event "${eventToDelete.title}"?`)) { events = events.filter(event => event.id !== selectedEventId); saveEventsToStorage(); renderCalendar(); renderEventsList(); closeModals(); selectedEventId = null; }
+        // *** THÊM KIỂM TRA: Không cho xóa nếu read-only ***
+        if (isCalendarReadOnly || !selectedEventId) {
+            console.warn("Attempted to delete event in read-only mode or no event selected.");
+            return;
+        }
+        const eventToDelete = events.find(e => e.id === selectedEventId); if (!eventToDelete) return; if (confirm(`Are you sure you want to delete the event "${eventToDelete.title}"?`)) { events = events.filter(event => event.id !== selectedEventId); saveEventsToStorage(); renderCalendar(); renderEventsList(); closeModals(); selectedEventId = null; }
     }
     function saveEventsToStorage() {
         try { localStorage.setItem('events', JSON.stringify(events)); console.log("Events saved to localStorage."); } catch (error) { console.error("Error saving events to localStorage:", error); }
     }
     function setReminder(event) {
-        if (!event || !event.startTime || !event.reminder) return; let reminderTime; try { reminderTime = new Date(event.startTime); reminderTime.setMinutes(reminderTime.getMinutes() - 15); } catch (e) { return; } const now = new Date(); const timeUntilReminder = reminderTime.getTime() - now.getTime(); if (timeUntilReminder > 0) { setTimeout(() => { showReminderNotification(event); }, timeUntilReminder); }
+        if (isCalendarReadOnly || !event || !event.startTime || !event.reminder) return; let reminderTime; try { reminderTime = new Date(event.startTime); reminderTime.setMinutes(reminderTime.getMinutes() - 15); } catch (e) { return; } const now = new Date(); const timeUntilReminder = reminderTime.getTime() - now.getTime(); if (timeUntilReminder > 0) { setTimeout(() => { showReminderNotification(event); }, timeUntilReminder); }
     }
     function showReminderNotification(event) {
-        if (!('Notification' in window)) return; const notify = () => { new Notification(`Reminder: ${event.title}`, { body: `Starts at ${formatTime(new Date(event.startTime))}. ${event.description || ''}`, icon: 'https: //cdn-icons-png.flaticon.com/512/3652/3652191.png' }); }; if (Notification.permission === 'granted') notify(); else if (Notification.permission !== 'denied') { Notification.requestPermission().then(permission => { if (permission === 'granted') notify(); }); }
+        if (!('Notification' in window) || isCalendarReadOnly) return; const notify = () => { try { new Notification(`Reminder: ${event.title}`, { body: `Starts at ${formatTime(new Date(event.startTime))}. ${event.description || ''}`, icon: 'https://cdn-icons-png.flaticon.com/512/3652/3652191.png' }); } catch (e) { console.error("Error showing notification:", e); } }; if (Notification.permission === 'granted') notify(); else if (Notification.permission !== 'denied') { Notification.requestPermission().then(permission => { if (permission === 'granted') notify(); }); }
     }
     function requestNotificationPermission() {
-        if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') { /* Notification.requestPermission(); */ }
+        // Chỉ yêu cầu quyền nếu không phải read-only và trình duyệt hỗ trợ
+        if (!isCalendarReadOnly && 'Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            // Có thể bật lại dòng dưới nếu muốn tự động hỏi quyền, nhưng thường nên để user tự kích hoạt
+            // Notification.requestPermission();
+            console.log("Notification permission not granted. User interaction may be required.");
+        }
     }
     function formatTime(date) {
         if (!date || !(date instanceof Date) || isNaN(date.getTime())) return 'Invalid Time'; return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
