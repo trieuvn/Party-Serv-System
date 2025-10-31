@@ -1,5 +1,19 @@
 ﻿@{
     var title = ViewBag.Title ?? "Dashboard";
+
+    // === Lấy thông tin user từ Session ===
+    var userFullname = Session["UserFullname"] != null ? Session["UserFullname"].ToString() : (User.Identity.IsAuthenticated ? User.Identity.Name : "Guest");
+    var userEmail = Session["UserEmail"] != null ? Session["UserEmail"].ToString() : (User.Identity.IsAuthenticated ? User.Identity.Name : "guest@example.com");
+    var userAvatar = Session["UserAvatar"] != null ? Session["UserAvatar"].ToString() : null;
+
+    var avatarSrc = "/Content/admin/dashboard/img/profile.jpg"; // Ảnh mặc định
+    if (!string.IsNullOrEmpty(userAvatar))
+    {
+        // Giả định là Base64
+        avatarSrc = "data:image/jpeg;base64," + userAvatar;
+        // Nếu là URL, dùng dòng này:
+        // avatarSrc = userAvatar;
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -77,58 +91,101 @@ toggle-sidebar">
                             </span>
 
                             <h4 class="text-section">Components</h4>
-                        </li>
                         <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#base">
-
                                 <i class="fas fa-th-list"></i>
                                 <p>Material management</p>
                                 <span class="caret"></span>
-
                             </a>
                             <div class="collapse" id="base">
                                 <ul class="nav nav-collapse">
-
                                     <li>
                                         <a href="/Admin/Foods">
-
-                                            <span class="sub-item">Food</span>
+                                            <i class="fas fa-utensils"></i> <span class="sub-item">Food</span>
                                         </a>
                                     </li>
-
                                     <li>
                                         <a href="/Admin/Ingredients">
-
-                                            <span class="sub-item">Ingredient</span>
+                                            <i class="fas fa-carrot"></i> <span class="sub-item">Ingredient</span>
                                         </a>
                                     </li>
-
                                     <li>
                                         <a href="/Admin/Providers">
-
-                                            <span class="sub-item">Provider</span>
+                                            <i class="fas fa-truck-moving"></i> <span class="sub-item">Provider</span>
                                         </a>
                                     </li>
-
+                                    <li>
+                                        <a href="/Admin/Parties">
+                                            <i class="fas fa-glass-cheers"></i> <span class="sub-item">Quản lý Tiệc</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/SystemUsers">
+                                            <i class="fas fa-users"></i>
+                                            <p>User</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Menus">
+                                            <i class="fas fa-book-open"></i>
+                                            <p>Menu</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Categories">
+                                            <i class="fas fa-tags"></i>
+                                            <p>Category</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/News">
+                                            <i class="far fa-newspaper"></i>
+                                            <p>New</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Discounts">
+                                            <i class="fas fa-percent"></i>
+                                            <p>Discount</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Rates">
+                                            <i class="fas fa-star"></i>
+                                            <p>Rate</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Comments">
+                                            <i class="fas fa-comments"></i>
+                                            <p>Comment</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Partners">
+                                            <i class="fas fa-handshake"></i>
+                                            <p>Partner</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Posters">
+                                            <i class="fas fa-image"></i>
+                                            <p>Poster</p>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
-
-                        @* === BẮT ĐẦU SỬA ĐỔI: Thêm link Báo cáo === *@
                         <li class="nav-item">
                             <a href="/Admin/Reports">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>Báo cáo (Reports)</p>
                             </a>
                         </li>
-                        @* === KẾT THÚC SỬA ĐỔI === *@
-
                         <li class="nav-item">
-
                             <a href="/Admin/Calendar">
                                 <i class="fas fa-calendar"></i>
                                 <p>Schedule</p>
-
                             </a>
                         </li>
                     </ul>
@@ -168,14 +225,11 @@ toggle-sidebar">
 
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <div class="avatar-sm">
-
-                                        <img src="/Content/admin/dashboard/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
+                                        <img src="@avatarSrc" alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
-
                                         <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">Trieu</span>
-
+                                        <span class="fw-bold">@userFullname</span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -185,39 +239,42 @@ toggle-sidebar">
                                         <div class="user-box">
 
                                             <div class="avatar-lg">
-                                                <img src="/Content/admin/dashboard/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
-
+                                                <img src="@avatarSrc" alt="image profile" class="avatar-img rounded" />
                                             </div>
                                             <div class="u-text">
-
-                                                <h4>Trieu</h4>
-                                                <p class="text-muted">trieunn22@uef.edu.vn</p>
-
-                                                <a href="/Home" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                                <h4>@userFullname</h4>
+                                                <p class="text-muted">@userEmail</p>
+                                                <a href="@Url.Action("Index", "PersonalAccount", new { area = "Admin" })" class="btn btn-xs btn-secondary btn-sm">View Profile</a> @* Link đến trang cá nhân *@
                                             </div>
 
                                         </div>
                                     </li>
                                     <li>
-
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">My Profile</a>
+                                        <a class="dropdown-item" href="@Url.Action("Index", "PersonalAccount", new { area = "Admin" })">My Profile</a>
+                                        <div class="dropdown-divider"></div>
 
-                                        <a class="dropdown-item" href="/Home">Logout</a>
+                                        @* Nút Logout - Sử dụng form để gửi POST request *@
+                                        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutFormAdmin" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <a class="dropdown-item" href="javascript:document.getElementById('logoutFormStaff').submit()">Logout</a>
+                                        }
                                     </li>
                     </div>
                     </ul>
-
                     </li>
                     </ul>
             </div>
             </nav>
         </div>
 
+        @* Form đăng xuất bên ngoài đã bị xóa (đã di chuyển vào trong <li>) *@
+
         <div class="container">
             <div class="page-inner">
                 @RenderBody()
-
             </div>
         </div>
         <footer class="footer">
@@ -225,10 +282,14 @@ toggle-sidebar">
                 <div class="copyright ms-auto">
                     @DateTime.Now.Year, made with <i class="fa fa-heart heart text-danger"></i> by <a href="#">eParty Team</a>
                 </div>
-
             </div>
         </footer>
     </div>
+
+    @* === BẮT ĐẦU SỬA LỖI: Đã xóa 1 thẻ </div> thừa ở đây === *@
+
+    </div> @* Đây là thẻ </div> đóng của <div class="wrapper"> *@
+
     <script src="/Content/admin/dashboard/js/core/jquery-3.7.1.min.js"></script>
     <script src="/Content/admin/dashboard/js/core/popper.min.js"></script>
     <script src="/Content/admin/dashboard/js/core/bootstrap.min.js"></script>

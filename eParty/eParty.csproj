@@ -2065,6 +2065,10 @@
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\ChangePassword.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\GoogleLink.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PersonalAccount\UpdateInfo.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

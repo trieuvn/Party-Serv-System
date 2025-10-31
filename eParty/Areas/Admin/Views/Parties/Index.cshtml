@@ -34,7 +34,6 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <!-- Image -->
                                 <td>
                                     @if (!string.IsNullOrEmpty(item.Image))
                                     {
@@ -51,14 +50,12 @@
                                     }
                                 </td>
 
-                                <!-- Name + Address -->
                                 <td>
                                     <strong>@Html.DisplayFor(modelItem => item.Name)</strong>
                                     <br />
                                     <small class="text-muted">@item.Address</small>
                                 </td>
 
-                                <!-- Menu -->
                                 <td>
                                     @if (item.MenuRef != null)
                                     {
@@ -70,7 +67,6 @@
                                     }
                                 </td>
 
-                                <!-- Type -->
                                 <td>
                                     <span class="badge @(item.Type == "Premium" ? "bg-primary" :
                                                         item.Type == "VIP" ? "bg-warning text-dark" : "bg-secondary")">
@@ -78,7 +74,6 @@
                                     </span>
                                 </td>
 
-                                <!-- Status -->
                                 <td>
                                     <span class="badge @(item.Status == "Active" ? "bg-success" :
                                                         item.Status == "Completed" ? "bg-info" :
@@ -87,7 +82,6 @@
                                     </span>
                                 </td>
 
-                                <!-- Cost -->
                                 <td>
                                     @if (item.Cost > 0)
                                     {
@@ -99,7 +93,6 @@
                                     }
                                 </td>
 
-                                <!-- Begin Time -->
                                 <td>
                                     @if (item.BeginTime.HasValue)
                                     {
@@ -111,27 +104,32 @@
                                     }
                                 </td>
 
-                                <!-- Slots -->
                                 <td>
                                     <span class="fw-bold">@Html.DisplayFor(modelItem => item.Slots)</span> slots
                                 </td>
 
-                                <!-- Action -->
                                 <td>
                                     <div class="form-button-action">
+                                        @* === BẮT ĐẦU SỬA ĐỔI === *@
                                         <a href="@Url.Action("Edit", "Parties", new { id = item.Id })"
                                            data-bs-toggle="tooltip" title="Edit"
-                                           class="btn btn-link btn-primary btn-lg">
+                                           class="btn btn-primary btn-sm">
+                                            @* Xóa btn-link, btn-lg. Thêm btn-sm và icon *@
+                                            <i class="fa fa-edit"></i>
                                         </a>
                                         <a href="@Url.Action("Details", "Parties", new { id = item.Id })"
                                            data-bs-toggle="tooltip" title="Details"
-                                           class="btn btn-link btn-info btn-lg">
+                                           class="btn btn-info btn-sm">
+                                            @* Xóa btn-link, btn-lg. Thêm btn-sm và icon *@
+                                            <i class="fa fa-eye"></i>
                                         </a>
                                         <a href="@Url.Action("Delete", "Parties", new { id = item.Id })"
                                            data-bs-toggle="tooltip" title="Remove"
-                                           class="btn btn-link btn-danger"
+                                           class="btn btn-danger btn-sm" @* Xóa btn-link. Thêm btn-sm và icon *@
                                            onclick="return confirm('Are you sure you want to delete this party?');">
+                                            <i class="fa fa-trash"></i>
                                         </a>
+                                        @* === KẾT THÚC SỬA ĐỔI === *@
                                     </div>
                                 </td>
                             </tr>
@@ -143,7 +141,6 @@
     </div>
 </div>
 
-<!-- DataTables Script -->
 @section scripts {
     <script>
         $(document).ready(function () {
@@ -165,7 +162,6 @@
                     }
                 }
             });
-
             // Tooltip
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
