@@ -1,15 +1,16 @@
-﻿using System;
+﻿using eParty;
+using eParty.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using eParty.Models;
-using eParty;
 
 namespace eParty.Controllers
 {
@@ -18,6 +19,7 @@ namespace eParty.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private AppDbContext db = new AppDbContext();
 
         public AccountController()
         {
@@ -59,7 +61,8 @@ namespace eParty.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            // Sửa lỗi NullReferenceException bằng cách khởi tạo model
+            return View(new LoginViewModel());
         }
 
         //
@@ -81,12 +84,30 @@ namespace eParty.Controllers
             {
                 case SignInStatus.Success:
                     {
-                        // Lấy user hiện tại
-                        var user = await UserManager.FindByEmailAsync(model.Email);
-                        if (user != null)
+                        // === BẮT ĐẦU SỬA ĐỔI: Lấy SystemUser và lưu vào Session ===
+                        var identityUser = await UserManager.FindByEmailAsync(model.Email);
+                        if (identityUser != null)
                         {
-                            Session["UserEmail"] = user.Email;
+                            // Dùng email (cũng là Username) để tìm SystemUser tương ứng
+                            var systemUser = db.SystemUsers.Find(identityUser.Email);
+                            if (systemUser != null)
+                            {
+                                // Lưu các thông tin cần thiết vào Session
+                                Session["UserEmail"] = systemUser.Email;
+                                Session["UserFullname"] = systemUser.FirstName;
+                                Session["UserAvatar"] = systemUser.Avatar; // Đây là trường bạn muốn!
+                                Session["UserRole"] = systemUser.Role;
+                            }
+                            else
+                            {
+                                // Dự phòng nếu SystemUser không tồn tại
+                                Session["UserEmail"] = identityUser.Email;
+                                Session["UserFullname"] = identityUser.Email; // Dùng tạm email
+                                Session["UserAvatar"] = null;
+                                Session["UserRole"] = "User"; // Giả định
+                            }
                         }
+                        // === KẾT THÚC SỬA ĐỔI ===
 
                         return RedirectToLocal(returnUrl);
                     }
@@ -157,7 +178,7 @@ namespace eParty.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, HttpPostedFileBase avatar)
         {
             if (ModelState.IsValid)
             {
@@ -165,14 +186,39 @@ namespace eParty.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    // Bỏ tự động đăng nhập (ĐÚNG BẢO MẬT)
                     // Gửi email xác nhận
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account",
+                        $"Please confirm your account by clicking <a href=\"{callbackUrl}\">here</a>");
 
-                    // ĐÃ SỬA: Chuyển hướng đến view thông báo kiểm tra email
                     await UserManager.AddToRoleAsync(user.Id, "User");
+
+                    // Tạo SystemUser
+                    SystemUser systemUser = new SystemUser
+                    {
+                        Username = user.Email,
+                        Password = "123456", 
+                        Email = user.Email,
+                        Role = "User",
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        PhoneNumber = model.PhoneNumber
+                    };
+
+                    // Xử lý avatar Base64
+                    if (avatar != null && avatar.ContentLength > 0)
+                    {
+                        using (var binaryReader = new BinaryReader(avatar.InputStream))
+                        {
+                            byte[] imageData = binaryReader.ReadBytes(avatar.ContentLength);
+                            systemUser.Avatar = Convert.ToBase64String(imageData);
+                        }
+                    }
+
+                    db.SystemUsers.Add(systemUser);
+                    db.SaveChanges();
+
                     return View("RegisterConfirmation");
                 }
                 AddErrors(result);
@@ -401,6 +447,12 @@ namespace eParty.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+
+            // === BẮT ĐẦU SỬA ĐỔI: Xóa Session khi đăng xuất ===
+            Session.Clear();
+            Session.Abandon();
+            // === KẾT THÚC SỬA ĐỔI ===
+
             return RedirectToAction("Index", "Home");
         }
 

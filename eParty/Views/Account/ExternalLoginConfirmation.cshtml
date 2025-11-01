@@ -5,17 +5,57 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - eParty</title>
     <link rel="stylesheet" href="~/Content/login/style.css">
 
-    <!-- CSS nội tuyến để hiển thị lỗi validation -->
     <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: url('/Content/login/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 400px;
+            margin: 8% auto;
+            text-align: center;
+            color: white;
+        }
+
+        h2 {
+            color: #4dabf7;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            color: #ccc;
+            margin-top: -10px;
+            margin-bottom: 25px;
+        }
+
         .text-danger {
-            color: #ff3860;
+            color: #ff6b6b;
             font-size: 0.875em;
             text-align: left;
             width: 100%;
@@ -25,7 +65,7 @@
         }
 
         .validation-summary-errors {
-            color: #ff3860;
+            color: #ff6b6b;
             text-align: center;
             list-style: none;
             padding: 0;
@@ -38,27 +78,42 @@
             margin-bottom: 20px;
             line-height: 1.5;
         }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #4dabf7, #228be6);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            button:hover {
+                background: linear-gradient(135deg, #74c0fc, #1c7ed6);
+            }
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <!-- Nền động -->
+    <div id="particles-js"></div>
 
+    <div class="wrapper">
         @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
         {
             @Html.AntiForgeryToken()
 
             <h2>@ViewBag.Title</h2>
-            <h4 style="color: #ccc; text-align: center; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">
-                Liên kết với tài khoản @ViewBag.LoginProvider .
-            </h4>
+            <h4>Liên kết với tài khoản @ViewBag.LoginProvider</h4>
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <p class="text-info">
-                Bạn đã xác thực thành công với <strong>@ViewBag.LoginProvider</strong>.
-                Vui lòng nhập (hoặc xác nhận) email của bạn để hoàn tất.
+                Bạn đã xác thực thành công với <strong>@ViewBag.LoginProvider</strong>.<br />
+                Vui lòng nhập hoặc xác nhận email của bạn để hoàn tất.
             </p>
 
-            <!-- Trường Email -->
             <div class="input-field">
                 @Html.TextBoxFor(m => m.Email, new { required = "required", autocomplete = "email" })
                 @Html.LabelFor(m => m.Email, "Nhập địa chỉ email")
@@ -71,5 +126,26 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+
+    <!-- Thư viện hiệu ứng particle -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 60 },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.4 },
+                size: { value: 2 },
+                move: { enable: true, speed: 1 }
+            },
+            interactivity: {
+                events: {
+                    onhover: { enable: true, mode: "repulse" }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
 </body>
 </html>

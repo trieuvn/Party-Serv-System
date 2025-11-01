@@ -1,0 +1,152 @@
+﻿@model IEnumerable<eParty.Models.MenuDetail>
+@{
+    ViewBag.Title = "Menu Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Menu Detail Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home"><a href="@Url.Action("Index", "Home")"><i class="icon-home"></i></a></li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Menu Details</a></li>
+    </ul>
+</div>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <h4 class="card-title">Menu Detail List</h4>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-round ms-auto">
+                    <i class="fa fa-plus"></i>
+                    Create New
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="menudetail-datatables" class="display table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Food</th>
+                            <th>Image</th>
+                            <th>Menu</th>
+                            <th>Amount</th>
+                            <th>Unit Price</th>
+                            <th>Total Cost</th>
+                            <th style="width: 12%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var finalPrice = item.FoodRef.Cost * (1 - item.FoodRef.Discount / 100m);
+                            var total = item.Amount * finalPrice;
+
+                            <tr>
+                                <!-- Food Name -->
+                                <td>
+                                    <strong>@Html.DisplayFor(m => item.FoodRef.Name)</strong>
+                                </td>
+
+                                <!-- Image -->
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.FoodRef.Image))
+                                    {
+                                        <img src="data:image/jpeg;base64,@item.FoodRef.Image"
+                                             alt="@item.FoodRef.Name"
+                                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+
+                                <!-- Menu Name -->
+                                <td>@Html.DisplayFor(m => item.MenuRef.Name)</td>
+
+                                <!-- Amount -->
+                                <td>
+                                    <span class="badge bg-info">
+                                        @item.Amount
+                                    </span>
+                                </td>
+
+                                <!-- Unit Price (with discount) -->
+                                <td>
+                                    @if (item.FoodRef.Discount > 0)
+                                    {
+                                        <span class="text-decoration-line-through text-muted small me-1">
+                                            @String.Format("{0:N0}", item.FoodRef.Cost)
+                                        </span>
+                                        <span class="text-danger fw-bold">
+                                            @String.Format("{0:N0}", finalPrice) VND
+                                        </span>
+                                        <small class="badge bg-success ms-1">Save @item.FoodRef.Discount%</small>
+                                    }
+                                    else
+                                    {
+                                        total = item.Amount * item.FoodRef.Cost;
+                                        <span>@String.Format("{0:N0}", item.FoodRef.Cost) VND</span>
+                                    }
+                                </td>
+
+                                <!-- Total Cost -->
+                                <td class="fw-bold text-primary">
+                                    @String.Format("{0:N0}", total) VND
+                                </td>
+
+                                <!-- Action Buttons -->
+                                <td>
+                                    <div class="form-button-action">
+                                        <a href="@Url.Action("Edit", new { menuId = item.Menu, foodId = item.Food })"
+                                           data-bs-toggle="tooltip" title="Edit"
+                                           class="btn btn-link btn-primary btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+
+                                        <a href="@Url.Action("Details", new { menuId = item.Menu, foodId = item.Food })"
+                                           data-bs-toggle="tooltip" title="Details"
+                                           class="btn btn-link btn-info btn-sm">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+
+                                        <a href="@Url.Action("Delete", new { menuId = item.Menu, foodId = item.Food })"
+                                           data-bs-toggle="tooltip" title="Remove"
+                                           class="btn btn-link btn-danger btn-sm">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#menudetail-datatables').DataTable({
+                "pageLength": 10,
+                "lengthMenu": [5, 10, 25, 50],
+                "order": [[0, "asc"]],
+                "columnDefs": [
+                    { "orderable": false, "targets": 6 } // Vô hiệu hóa sort cột Action
+                ]
+            });
+
+            // Khởi tạo tooltip
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+}

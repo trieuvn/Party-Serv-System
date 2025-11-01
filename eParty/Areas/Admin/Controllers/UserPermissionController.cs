@@ -1,16 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
+﻿using eParty.Models;
+using Microsoft.AspNet.Identity.Owin;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using eParty.Models;
-using eParty;
-using System.Collections.Generic;
 
 namespace eParty.Areas.Admin.Controllers
 {
@@ -18,6 +12,7 @@ namespace eParty.Areas.Admin.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private AppDbContext db = new AppDbContext();
 
         public UserPermissionController() { }
 
@@ -69,6 +64,7 @@ namespace eParty.Areas.Admin.Controllers
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await UserManager.CreateAsync(user, model.Password);
 
+            SystemUser systemUser = new SystemUser();
 
             if (result.Succeeded)
             {
@@ -76,10 +72,23 @@ namespace eParty.Areas.Admin.Controllers
                 {
                     await UserManager.AddToRoleAsync(user.Id, Role[i]);
 
+                    systemUser.Role = Role[i];
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                 }
+                systemUser.Username = user.Email;
+
+                systemUser.Password = "123456";
+
+                systemUser.Email = user.Email;
+
+                db.SystemUsers.Add(systemUser);
+                db.SaveChanges();
                 return RedirectToAction("Index", "Dashboard");
             }
+
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error);

@@ -1,0 +1,145 @@
+﻿@model eParty.Models.PriceHistory
+@{
+    ViewBag.Title = "Edit Price History";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Price History Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+            <a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "PriceHistories")">Price History</a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Edit</a></li>
+    </ul>
+</div>
+
+<!-- Thông báo -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Edit", "PriceHistories", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <!-- Ẩn khóa chính -->
+            @Html.HiddenFor(m => m.Party)
+            @Html.HiddenFor(m => m.Food)
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        Editing Price for:
+                        <strong>@(Model.FoodRef != null ? Model.FoodRef.Name : "Unknown Food")</strong>
+                        at
+                        <strong>@(Model.PartyRef != null ? Model.PartyRef.Name : "Unknown Party")</strong>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <!-- Thông tin món ăn & sự kiện (chỉ đọc) -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label fw-bold text-primary">Food</label>
+                                <p class="form-control-plaintext">
+                                    <span class="badge bg-primary">
+                                        @(Model.FoodRef != null ? Model.FoodRef.Name : "Unknown Food")
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label fw-bold text-info">Event / Party</label>
+                                <p class="form-control-plaintext">
+                                    <span class="badge bg-info text-dark">
+                                        @(Model.PartyRef != null ? Model.PartyRef.Name : "Unknown Party")
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Form chỉnh sửa -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Cost, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Cost, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        type = "number",
+                                        min = "0",
+                                        step = "1000",
+                                        placeholder = "e.g., 55000"
+                                    }
+                                })
+                                @Html.ValidationMessageFor(m => m.Cost, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Amount, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Amount, new
+                                {
+                                    htmlAttributes = new
+                                    {
+                                        @class = "form-control",
+                                        type = "number",
+                                        min = "1",
+                                        placeholder = "e.g., 100"
+                                    }
+                                })
+                                @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tổng giá trị -->
+                    <div class="alert alert-light mt-3">
+                        <strong>Total Value:</strong>
+                        <span class="text-primary fs-5">
+                            @string.Format("{0:N0} VND", (Model.Cost * Model.Amount))
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">
+                        <i class="icon-save me-1"></i> Save Changes
+                    </button>
+                    <a href="@Url.Action("Index", "PriceHistories")" class="btn btn-secondary">
+                        <i class="icon-arrow-left me-1"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

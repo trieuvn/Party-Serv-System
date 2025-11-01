@@ -4,23 +4,100 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - eParty</title>
     <link rel="stylesheet" href="~/Content/login/style.css">
     <link rel="stylesheet" href="~/Content/login/SharedMessageTemplate.css">
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: url('/Content/login/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 400px;
+            margin: 8% auto;
+            text-align: center;
+            color: white;
+        }
+
+        h2 {
+            color: #4dabf7;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #eee;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+
+        a#loginLink {
+            color: #74c0fc;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+            a#loginLink:hover {
+                color: #a5d8ff;
+                text-decoration: underline;
+            }
+    </style>
 </head>
 <body>
+    <!-- Nền động -->
+    <div id="particles-js"></div>
+
     <div class="wrapper">
         <h2>@ViewBag.Title</h2>
-        <div>
-            <p>
-                Cảm ơn bạn đã xác nhận email.
-                Vui lòng @Html.ActionLink("nhấn vào đây để Đăng nhập", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-            </p>
-        </div>
+        <p>
+            Cảm ơn bạn đã xác nhận email.<br />
+            Vui lòng @Html.ActionLink("nhấn vào đây để Đăng nhập", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        </p>
     </div>
+
+    <!-- Hiệu ứng hạt động -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 60 },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.4 },
+                size: { value: 2 },
+                move: { enable: true, speed: 1 }
+            },
+            interactivity: {
+                events: {
+                    onhover: { enable: true, mode: "repulse" }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
 </body>
 </html>

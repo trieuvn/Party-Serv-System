@@ -12,8 +12,18 @@
     <title>@ViewBag.Title - eParty</title>
     <link rel="stylesheet" href="~/Content/login/style.css">
 
-    <!-- CSS nội tuyến cho DropDownList -->
     <style>
+        /* Nền particles */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
         .text-danger {
             color: #ff3860;
             font-size: 0.875em;
@@ -24,7 +34,7 @@
             margin-top: 5px;
         }
 
-        /* CSS tùy chỉnh cho phần chọn provider */
+        /* CSS cho phần chọn provider */
         .select-provider {
             margin-bottom: 25px;
             color: #ccc;
@@ -41,21 +51,35 @@
             .select-provider select {
                 width: 100%;
                 padding: 12px 10px;
-                background: transparent;
+                background: rgba(255, 255, 255, 0.05);
                 border: 1px solid rgba(255, 255, 255, 0.2);
                 border-radius: 5px;
                 color: #fff;
                 font-size: 1em;
                 font-family: 'Poppins', sans-serif;
+                outline: none;
+                transition: all 0.3s ease;
             }
-                /* Style cho các <option> bên trong */
+
+                .select-provider select:focus {
+                    border-color: #60a5fa;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
                 .select-provider select option {
-                    background: #333; /* Nền tối cho các lựa chọn */
+                    background: #333;
                     color: #fff;
                 }
+
+        button {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
+    <!-- Hiệu ứng particles nền -->
+    <div id="particles-js"></div>
+
     <div class="wrapper">
 
         @using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" }))
@@ -65,12 +89,12 @@
 
             <h2>@ViewBag.Title</h2>
             <h4 style="color: #ccc; text-align: center; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">
-                Chọn phương thức xác thực
+                Chọn phương thức xác thực để nhận mã
             </h4>
 
-            <!-- Vùng chọn Provider (Dropdown) -->
+            <!-- Dropdown chọn nhà cung cấp -->
             <div class="select-provider">
-                <label for="SelectedProvider">Chọn nhà cung cấp xác thực:</label>
+                <label for="SelectedProvider">Phương thức xác thực:</label>
                 @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers, new { @class = "form-control", id = "SelectedProvider" })
             </div>
 
@@ -78,8 +102,41 @@
         }
     </div>
 
-    <!-- Scripts cho validation -->
+    <!-- Scripts -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+
+    <!-- Script hiệu ứng Particles -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3, "random": true },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": { "enable": true, "speed": 3, "out_mode": "out" }
+            },
+            "interactivity": {
+                "events": {
+                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onclick": { "enable": true, "mode": "push" }
+                },
+                "modes": {
+                    "repulse": { "distance": 100 },
+                    "push": { "particles_nb": 4 }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
 </body>
 </html>
