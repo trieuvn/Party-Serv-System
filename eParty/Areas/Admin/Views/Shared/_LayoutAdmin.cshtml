@@ -1,5 +1,19 @@
 ﻿@{
     var title = ViewBag.Title ?? "Dashboard";
+
+    // === Lấy thông tin user từ Session ===
+    var userFullname = Session["UserFullname"] != null ? Session["UserFullname"].ToString() : (User.Identity.IsAuthenticated ? User.Identity.Name : "Guest");
+    var userEmail = Session["UserEmail"] != null ? Session["UserEmail"].ToString() : (User.Identity.IsAuthenticated ? User.Identity.Name : "guest@example.com");
+    var userAvatar = Session["UserAvatar"] != null ? Session["UserAvatar"].ToString() : null;
+
+    var avatarSrc = "/Content/admin/dashboard/img/profile.jpg"; // Ảnh mặc định
+    if (!string.IsNullOrEmpty(userAvatar))
+    {
+        // Giả định là Base64
+        avatarSrc = "data:image/jpeg;base64," + userAvatar;
+        // Nếu là URL, dùng dòng này:
+        // avatarSrc = userAvatar;
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -77,7 +91,6 @@ toggle-sidebar">
                             </span>
 
                             <h4 class="text-section">Components</h4>
-                        </li>
                         <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#base">
 
@@ -96,6 +109,11 @@ toggle-sidebar">
                                         </a>
                                     </li>
 
+                                    <li>
+                                        <a href="/Admin/FoodIngredients">
+                                            <i class="fas fa-seedling"></i><span class="nav-item">Food Ingredient</span>
+</a>
+                                    </li>
                                     <li>
                                         <a href="/Admin/Ingredients">
 
@@ -214,6 +232,8 @@ toggle-sidebar">
             </nav>
         </div>
 
+        @* Form đăng xuất bên ngoài đã bị xóa (đã di chuyển vào trong <li>) *@
+
         <div class="container">
             <div class="page-inner">
                 @RenderBody()
@@ -229,6 +249,11 @@ toggle-sidebar">
             </div>
         </footer>
     </div>
+
+    @* === BẮT ĐẦU SỬA LỖI: Đã xóa 1 thẻ </div> thừa ở đây === *@
+
+    </div> @* Đây là thẻ </div> đóng của <div class="wrapper"> *@
+
     <script src="/Content/admin/dashboard/js/core/jquery-3.7.1.min.js"></script>
     <script src="/Content/admin/dashboard/js/core/popper.min.js"></script>
     <script src="/Content/admin/dashboard/js/core/bootstrap.min.js"></script>

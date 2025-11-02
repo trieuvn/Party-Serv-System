@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // App State
     let currentView = 'month';
     let currentDate = new Date();
+    // Lấy events từ biến global (nếu có) hoặc localStorage
     let events = (typeof window.serverEvents !== 'undefined' && Array.isArray(window.serverEvents))
         ? window.serverEvents
         : [];
@@ -96,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderCalendar();
         renderEventsList();
         setupEventListeners();
-        requestNotificationPermission();
+        requestNotificationPermission(); // Có thể bỏ nếu không cần reminder
     }
 
     // Setup Event Listeners
@@ -118,6 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
             openEventModal(selectedEventId);
         });
 
+
+        closeBtns.forEach(btn => btn.addEventListener('click', closeModals));
         window.addEventListener('click', (e) => { if (e.target === eventModal || e.target === eventDetailsModal) closeModals(); });
 
         const toggleBtn = document.getElementById('toggle-sidebar');
@@ -185,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderMonthView() {
         const monthContainer = document.createElement('div'); monthContainer.className = 'month-view'; const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1); const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0); const daysInMonth = lastDayOfMonth.getDate(); const startingDayOfWeek = firstDayOfMonth.getDay(); const monthHeader = document.createElement('div'); monthHeader.className = 'month-header';['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => { const dayElement = document.createElement('div'); dayElement.className = 'day-header'; dayElement.textContent = day; monthHeader.appendChild(dayElement); }); monthContainer.appendChild(monthHeader); const daysGrid = document.createElement('div'); daysGrid.className = 'month-days'; const daysInPrevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate(); for (let i = 0; i < startingDayOfWeek; i++) { const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, daysInPrevMonth - startingDayOfWeek + i + 1); daysGrid.appendChild(createDayCell(dayDate, true)); } const today = new Date(); for (let i = 1; i <= daysInMonth; i++) { const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i); const isToday = dayDate.toDateString() === today.toDateString(); daysGrid.appendChild(createDayCell(dayDate, false, isToday)); } const totalCells = startingDayOfWeek + daysInMonth; const remainingCells = (Math.ceil(totalCells / 7) * 7) - totalCells; for (let i = 1; i <= remainingCells; i++) { const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, i); daysGrid.appendChild(createDayCell(dayDate, true)); } monthContainer.appendChild(daysGrid); calendarView.appendChild(monthContainer);
     }
+    // *** SỬA HÀM createDayCell ĐỂ KIỂM TRA isCalendarReadOnly ***
     function createDayCell(date, isOtherMonth, isToday = false) {
         const dayCell = document.createElement('div'); dayCell.className = `day-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'current-day' : ''}`; const dayNumber = document.createElement('div'); dayNumber.className = 'day-number'; dayNumber.textContent = date.getDate(); dayCell.appendChild(dayNumber); const dayEventsContainer = document.createElement('div'); dayEventsContainer.className = 'day-events'; const dayEvents = getEventsForDate(date); const maxEventsToShow = 2; let eventsShownCount = 0; dayEvents.forEach(event => { if (eventsShownCount < maxEventsToShow) { const eventElement = document.createElement('div'); eventElement.className = 'day-event'; eventElement.textContent = event.title; eventElement.style.backgroundColor = event.color; eventElement.dataset.eventId = event.id; eventElement.addEventListener('click', (e) => { e.stopPropagation(); showEventDetails(event.id); }); dayEventsContainer.appendChild(eventElement); eventsShownCount++; } }); if (dayEvents.length > maxEventsToShow) { const moreEvents = document.createElement('div'); moreEvents.className = 'more-events'; moreEvents.textContent = `+${dayEvents.length - maxEventsToShow} more`; dayEventsContainer.appendChild(moreEvents); } dayCell.appendChild(dayEventsContainer); dayCell.addEventListener('click', () => { currentDate = new Date(date); if (isOtherMonth) { renderCalendar(); } else { switchView('day'); } }); return dayCell;
     }
@@ -197,7 +201,12 @@ document.addEventListener('DOMContentLoaded', function () {
             dayGrid.appendChild(hourLabel);
             const timeBlock = document.createElement('div'); timeBlock.className = 'day-time-block';
             dayGrid.appendChild(timeBlock);
-            timeBlock.addEventListener('click', () => openEventModalForTime(currentDate, hour));
+            // *** THÊM KIỂM TRA isCalendarReadOnly KHI CLICK Ô TRỐNG ***
+            timeBlock.addEventListener('click', () => {
+                if (!isCalendarReadOnly) {
+                    openEventModalForTime(currentDate, hour);
+                }
+            });
         }
 
         const overlay = document.createElement('div');
@@ -232,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 el.style.top = (minutesFromStartOfDay * pxPerMinute) + 'px';
                 el.style.height = (durationMinutes * pxPerMinute) + 'px';
-
                 el.style.background = ev.color;
                 el.dataset.eventId = ev.id;
                 el.title = `${formatTime(s)} - ${formatTime(eDate)}: ${ev.title}`;
@@ -256,7 +264,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 const blockDate = new Date(startOfWeek); blockDate.setDate(startOfWeek.getDate() + d);
                 timeBlock.dataset.date = ymdLocal(blockDate);
                 timeBlock.dataset.hour = hour;
-                timeBlock.addEventListener('click', () => openEventModalForTime(blockDate, hour)); grid.appendChild(timeBlock);
+                // *** THÊM KIỂM TRA isCalendarReadOnly KHI CLICK Ô TRỐNG ***
+                timeBlock.addEventListener('click', () => {
+                    if (!isCalendarReadOnly) {
+                        openEventModalForTime(blockDate, hour);
+                    }
+                });
+                grid.appendChild(timeBlock);
             }
         }
 
@@ -293,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         const maxHeight = (24 * hourHWeek) - (startMinutes * ppmWeek);
                         el.style.height = Math.min(eventHeight, maxHeight) + 'px';
-
                         el.style.background = ev.color;
                         el.textContent = `${formatTime(s)} ${ev.title}`; el.title = `${formatTime(s)} - ${formatTime(eDate)}: ${ev.title}`; el.dataset.eventId = ev.id;
                         el.addEventListener('click', (e) => { e.stopPropagation(); showEventDetails(ev.id); }); targetBlock.appendChild(el);
@@ -305,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // SỬA ĐỔI: renderEventsList để lọc
     function renderEventsList() {
-        if (!eventsList) { return; }
+        if (!eventsList) { return; } // Dừng nếu không tìm thấy element
         eventsList.innerHTML = '';
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -364,12 +377,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Helper Functions (Giữ nguyên) ---
     function getEventsForDate(date) {
+        if (!date || isNaN(date.getTime())) return []; // Thêm kiểm tra date hợp lệ
         const targetStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const targetEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
         return events.filter(event => {
             if (!event || !event.startTime) return false;
             try {
                 const eventStartDate = new Date(event.startTime); if (isNaN(eventStartDate.getTime())) return false;
+                // Sửa logic: Chỉ cần event bắt đầu trong ngày đó
                 return eventStartDate >= targetStart && eventStartDate < targetEnd;
             } catch (e) { console.error("Error filtering event date:", e); return false; }
         });
@@ -471,6 +486,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function openEventModalForTime(date, hour) {
+        if (isCalendarReadOnly) {
+            console.log("Read-only: Prevented opening modal from time block click.");
+            return; // Không làm gì nếu chỉ xem
+        }
         openEventModal(); try { eventDateInput.value = date.toISOString().split('T')[0]; } catch (e) { eventDateInput.value = new Date().toISOString().split('T')[0]; } const startTime = `${hour.toString().padStart(2, '0')}:00`; const endTime = `${(hour + 1 > 23 ? 23 : hour + 1).toString().padStart(2, '0')}:${hour + 1 > 23 ? '59' : '00'}`; eventStartTimeInput.value = startTime; eventEndTimeInput.value = endTime;
     }
 
@@ -842,13 +861,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Các hàm tiện ích (Giữ nguyên) ---
     function setReminder(event) {
-        if (!event || !event.startTime || !event.reminder) return; let reminderTime; try { reminderTime = new Date(event.startTime); reminderTime.setMinutes(reminderTime.getMinutes() - 15); } catch (e) { return; } const now = new Date(); const timeUntilReminder = reminderTime.getTime() - now.getTime(); if (timeUntilReminder > 0) { setTimeout(() => { showReminderNotification(event); }, timeUntilReminder); }
+        if (isCalendarReadOnly || !event || !event.startTime || !event.reminder) return; let reminderTime; try { reminderTime = new Date(event.startTime); reminderTime.setMinutes(reminderTime.getMinutes() - 15); } catch (e) { return; } const now = new Date(); const timeUntilReminder = reminderTime.getTime() - now.getTime(); if (timeUntilReminder > 0) { setTimeout(() => { showReminderNotification(event); }, timeUntilReminder); }
     }
     function showReminderNotification(event) {
-        if (!('Notification' in window)) return; const notify = () => { new Notification(`Reminder: ${event.title}`, { body: `Starts at ${formatTime(new Date(event.startTime))}. ${event.description || ''}`, icon: 'https: //cdn-icons-png.flaticon.com/512/3652/3652191.png' }); }; if (Notification.permission === 'granted') notify(); else if (Notification.permission !== 'denied') { Notification.requestPermission().then(permission => { if (permission === 'granted') notify(); }); }
+        if (!('Notification' in window) || isCalendarReadOnly) return; const notify = () => { try { new Notification(`Reminder: ${event.title}`, { body: `Starts at ${formatTime(new Date(event.startTime))}. ${event.description || ''}`, icon: 'https://cdn-icons-png.flaticon.com/512/3652/3652191.png' }); } catch (e) { console.error("Error showing notification:", e); } }; if (Notification.permission === 'granted') notify(); else if (Notification.permission !== 'denied') { Notification.requestPermission().then(permission => { if (permission === 'granted') notify(); }); }
     }
     function requestNotificationPermission() {
-        if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') { /* Notification.requestPermission(); */ }
+        // Chỉ yêu cầu quyền nếu không phải read-only và trình duyệt hỗ trợ
+        if (!isCalendarReadOnly && 'Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            // Có thể bật lại dòng dưới nếu muốn tự động hỏi quyền, nhưng thường nên để user tự kích hoạt
+            // Notification.requestPermission();
+            console.log("Notification permission not granted. User interaction may be required.");
+        }
     }
     function formatTime(date) {
         if (!date || !(date instanceof Date) || isNaN(date.getTime())) return 'Invalid Time'; return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });

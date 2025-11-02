@@ -18,7 +18,7 @@ namespace eParty.Areas.Admin.Models
         public String TotalCost { get; set; }
 
         public string DailySales { get; set; }
-        
+
         public List<long> MonthlyPartyCost { get; set; }
 
         public List<long> MonthlyPriceHistoryCost { get; set; }
@@ -28,5 +28,16 @@ namespace eParty.Areas.Admin.Models
         public List<SystemUser> NewCustomer { get; set; }
 
         public List<Party> TransactionHistory { get; set; }
+
+        /// <summary>
+        /// Lưu trữ chi phí dự đoán cho các tháng tiếp theo
+        /// (Sử dụng ML Hồi quy tuyến tính)
+        /// </summary>
+        public List<long> PredictedCosts { get; set; } // Đổi từ long sang List<long>
+
+        /// <summary>
+        /// Tháng hiện tại (1-based, ví dụ: 10 cho tháng 10)
+        /// </summary>
+        public int CurrentMonth { get; set; } // Thêm mới
     }
 }

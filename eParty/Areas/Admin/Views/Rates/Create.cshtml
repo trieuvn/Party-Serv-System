@@ -1,0 +1,87 @@
+﻿@model eParty.Models.Rate
+
+@{
+    ViewBag.Title = "Create New Rate";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Rate Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+            <a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "Rates")">Rates</a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Create</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "Rates", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title fw-bold">Add New Rating</div>
+                </div>
+
+                <div class="card-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <!-- User -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(model => model.User, "User", new { @class = "form-label fw-semibold" })
+                                @Html.DropDownList("User", null, "--- Select a User ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.User, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Party -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(model => model.Party, "Party", new { @class = "form-label fw-semibold" })
+                                @Html.DropDownList("Party", null, "--- Select a Party ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Party, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Stars -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(model => model.Stars, new { @class = "form-label fw-semibold" })
+                                @Html.EditorFor(model => model.Stars, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1", max = "5", placeholder = "Enter rating from 1 to 5" } })
+                                @Html.ValidationMessageFor(model => model.Stars, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Comment -->
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(model => model.Comment, new { @class = "form-label fw-semibold" })
+                                @Html.TextAreaFor(model => model.Comment, 4, 1, new { @class = "form-control", placeholder = "Enter your comment..." })
+                                @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">
+                        <i class="icon-check"></i> Create
+                    </button>
+                    <a href="@Url.Action("Index", "Rates")" class="btn btn-danger">
+                        <i class="icon-close"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

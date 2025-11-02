@@ -1,0 +1,202 @@
+﻿@model eParty.Models.Party
+@{
+    ViewBag.Title = "Edit Party";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Party Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+            <a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "Parties")">Party</a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item">
+            <a href="#">Edit</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Success / Error Messages -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Edit", "Parties", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Edit Party: @Model.Name</div>
+                </div>
+
+                <div class="card-body">
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.Image) <!-- Keep old image if not changed -->
+
+                    <div class="row">
+                        <!-- Party Name -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter party name" } })
+                                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Menu -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Menu, "Menu", new { @class = "form-label" })
+                                @Html.DropDownList("Menu", null, "--- Select Menu ---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Menu, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Type -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Type, new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.Type,
+                                    new SelectList(new[] { "Standard", "Premium", "VIP" }),
+                                    "--- Select Type ---",
+                                    new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Status, new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.Status,
+                                    new SelectList(new[] { "Pending", "Active", "Completed", "Cancelled" }),
+                                    "--- Select Status ---",
+                                    new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Cost -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Cost, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Cost, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0" } })
+                                @Html.ValidationMessageFor(m => m.Cost, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Slots -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Slots, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Slots, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1" } })
+                                @Html.ValidationMessageFor(m => m.Slots, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Begin Time -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.BeginTime, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.BeginTime, new { htmlAttributes = new { @class = "form-control", type = "datetime-local" } })
+                                @Html.ValidationMessageFor(m => m.BeginTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- End Time -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.EndTime, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.EndTime, new { htmlAttributes = new { @class = "form-control", type = "datetime-local" } })
+                                @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Address, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Full address" } })
+                                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Latitude & Longitude -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Latitude, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Latitude, new { htmlAttributes = new { @class = "form-control", type = "number", step = "any" } })
+                                @Html.ValidationMessageFor(m => m.Latitude, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Longitude, new { @class = "form-label" })
+                                @Html.EditorFor(m => m.Longitude, new { htmlAttributes = new { @class = "form-control", type = "number", step = "any" } })
+                                @Html.ValidationMessageFor(m => m.Longitude, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.Description, 4, 1, new { @class = "form-control", placeholder = "Party description..." })
+                                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Current Image</label>
+                                @if (!string.IsNullOrEmpty(Model.Image))
+                                {
+                                    <div class="mb-2">
+                                        <img src="data:image/jpeg;base64,@Model.Image" alt="@Model.Name" class="img-thumbnail" style="max-width: 200px;" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-2">No image uploaded yet.</p>
+                                }
+                                <label for="imageFile" class="form-label">Upload New Image</label>
+                                <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*" />
+                                <small class="text-muted">Supported: JPG, PNG, GIF (max 5MB)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="card-action">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <a href="@Url.Action("Index", "Parties")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

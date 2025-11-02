@@ -1,0 +1,104 @@
+﻿@model eParty.Areas.Staff.Models.UserInformation
+@{
+    ViewBag.Title = "Cập nhật thông tin cá nhân";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="mb-4">Cập nhật thông tin cá nhân</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        @* Bắt đầu Form, CẦN THÊM 'enctype' để upload được ảnh *@
+        <form action="@Url.Action("UpdateInfo")" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div class="card p-3 mb-3">
+                <h5>Thông tin cá nhân</h5>
+
+                <ul class="list-group list-group-flush">
+
+                    @* === 1. AVATAR (MỚI) === *@
+                    <li class="list-group-item d-flex align-items-center">
+                        <strong style="min-width: 130px;">Avatar</strong>
+                        <div>
+                            @* Ảnh đại diện hiện tại *@
+                            @{
+                                string currentAvatar = "https://via.placeholder.com/100"; // Ảnh mặc định
+                                if (!string.IsNullOrEmpty(Model.systemUser.Avatar))
+                                {
+                                    currentAvatar = Model.systemUser.Avatar.StartsWith("data:image")
+                                        ? Model.systemUser.Avatar
+                                        : "data:image/png;base64," + Model.systemUser.Avatar;
+                                }
+                            }
+                            <img id="avatarPreview" src="@currentAvatar" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;" />
+
+                            @* Input để chọn file mới *@
+                            <input type="file" name="AvatarFile" id="AvatarFile" class="form-control-file" accept="image/*" />
+
+                            @* Input ẩn để lưu chuỗi Base64 (nếu JS chạy) *@
+                            @* Tên "Avatar" sẽ được post lên controller *@
+                            <input type="hidden" name="Avatar" id="AvatarBase64" value="@Model.systemUser.Avatar" />
+                        </div>
+                    </li>
+
+                    @* === 2. HỌ (SỬA LẠI LAYOUT) === *@
+                    <li class="list-group-item d-flex align-items-center">
+                        <label for="FirstName" class="form-label" style="min-width: 130px;"><strong>Họ</strong></label>
+                        <input type="text" id="FirstName" name="FirstName" class="form-control" value="@Model.systemUser.FirstName" />
+                    </li>
+
+                    @* === 3. TÊN (THÊM MỚI) === *@
+                    <li class="list-group-item d-flex align-items-center">
+                        <label for="LastName" class="form-label" style="min-width: 130px;"><strong>Tên</strong></label>
+                        <input type="text" id="LastName" name="LastName" class="form-control" value="@Model.systemUser.LastName" />
+                    </li>
+
+                    @* === 4. EMAIL (SỬA LẠI LAYOUT) === *@
+                    <li class="list-group-item d-flex align-items-center">
+                        <label for="Email" class="form-label" style="min-width: 130px;"><strong>Email</strong></label>
+                        <input type="email" id="Email" class="form-control" value="@Model.user.Email" disabled />
+                    </li>
+
+                    @* === 5. SỐ ĐIỆN THOẠI (SỬA LẠI LAYOUT VÀ NGUỒN DATA) === *@
+                    @* Sửa value từ systemUser.PhoneNumber -> user.PhoneNumber cho đúng với trang View Info *@
+                    <li class="list-group-item d-flex align-items-center">
+                        <label for="PhoneNumber" class="form-label" style="min-width: 130px;"><strong>Số điện thoại</strong></label>
+                        <input type="text" id="PhoneNumber" name="PhoneNumber" class="form-control" value="@Model.user.PhoneNumber" />
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">Quay lại</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@* THÊM SCRIPT ĐỂ XỬ LÝ AVATAR *@
+@section scripts {
+    <script>
+        document.getElementById('AvatarFile').addEventListener('change', function (event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    // 1. Hiển thị ảnh preview
+                    document.getElementById('avatarPreview').src = e.target.result;
+
+                    // 2. Lưu chuỗi Base64 (phần sau dấu phẩy) vào input ẩn
+                    // e.target.result sẽ có dạng "data:image/png;base64,iVBORw..."
+                    var base64String = e.target.result.split(',')[1];
+                    document.getElementById('AvatarBase64').value = base64String;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

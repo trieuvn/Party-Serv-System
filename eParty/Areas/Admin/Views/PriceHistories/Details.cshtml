@@ -1,0 +1,83 @@
+﻿@model eParty.Models.PriceHistory
+@{
+    ViewBag.Title = "Price History Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="page-header">
+    <h3 class="fw-bold mb-3">Price History Management</h3>
+    <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+            <a href="@Url.Action("Index", "Dashboard")"><i class="icon-home"></i></a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "PriceHistories")">Price History</a>
+        </li>
+        <li class="separator"><i class="icon-arrow-right"></i></li>
+        <li class="nav-item"><a href="#">Details</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-light">
+                <div class="card-title fs-5 fw-bold text-dark">
+                    Price Record:
+                    <strong class="text-primary">
+                        @(Model.FoodRef != null ? Model.FoodRef.Name : "Unknown Food")
+                    </strong>
+                    at
+                    <strong class="text-info">
+                        @(Model.PartyRef != null ? Model.PartyRef.Name : "Unknown Party")
+                    </strong>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <!-- Food -->
+                    <dt class="col-sm-3 fw-semibold text-secondary">Food</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-primary fs-6">
+                            @(Model.FoodRef != null ? Model.FoodRef.Name : "N/A")
+                        </span>
+                    </dd>
+
+                    <!-- Party -->
+                    <dt class="col-sm-3 fw-semibold text-secondary">Party / Event</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-info text-dark fs-6">
+                            @(Model.PartyRef != null ? Model.PartyRef.Name : "N/A")
+                        </span>
+                    </dd>
+
+                    <!-- Unit Price -->
+                    <dt class="col-sm-3 fw-semibold text-secondary">Unit Price</dt>
+                    <dd class="col-sm-9 text-success fw-bold fs-6">
+                        @string.Format("{0:N0} VND", Model.Cost)
+                    </dd>
+
+                    <!-- Quantity -->
+                    <dt class="col-sm-3 fw-semibold text-secondary">Quantity</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-secondary fs-6">@Model.Amount</span>
+                    </dd>
+
+                    <!-- Total Value -->
+                    <dt class="col-sm-3 fw-semibold text-secondary">Total Value</dt>
+                    <dd class="col-sm-9 text-primary fw-bold fs-5">
+                        @string.Format("{0:N0} VND", (Model.Cost * Model.Amount))
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="card-footer bg-light">
+                <a href="@Url.Action("Index", "PriceHistories")" class="btn btn-outline-primary">
+                    <i class="icon-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
