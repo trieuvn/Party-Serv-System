@@ -2,8 +2,6 @@
 
 This is the source code repository for the **PARTYSERV** project, a web-based system for managing parties and events.
 
-This project was developed as the Final Project for the Web Application Development course (Course Code: ITE1265E) at the Ho Chi Minh City University of Economics and Finance (UEF).
-
 ---
 
 ## 📝 Project Description
