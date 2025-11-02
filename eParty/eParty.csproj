@@ -64,6 +64,9 @@
     <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -2095,6 +2098,9 @@
     <Content Include="Areas\Staff\Views\PersonalAccount\ChangePassword.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\GoogleLink.cshtml" />
     <Content Include="Areas\Staff\Views\PersonalAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\Index.cshtml" />
     <Content Include="Areas\Admin\Views\MenuDetails\Create.cshtml" />
     <Content Include="Areas\Admin\Views\MenuDetails\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\MenuDetails\Details.cshtml" />
